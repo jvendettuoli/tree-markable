@@ -1,5 +1,5 @@
 {
-  "name": "tree-markable",
+  "name": "tree-markable-server",
   "version": "1.0.0",
   "description": "tree-markable server",
   "main": "server.js",
