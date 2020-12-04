@@ -7,6 +7,7 @@ const useStyles = makeStyles({});
 
 function Home() {
 	const classes = useStyles();
+
 	return (
 		<Grid container className={classes.image}>
 			Homepage
