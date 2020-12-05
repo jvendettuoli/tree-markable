@@ -3,6 +3,8 @@ import { Switch, Route } from 'react-router-dom';
 
 import Home from './Home';
 import Signup from './Signup';
+import Login from './Login';
+import SignOut from './SignOut';
 
 function Routes() {
 	return (
@@ -13,6 +15,12 @@ function Routes() {
 				</Route>
 				<Route exact path="/signup">
 					<Signup />
+				</Route>
+				<Route exact path="/login">
+					<Login />
+				</Route>
+				<Route exact path="/signout">
+					<SignOut />
 				</Route>
 			</Switch>
 		</div>

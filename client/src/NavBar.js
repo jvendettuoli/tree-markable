@@ -49,9 +49,15 @@ function NavBar() {
 						to="/signup"
 						{...a11yProps(1)}
 					/>
+					<LinkTab label="Login" to="/login" {...a11yProps(2)} />
 					<LinkTab
-						label="Page Three"
-						to="/spam"
+						label="Sign Out"
+						to="/signout"
+						{...a11yProps(2)}
+					/>
+					<LinkTab
+						label="Upload"
+						to="/upload"
 						{...a11yProps(2)}
 					/>
 				</Tabs>

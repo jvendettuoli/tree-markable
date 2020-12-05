@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { signUp } from './firebase/firebaseAuth';
+import { signIn } from './firebase/firebaseAuth';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles({});
 
-function SignUp() {
+function Login() {
 	const classes = useStyles();
 	const INITIAL_FORM_DATA = {
 		email    : '',
@@ -27,11 +27,11 @@ function SignUp() {
 
 	const handleSubmit = (evt) => {
 		evt.preventDefault();
-		signUp(formData.email, formData.password);
+		signIn(formData.email, formData.password);
 	};
 	return (
-		<Grid container className="Signup">
-			Signup Page
+		<Grid container className="Login">
+			Login Page
 			<form onSubmit={handleSubmit}>
 				<TextField
 					id="email"
@@ -50,9 +50,9 @@ function SignUp() {
 					value={formData.password}
 					autoComplete="password"
 				/>
-				<Button type="submit">Signup</Button>
+				<Button type="submit">Login</Button>
 			</form>
 		</Grid>
 	);
 }
-export default SignUp;
+export default Login;
