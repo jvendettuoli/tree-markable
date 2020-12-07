@@ -5,6 +5,7 @@ import Home from './Home';
 import Signup from './Signup';
 import Login from './Login';
 import SignOut from './SignOut';
+import Upload from './Upload';
 
 function Routes() {
 	return (
@@ -21,6 +22,9 @@ function Routes() {
 				</Route>
 				<Route exact path="/signout">
 					<SignOut />
+				</Route>
+				<Route exact path="/upload">
+					<Upload />
 				</Route>
 			</Switch>
 		</div>
