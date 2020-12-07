@@ -60,6 +60,11 @@ function NavBar() {
 						to="/upload"
 						{...a11yProps(2)}
 					/>
+					<LinkTab
+						label="Leaflet Map"
+						to="/map"
+						{...a11yProps(2)}
+					/>
 				</Tabs>
 			</AppBar>
 		</div>

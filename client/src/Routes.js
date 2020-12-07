@@ -6,6 +6,7 @@ import Signup from './Signup';
 import Login from './Login';
 import SignOut from './SignOut';
 import Upload from './Upload';
+import LeafletMap from './LeafletMap';
 
 function Routes() {
 	return (
@@ -25,6 +26,9 @@ function Routes() {
 				</Route>
 				<Route exact path="/upload">
 					<Upload />
+				</Route>
+				<Route exact path="/map">
+					<LeafletMap />
 				</Route>
 			</Switch>
 		</div>
