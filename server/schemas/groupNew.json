@@ -1,0 +1,46 @@
+{
+  "$id": "http://tree-markable.herokuapp.com/schemas/groupNew.json",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "$id": "/properties/name",
+      "type": "string",
+      "title": "The Name Schema ",
+      "default": "",
+      "minLength": 1,
+      "maxLength": 55,
+      "examples": ["Clallam Tree Alliance"]
+    },
+    "description": {
+      "$id": "/properties/description",
+      "type": "string",
+      "title": "The Description Schema",
+      "default": "",
+      "maxLength": 2000,
+      "examples": ["Clallam Tree Alliance gives away free plants to be planted in the City of Port Angles. This groups help track where those trees go!"]
+    },
+    "storage_url": {
+      "$id": "/properties/storage_url",
+      "type": "string",
+      "title": "The Storage URL Schema",
+      "format": "uri-reference",
+      "default": "",
+      "examples": ["gs://tree-markable.appspot.com/images/group-id/"]
+    },
+    "creator": {
+      "$id": "/properties/creator",
+      "type": "string",
+      "title": "The Creator Schema",
+      "default": "",
+      "examples": ["username"]
+    },
+    "is_public": {
+      "$id": "/properties/is_public",
+      "type": "boolean",
+      "default": "false",
+      "examples": [false, true]
+    }
+  },
+  "required": ["name"]
+}

@@ -1,0 +1,79 @@
+{
+  "$id": "http://tree-markable.herokuapp.com/schemas/treeNew.json",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "$id": "/properties/name",
+      "type": "string",
+      "title": "The Name Schema",
+      "default": "",
+      "minLength": 1,
+      "maxLength": 55,
+      "examples": ["The Wiz Biz Tree"]
+    },
+    "common_name": {
+      "$id": "/properties/common_name",
+      "type": "string",
+      "title": "The Common Name Schema",
+      "default": "",
+      "minLength": 1,
+      "maxLength": 55,
+      "examples": ["Bigleaf Maple"]
+    },
+    "scientific_name": {
+      "$id": "/properties/scientific_name",
+      "type": "string",
+      "title": "The Scientific Name Schema",
+      "default": "",
+      "minLength": 1,
+      "maxLength": 55,
+      "examples": ["Acer macrophyllum"]
+    },
+    "description": {
+      "$id": "/properties/description",
+      "type": "string",
+      "title": "The Description Schema",
+      "default": "",
+      "maxLength": 2000,
+      "examples": ["This is a lovely tree on 5th and 8th that is 200yrs old!"]
+    },
+    "storage_url": {
+      "$id": "/properties/storage_url",
+      "type": "string",
+      "title": "The Storage URL Schema",
+      "format": "uri-reference",
+      "default": "",
+      "examples": ["gs://tree-markable.appspot.com/images/tree-id/"]
+    },
+    "creator": {
+      "$id": "/properties/creator",
+      "type": "string",
+      "title": "The Creator Schema",
+      "default": "",
+      "examples": ["username"]
+    },
+    "geolocation": {
+      "$id": "/properties/geolocation",
+      "type": "object",
+      "title": "The Geolocation Schema",
+      "required": ["latitude", "longitude"],
+      "default": "",
+      "properties": {
+        "latitude": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        }
+      },
+      "examples": [{"latitude": 48.09137995448585, "longitude": -123.48034399738893}]
+    }
+
+  },
+  "required": ["name", "creator", "geolocation"]
+}

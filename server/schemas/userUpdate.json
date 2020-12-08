@@ -1,0 +1,61 @@
+{
+  "$id": "http://tree-markable.herokuapp.com/schemas/userUpdate.json",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "username": {
+      "$id": "/properties/username",
+      "type": "string",
+      "title": "The Username Schema",
+      "default": "",
+      "minLength": 1,
+      "maxLength": 55,
+      "examples": ["hueter"]
+    },
+    "password": {
+      "$id": "/properties/password",
+      "type": "string",
+      "title": "The Password Schema",
+      "default": "",
+      "minLength": 6,
+      "maxLength": 55,
+      "examples": ["foo123"]
+    },
+    "firebase_id": {
+      "$id": "/properties/firebase_id",
+      "type": "string",
+      "title": "The firebase_id Schema",
+      "default": "",
+      "minLength": 1,
+      "maxLength": 55,
+      "examples": ["4ygMAIxZg1g45w5h6uMmjGqfUEC2"]
+    },
+    "is_admin": {
+      "$id": "/properties/is_admin",
+      "type": "boolean",
+      "default": "false",
+      "examples": [false, true]
+    },
+    "img_url": {
+      "$id": "/properties/img",
+      "type": "string",
+      "title": "The User Image Schema",
+      "format": "uri-reference",
+      "default": "",
+      "examples": [
+        "https://avatars0.githubusercontent.com/u/13444851?s=460&v=4"
+      ]
+    },
+    "email": {
+      "$id": "/properties/email",
+      "type": "string",
+      "format": "email",
+      "minLength": 6,
+      "maxLength": 60,
+      "title": "The Email Schema",
+      "default": "",
+      "examples": ["michael@rithmschool.com"]
+    }
+  },
+  "required": ["firebase_id", "password"]
+}

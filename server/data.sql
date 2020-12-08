@@ -1,3 +1,5 @@
+CREATE EXTENSION cube;
+CREATE EXTENSION earthdistance;
 DROP TABLE IF EXISTS users, groups, trees, comments;
 
 CREATE TABLE users(
@@ -6,8 +8,11 @@ CREATE TABLE users(
     password TEXT NOT NULL,
     email TEXT NOT NULL,
     img_url TEXT,
+    home_geolocation POINT,
     firebase_id TEXT UNIQUE,
-    is_admin BOOLEAN NOT NULL DEFAULT false   
+    is_admin BOOLEAN NOT NULL DEFAULT false,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+
 );
 
 CREATE TABLE groups(
@@ -15,7 +20,7 @@ CREATE TABLE groups(
     name TEXT NOT NULL,
     description TEXT,
     img_url TEXT,
-    cover_img_url TEXT,
+    storage_url TEXT,
     is_public BOOLEAN NOT NULL DEFAULT true,
     creator INTEGER NOT NULL REFERENCES users,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -25,9 +30,10 @@ CREATE TABLE trees(
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     common_name TEXT,
-    scientifit_name TEXT,
+    scientific_name TEXT,
     description TEXT,
-    img_url TEXT,
+    storage_url TEXT,
+    geolocation POINT NOT NULL,
     favorites INTEGER NOT NULL DEFAULT 0,
     creator INTEGER NOT NULL REFERENCES users,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
