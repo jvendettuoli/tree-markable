@@ -6,6 +6,7 @@ CREATE TABLE users(
     password TEXT NOT NULL,
     email TEXT NOT NULL,
     img_url TEXT,
+    firebase_id TEXT UNIQUE,
     is_admin BOOLEAN NOT NULL DEFAULT false   
 );
 
