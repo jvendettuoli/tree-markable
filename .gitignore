@@ -1,2 +1,4 @@
-server/node_modules/
-client/node_modules/
+node_modules/
+node_modules/
+server/tree-markable-firebase-adminsdk-sdmzs-7aaeaea861.json
+.env
