@@ -21,7 +21,7 @@ async function seed() {
             (name, description, storage_url, is_public, creator)
             VALUES
             ('TestGroup1', 'A description for Test Group 1, which is a made up group for testing.','gs://tree-markable.appspot.com/images/groups/1', true,'4ygMAIxZg0g45w5h6uMmjGqfUVC2'),
-            ('TestGroup2', 'A description for Test Group 2, which is a made up group for testing.','gs://tree-markable.appspot.com/images/groups/2', false,'XxpNYSGC0aR9Yzg7rVYmp3fRYCo1')`
+            ('TestGroup2', 'A description for Test Group 2, which is a made up group for testing.','gs://tree-markable.appspot.com/images/groups/2', false,'XxpNYSGC0aR9Yzg7rVYmp3fRYCo1')g`
 		);
 
 		await db.query(

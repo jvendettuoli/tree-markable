@@ -53,4 +53,14 @@ const currentUser = () => {
 	console.log(auth.currentUser);
 };
 
-export { signUp, signIn, signOut, currentUser };
+const getToken = async () => {
+	try {
+		const token = await auth.currentUser.getIdToken(true);
+		console.log('Token', token);
+		return token;
+	} catch (error) {
+		console.log('getToken error', error.errorCode, error.message);
+	}
+};
+
+export { signUp, signIn, signOut, currentUser, getToken };

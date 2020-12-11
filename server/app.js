@@ -2,12 +2,18 @@
 const express = require('express');
 const morgan = require('morgan');
 
+const ExpressError = require('./helpers/expressError');
+const usersRoutes = require('./routes/users');
+
 const app = express();
 
 app.use(express.json());
 
 // add basic logging system
 app.use(morgan('tiny'));
+
+//Routes
+app.use('/users', usersRoutes);
 
 /** 404 handler */
 app.use(function(req, res, next) {

@@ -19,10 +19,10 @@ database is:
 let DB_URI;
 
 if (process.env.NODE_ENV === 'test') {
-	DB_URI = process.env.TEST_DATABASE_URL || 'tree-markable-test';
+	DB_URI = process.env.TEST_DATABASE_URL || 'tree_markable_test';
 }
 else {
-	DB_URI = process.env.DATABASE_URL || 'tree-markable';
+	DB_URI = process.env.DATABASE_URL || 'tree_markable';
 }
 
 module.exports = {

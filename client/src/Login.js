@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { signIn } from './firebase/firebaseAuth';
+import { signIn, getToken } from './firebase/firebaseAuth';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -28,6 +28,7 @@ function Login() {
 	const handleSubmit = (evt) => {
 		evt.preventDefault();
 		signIn(formData.email, formData.password);
+		getToken();
 	};
 	return (
 		<Grid container className="Login">
