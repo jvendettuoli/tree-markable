@@ -10,4 +10,13 @@ const verifyToken = async (idToken) => {
 	}
 };
 
-module.exports = { verifyToken };
+const createAdmin = async (uid) => {
+	try {
+		await admin.auth().setCustomUserClaims(uid, { is_admin: true });
+		return true;
+	} catch (err) {
+		console.log(err);
+	}
+};
+
+module.exports = { verifyToken, createAdmin };

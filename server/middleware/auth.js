@@ -11,12 +11,12 @@ const ExpressError = require('../helpers/expressError');
  *
  */
 
-function authRequired(req, res, next) {
+async function authRequired(req, res, next) {
 	try {
 		const tokenStr = req.body._token || req.query._token;
-		let token = verifyToken(tokenStr);
-		req.username = token.username;
-		console.log('USER', token.uid);
+		let token = await verifyToken(tokenStr);
+		req.uid = token.uid;
+
 		return next();
 	} catch (err) {
 		const unauthorized = new ExpressError(err.message, err.code);
