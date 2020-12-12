@@ -4,8 +4,8 @@ DROP TABLE IF EXISTS users, groups, trees, comments, users_trees, users_groups, 
 
 CREATE TABLE users(
     firebase_id TEXT PRIMARY KEY UNIQUE,
-    username TEXT NOT NULL,
-    email TEXT NOT NULL,
+    username TEXT NOT NULL UNIQUE,
+    email TEXT NOT NULL UNIQUE,
     img_url TEXT,
     home_geolocation POINT,
     is_admin BOOLEAN NOT NULL DEFAULT false,

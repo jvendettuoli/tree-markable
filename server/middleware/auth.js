@@ -32,12 +32,12 @@ async function authRequired(req, res, next) {
  *
  */
 
-function adminRequired(req, res, next) {
+async function adminRequired(req, res, next) {
 	try {
 		const tokenStr = req.body._token;
 
-		let token = jwt.verify(tokenStr, SECRET);
-		req.username = token.username;
+		let token = await verifyToken(tokenStr);
+		req.uid = token.uid;
 
 		if (token.is_admin) {
 			return next();
