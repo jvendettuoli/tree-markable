@@ -4,10 +4,9 @@ const ExpressError = require('../helpers/expressError');
 const verifyToken = async (idToken) => {
 	try {
 		const decodedToken = await admin.auth().verifyIdToken(idToken);
-		console.log('Decoded token', decodedToken);
-	} catch (error) {
-		// return new ExpressError('Issue verifying idToken', 401);
-		return error;
+		return decodedToken;
+	} catch (err) {
+		console.log(err);
 	}
 };
 

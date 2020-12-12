@@ -1,6 +1,7 @@
 /** Convenience middleware to handle common auth cases in routes. */
 
 const { verifyToken } = require('../firebase/firebaseAuth');
+const ExpressError = require('../helpers/expressError');
 
 /** Middleware to use when they must provide a valid token.
  *
@@ -14,13 +15,12 @@ function authRequired(req, res, next) {
 	try {
 		const tokenStr = req.body._token || req.query._token;
 		let token = verifyToken(tokenStr);
-		console.log('token', token);
 		req.username = token.username;
+		console.log('USER', token.uid);
 		return next();
 	} catch (err) {
-		let unauthorized = new Error('You must authenticate first.');
-		unauthorized.status = 401; // 401 Unauthorized
-		return next(err);
+		const unauthorized = new ExpressError(err.message, err.code);
+		return next(unauthorized);
 	}
 }
 
