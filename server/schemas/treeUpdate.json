@@ -38,14 +38,6 @@
       "maxLength": 2000,
       "examples": ["This is a lovely tree on 5th and 8th that is 200yrs old!"]
     },
-    "storage_url": {
-      "$id": "/properties/storage_url",
-      "type": "string",
-      "title": "The Storage URL Schema",
-      "format": "uri-reference",
-      "default": "",
-      "examples": ["gs://tree-markable.appspot.com/images/tree-id/"]
-    },
     "creator": {
       "$id": "/properties/creator",
       "type": "string",

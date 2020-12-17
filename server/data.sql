@@ -15,9 +15,8 @@ CREATE TABLE users(
 
 CREATE TABLE groups(
     id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL UNIQUE,
     description TEXT,
-    storage_url TEXT,
     is_public BOOLEAN NOT NULL DEFAULT true,
     creator TEXT NOT NULL REFERENCES users ON DELETE CASCADE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -29,7 +28,6 @@ CREATE TABLE trees(
     common_name TEXT,
     scientific_name TEXT,
     description TEXT,
-    storage_url TEXT,
     geolocation POINT NOT NULL,
     favorites INTEGER NOT NULL DEFAULT 0,
     creator TEXT NOT NULL REFERENCES users ON DELETE CASCADE,

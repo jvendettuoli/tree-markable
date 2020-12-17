@@ -20,14 +20,6 @@
       "maxLength": 2000,
       "examples": ["Clallam Tree Alliance gives away free plants to be planted in the City of Port Angles. This groups help track where those trees go!"]
     },
-    "storage_url": {
-      "$id": "/properties/storage_url",
-      "type": "string",
-      "title": "The Storage URL Schema",
-      "format": "uri-reference",
-      "default": "",
-      "examples": ["gs://tree-markable.appspot.com/images/group-id/"]
-    },
     "creator": {
       "$id": "/properties/creator",
       "type": "string",
