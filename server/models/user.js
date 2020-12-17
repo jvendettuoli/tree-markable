@@ -1,5 +1,4 @@
 const db = require('../db');
-const bcrypt = require('bcrypt');
 const ExpressError = require('../helpers/expressError');
 const partialUpdate = require('../helpers/partialUpdate');
 const admin = require('../firebase/firebaseServerAdmin');
@@ -9,6 +8,58 @@ const { BCRYPT_WORK_FACTOR } = require('../config');
 /** Related functions for users. */
 
 class User {
+	/** Register user with data. Returns new user data. */
+
+	static async register(data) {
+		console.log('Models - User.register - Start');
+
+		const home_geolocation = `${data.home_geolocation.longitude},
+		${data.home_geolocation.latitude}`;
+
+		try {
+			const result = await db.query(
+				`INSERT INTO users 
+              (firebase_id, username, email, img_url, home_geolocation, is_admin) 
+            VALUES ($1, $2, $3, $4, $5, $6) 
+            RETURNING firebase_id, username, email, img_url, home_geolocation, is_admin, created_at`,
+				[
+					data.firebase_id,
+					data.username,
+					data.email,
+					data.img_url,
+					home_geolocation,
+					data.is_admin
+				]
+			);
+
+			return result.rows[0];
+		} catch (err) {
+			if (err.code === '23505') {
+				if (err.constraint === 'users_pkey') {
+					throw new ExpressError(
+						`Duplicate firebase_id found for: '${data.firebase_id}'.`,
+						400
+					);
+				}
+				if (err.constraint === 'users_email_key') {
+					throw new ExpressError(
+						`Duplicate email found for: '${data.email}'.`,
+						400
+					);
+				}
+				if (err.constraint === 'users_username_key') {
+					throw new ExpressError(
+						`Duplicate username found for: '${data.username}'.`,
+						400
+					);
+				}
+			}
+			else {
+				throw new ExpressError(err.message, 400);
+			}
+		}
+	}
+
 	/** Find all users. */
 
 	static async findAll() {
@@ -23,7 +74,7 @@ class User {
 
 	/** Given a username, return data about user. */
 
-	static async findOne(username) {
+	static async findByUsername(username) {
 		const userRes = await db.query(
 			`SELECT firebase_id, username, email, img_url, home_geolocation, is_admin, created_at
             FROM users 
@@ -43,6 +94,28 @@ class User {
 
 		return user;
 	}
+	/** Given a firebase_id, return data about user. */
+
+	static async findByUid(uid) {
+		const userRes = await db.query(
+			`SELECT firebase_id, username, email, img_url, home_geolocation, is_admin, created_at
+            FROM users 
+            WHERE firebase_id = $1`,
+			[ uid ]
+		);
+
+		const user = userRes.rows[0];
+
+		if (!user) {
+			const error = new ExpressError(
+				`There exists no firebase_id '${uid}'`,
+				404
+			);
+			throw error;
+		}
+
+		return user;
+	}
 
 	/** Update user data with `data`.
    *
@@ -54,11 +127,9 @@ class User {
    */
 
 	static async update(username, data) {
-		if (data.password) {
-			data.password = await bcrypt.hash(
-				data.password,
-				BCRYPT_WORK_FACTOR
-			);
+		if (data.hasOwnProperty('home_geolocation')) {
+			data.home_geolocation = `${data.home_geolocation
+				.longitude}, ${data.home_geolocation.latitude}`;
 		}
 
 		let { query, values } = partialUpdate(
@@ -73,14 +144,11 @@ class User {
 
 		if (!user) {
 			let notFound = new ExpressError(
-				`There exists no user '${username}`,
+				`There exists no user: '${username}'`,
 				404
 			);
 			throw notFound;
 		}
-
-		delete user.password;
-		delete user.is_admin;
 
 		return result.rows[0];
 	}

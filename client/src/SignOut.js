@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { signOut, currentUser } from './firebase/firebaseAuth';
+import { signOut, currentUser, getToken } from './firebase/firebaseAuth';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -16,6 +16,7 @@ function Login() {
 	};
 	const handleClickUser = (evt) => {
 		currentUser();
+		getToken();
 	};
 
 	return (

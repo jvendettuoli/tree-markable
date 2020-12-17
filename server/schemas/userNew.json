@@ -12,15 +12,6 @@
       "maxLength": 55,
       "examples": ["hueter"]
     },
-    "password": {
-      "$id": "/properties/password",
-      "type": "string",
-      "title": "The Password Schema",
-      "default": "",
-      "minLength": 6,
-      "maxLength": 55,
-      "examples": ["foo123"]
-    },
     "firebase_id": {
       "$id": "/properties/firebase_id",
       "type": "string",
@@ -55,7 +46,27 @@
       "title": "The Email Schema",
       "default": "",
       "examples": ["michael@rithmschool.com"]
+    },
+    "home_geolocation": {
+      "$id": "/properties/geolocation",
+      "type": "object",
+      "title": "The Geolocation Schema",
+      "required": ["latitude", "longitude"],
+      "default": "",
+      "properties": {
+        "latitude": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        }
+      },
+      "examples": [{"latitude": 48.09137995448585, "longitude": -123.48034399738893}]
     }
   },
-  "required": ["username","email", "firebase_id", "password", "is_admin"]
+  "required": ["username","email", "firebase_id", "is_admin"]
 }

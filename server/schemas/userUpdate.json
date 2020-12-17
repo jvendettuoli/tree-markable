@@ -55,7 +55,27 @@
       "title": "The Email Schema",
       "default": "",
       "examples": ["michael@rithmschool.com"]
+    },
+    "home_geolocation": {
+      "$id": "/properties/geolocation",
+      "type": "object",
+      "title": "The Geolocation Schema",
+      "required": ["latitude", "longitude"],
+      "default": "",
+      "properties": {
+        "latitude": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        }
+      },
+      "examples": [{"latitude": 48.09137995448585, "longitude": -123.48034399738893}]
     }
   },
-  "required": ["firebase_id", "password"]
+  "required": []
 }

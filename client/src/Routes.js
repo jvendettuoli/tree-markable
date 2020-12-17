@@ -2,7 +2,7 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import Home from './Home';
-import Signup from './Signup';
+import SignUp from './SignUp';
 import Login from './Login';
 import SignOut from './SignOut';
 import Upload from './Upload';
@@ -16,7 +16,7 @@ function Routes() {
 					<Home />
 				</Route>
 				<Route exact path="/signup">
-					<Signup />
+					<SignUp />
 				</Route>
 				<Route exact path="/login">
 					<Login />

@@ -5,7 +5,12 @@ const router = express.Router();
 const { validate } = require('jsonschema');
 
 const User = require('../models/user');
-const { authRequired } = require('../middleware/auth');
+const {
+	updateUserInFirebase,
+	deleteFirebaseUser
+} = require('../firebase/firebaseAuth');
+const ExpressError = require('../helpers/expressError');
+const { authRequired, ensureCorrectUser } = require('../middleware/auth');
 const { userNewSchema, userUpdateSchema } = require('../schemas');
 
 /** GET / => {users: [user, ...]} */
@@ -23,7 +28,7 @@ router.get('/', authRequired, async function(req, res, next) {
 
 router.get('/:username', async function(req, res, next) {
 	try {
-		const user = await User.findOne(req.params.username);
+		const user = await User.findByUsername(req.params.username);
 		return res.json({ user });
 	} catch (err) {
 		return next(err);
@@ -32,38 +37,43 @@ router.get('/:username', async function(req, res, next) {
 
 /** POST / {userdata}  => {token: token} */
 
-router.post('/', async function(req, res, next) {
+router.post('/', authRequired, async function(req, res, next) {
 	try {
 		delete req.body._token;
 		const validation = validate(req.body, userNewSchema);
 
 		if (!validation.valid) {
-			return next({
-				status  : 400,
-				message : validation.errors.map((e) => e.stack)
-			});
+			return next(
+				new ExpressError(
+					validation.errors.map((err) => err.stack),
+					400
+				)
+			);
 		}
 
 		const newUser = await User.register(req.body);
-		const token = createToken(newUser);
-		return res.status(201).json({ token });
-	} catch (e) {
-		return next(e);
+		return res.status(201).json({ newUser });
+	} catch (err) {
+		return next(err);
 	}
 });
 
 /** PATCH /[handle] {userData} => {user: updatedUser} */
 
-router.patch('/:username', async function(req, res, next) {
+router.patch('/:username', ensureCorrectUser, async function(
+	req,
+	res,
+	next
+) {
 	try {
-		if ('username' in req.body || 'is_admin' in req.body) {
-			return next({ status: 400, message: 'Not allowed' });
+		delete req.body._token;
+		if ('firebase_id' in req.body || 'is_admin' in req.body) {
+			return next({
+				status  : 400,
+				message : 'Invalid keys in update request.'
+			});
 		}
-		await User.authenticate({
-			username : req.params.username,
-			password : req.body.password
-		});
-		delete req.body.password;
+
 		const validation = validate(req.body, userUpdateSchema);
 		if (!validation.valid) {
 			return next({
@@ -72,6 +82,28 @@ router.patch('/:username', async function(req, res, next) {
 			});
 		}
 
+		// Update Firebase Auth
+		const firebaseProperties = [
+			'email',
+			'phoneNumber',
+			'username',
+			'img_url'
+		];
+		if (
+			Object.keys(req.body).some((property) => {
+				return firebaseProperties.includes(property);
+			})
+		) {
+			const result = await updateUserInFirebase(
+				req.token.uid,
+				req.body
+			);
+			if (result instanceof Error) {
+				throw result;
+			}
+		}
+
+		//Update database
 		const user = await User.update(req.params.username, req.body);
 		return res.json({ user });
 	} catch (err) {
@@ -81,10 +113,17 @@ router.patch('/:username', async function(req, res, next) {
 
 /** DELETE /[handle]  =>  {message: "User deleted"}  */
 
-router.delete('/:username', async function(req, res, next) {
+router.delete('/:username', ensureCorrectUser, async function(
+	req,
+	res,
+	next
+) {
 	try {
+		await deleteFirebaseUser(req.token.uid);
 		await User.remove(req.params.username);
-		return res.json({ message: 'User deleted' });
+		return res.json({
+			message : `User '${req.params.username}' deleted`
+		});
 	} catch (err) {
 		return next(err);
 	}

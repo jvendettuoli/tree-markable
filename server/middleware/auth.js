@@ -2,33 +2,47 @@
 
 const { verifyToken } = require('../firebase/firebaseAuth');
 const ExpressError = require('../helpers/expressError');
+const User = require('../models/user');
 
-/** Middleware to use when they must provide a valid token.
+/** Middleware to use when they must provide a valid Firebase token.
  *
- * Add username onto req as a convenience for view functions.
+ * If valid adds token on to req and proceeds to next.
  *
- * If not, raises Unauthorized.
+ * If not, raises error.
  *
  */
 
 async function authRequired(req, res, next) {
+	console.log('Middleware - authRequired - Start');
 	try {
 		const tokenStr = req.body._token || req.query._token;
-		let token = await verifyToken(tokenStr);
-		req.uid = token.uid;
+		let result = await verifyToken(tokenStr);
+		if (result instanceof Error) {
+			throw result;
+		}
+
+		req.token = result;
 
 		return next();
 	} catch (err) {
-		const unauthorized = new ExpressError(err.message, err.code);
-		return next(unauthorized);
+		if (err.code === 'auth/id-token-expired') {
+			return next(
+				new ExpressError(
+					'Firebase ID token has expired. Get a fresh ID token from your client app and try again.',
+					401
+				)
+			);
+		}
+		return next(err);
 	}
 }
 
-/** Middleware to use when they must provide a valid token that is an admin token.
+/** Middleware to use when they must provide a valid Firebase token that has a
+ * custom admin claim.
  *
- * Add username onto req as a convenience for view functions.
+ * If valid adds token on to req and proceeds to next.
  *
- * If not, raises Unauthorized.
+ * If not, raises error.
  *
  */
 
@@ -37,49 +51,68 @@ async function adminRequired(req, res, next) {
 		const tokenStr = req.body._token;
 
 		let token = await verifyToken(tokenStr);
-		req.uid = token.uid;
+		console.log('TOken', token);
 
-		if (token.is_admin) {
-			return next();
+		if (!token.claims.is_admin) {
+			throw new ExpressError(
+				`Must have admin privileges to access this endpoint.`,
+				401
+			);
 		}
-
-		// throw an error, so we catch it in our catch, below
-		throw new Error();
+		req.token = token;
+		return next();
 	} catch (err) {
-		const unauthorized = new Error('You must be an admin to access.');
-		unauthorized.status = 401;
-
-		return next(unauthorized);
+		if (err.code === 'auth/id-token-expired') {
+			return next(
+				new ExpressError(
+					'Firebase ID token has expired. Get a fresh ID token from your client app and try again.',
+					401
+				)
+			);
+		}
+		return next(err);
 	}
 }
 
-/** Middleware to use when they must provide a valid token & be user matching
- *  username provided as route param.
+/** Middleware to use when user must provide a valid token & be user matching
+ * Username provided as route param compared to Firebase token's
+ * name property.
+ * 
+ * If valid, add token onto req and proceed to next.
  *
- * Add username onto req as a convenience for view functions.
- *
- * If not, raises Unauthorized.
+ * If not, raises error.
  *
  */
 
-function ensureCorrectUser(req, res, next) {
+async function ensureCorrectUser(req, res, next) {
+	console.log('Middleware - ensureCorrectUser - Start');
 	try {
 		const tokenStr = req.body._token || req.query._token;
 
-		let token = jwt.verify(tokenStr, SECRET);
-		req.username = token.username;
-
-		if (token.username === req.params.username) {
-			return next();
+		let result = await verifyToken(tokenStr);
+		if (result instanceof Error) {
+			throw result;
 		}
 
-		// throw an error, so we catch it in our catch, below
-		throw new Error();
-	} catch (e) {
-		const unauthorized = new Error('You are not authorized.');
-		unauthorized.status = 401;
-
-		return next(unauthorized);
+		if (result.name !== req.params.username) {
+			throw new ExpressError(
+				`Must be user '${req.params
+					.username}' or admin to access this endpoint.`,
+				401
+			);
+		}
+		req.token = result;
+		return next();
+	} catch (err) {
+		if (err.code === 'auth/id-token-expired') {
+			return next(
+				new ExpressError(
+					'Firebase ID token has expired. Get a fresh ID token from your client app and try again.',
+					401
+				)
+			);
+		}
+		return next(err);
 	}
 }
 
