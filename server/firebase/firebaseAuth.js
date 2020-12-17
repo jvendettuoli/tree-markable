@@ -1,11 +1,9 @@
 const admin = require('./firebaseServerAdmin');
-const ExpressError = require('../helpers/expressError');
 
 const verifyToken = async (idToken) => {
 	console.log('Firebase Auth - verifyToken - Start');
 	try {
 		const decodedToken = await admin.auth().verifyIdToken(idToken);
-		// console.log('Firebase Auth - verifyToken - decodedToken', decodedToken);
 		return decodedToken;
 	} catch (err) {
 		return err;

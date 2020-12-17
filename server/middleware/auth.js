@@ -2,7 +2,7 @@
 
 const { verifyToken } = require('../firebase/firebaseAuth');
 const ExpressError = require('../helpers/expressError');
-const User = require('../models/user');
+const handleFirebaseErrors = require('../firebase/firebaseErrors');
 
 /** Middleware to use when they must provide a valid Firebase token.
  *
@@ -17,6 +17,7 @@ async function authRequired(req, res, next) {
 	try {
 		const tokenStr = req.body._token || req.query._token;
 		let result = await verifyToken(tokenStr);
+		console.log(result);
 		if (result instanceof Error) {
 			throw result;
 		}
@@ -25,14 +26,7 @@ async function authRequired(req, res, next) {
 
 		return next();
 	} catch (err) {
-		if (err.code === 'auth/id-token-expired') {
-			return next(
-				new ExpressError(
-					'Firebase ID token has expired. Get a fresh ID token from your client app and try again.',
-					401
-				)
-			);
-		}
+		handleFirebaseErrors(err, next);
 		return next(err);
 	}
 }
@@ -50,8 +44,10 @@ async function adminRequired(req, res, next) {
 	try {
 		const tokenStr = req.body._token;
 
-		let token = await verifyToken(tokenStr);
-		console.log('TOken', token);
+		let result = await verifyToken(tokenStr);
+		if (result instanceof Error) {
+			throw result;
+		}
 
 		if (!token.claims.is_admin) {
 			throw new ExpressError(
@@ -59,17 +55,10 @@ async function adminRequired(req, res, next) {
 				401
 			);
 		}
-		req.token = token;
+		req.token = result;
 		return next();
 	} catch (err) {
-		if (err.code === 'auth/id-token-expired') {
-			return next(
-				new ExpressError(
-					'Firebase ID token has expired. Get a fresh ID token from your client app and try again.',
-					401
-				)
-			);
-		}
+		handleFirebaseErrors(err, next);
 		return next(err);
 	}
 }
@@ -104,14 +93,8 @@ async function ensureCorrectUser(req, res, next) {
 		req.token = result;
 		return next();
 	} catch (err) {
-		if (err.code === 'auth/id-token-expired') {
-			return next(
-				new ExpressError(
-					'Firebase ID token has expired. Get a fresh ID token from your client app and try again.',
-					401
-				)
-			);
-		}
+		handleFirebaseErrors(err, next);
+		`   `;
 		return next(err);
 	}
 }
