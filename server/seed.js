@@ -81,19 +81,19 @@ async function seed() {
 
 		await db.query(
 			`INSERT INTO groups
-            (name, description, storage_url, is_public, creator)
+            (name, description, is_public, creator)
             VALUES
-            ('TestGroup1', 'A description for Test Group 1, which is a made up group for testing.','gs://tree-markable.appspot.com/images/groups/1', true, $1),
-            ('TestGroup2', 'A description for Test Group 2, which is a made up group for testing.','gs://tree-markable.appspot.com/images/groups/2', false, $2);`,
+            ('TestGroup1', 'A description for Test Group 1, which is a made up group for testing.', true, $1),
+            ('TestGroup2', 'A description for Test Group 2, which is a made up group for testing.', false, $2);`,
 			[ userRecords[0].uid, userRecords[1].uid ]
 		);
 
 		await db.query(
 			`INSERT INTO trees
-            (name, common_name, scientific_name, description, storage_url, geolocation, favorites, creator)
+            (name, common_name, scientific_name, description, geolocation, favorites, creator)
             VALUES
-            ('Test Tree 1', 'Bigleaf Maple', 'Acer Macrophyllum', 'Beautiful bigleaf maple on the corner of 8th and 6th','gs://tree-markable.appspot.com/images/tree/1', '-123.48034399738893,49.0913799544858', 0, $1),
-            ('Test Tree 2', 'Cottonwood', 'Populus balsamifera', 'Beautiful cottonwood on the corner of 9th and 5th','gs://tree-markable.appspot.com/images/tree/2', '-122.48034399738893,48.0913799544858', 0, $2);`,
+            ('Test Tree 1', 'Bigleaf Maple', 'Acer Macrophyllum', 'Beautiful bigleaf maple on the corner of 8th and 6th', '-123.48034399738893,49.0913799544858', 0, $1),
+            ('Test Tree 2', 'Cottonwood', 'Populus balsamifera', 'Beautiful cottonwood on the corner of 9th and 5th', '-122.48034399738893,48.0913799544858', 0, $2);`,
 			[ userRecords[0].uid, userRecords[2].uid ]
 		);
 	} catch (err) {
