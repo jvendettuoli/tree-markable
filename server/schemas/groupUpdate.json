@@ -7,7 +7,6 @@
       "$id": "/properties/name",
       "type": "string",
       "title": "The Name Schema ",
-      "default": "",
       "minLength": 1,
       "maxLength": 55,
       "examples": ["Clallam Tree Alliance"]

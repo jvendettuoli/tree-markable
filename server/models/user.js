@@ -1,9 +1,6 @@
 const db = require('../db');
 const ExpressError = require('../helpers/expressError');
 const partialUpdate = require('../helpers/partialUpdate');
-const admin = require('../firebase/firebaseServerAdmin');
-
-const { BCRYPT_WORK_FACTOR } = require('../config');
 
 /** Related functions for users. */
 

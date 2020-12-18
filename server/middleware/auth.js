@@ -3,6 +3,8 @@
 const { verifyToken } = require('../firebase/firebaseAuth');
 const ExpressError = require('../helpers/expressError');
 const handleFirebaseErrors = require('../firebase/firebaseErrors');
+const Group = require('../models/group');
+// const Tree = require('../models/tree');
 
 /** Middleware to use when they must provide a valid Firebase token.
  *
@@ -94,7 +96,52 @@ async function ensureCorrectUser(req, res, next) {
 		return next();
 	} catch (err) {
 		handleFirebaseErrors(err, next);
-		`   `;
+		return next(err);
+	}
+}
+
+/** Middleware to use when user must provide a valid token & be creator
+ * of item being affected.
+ * Firbase token's uid compared to item's creator.
+ * 
+ * If valid, add token onto req and proceed to next.
+ *
+ * If not, raises error.
+ *
+ */
+
+async function ensureIsCreator(req, res, next) {
+	console.log('Middleware - ensureCorrectUser - Start');
+	try {
+		console.log('req:', req);
+		const tokenStr = req.body._token || req.query._token;
+
+		let result = await verifyToken(tokenStr);
+		if (result instanceof Error) {
+			throw result;
+		}
+
+		let item;
+		let itemCreatorUid;
+		if (req.baseUrl === '/groups') {
+			item = await Group.findOne(req.params.id);
+			itemCreatorUid = item.creator;
+		}
+		// else if (req.baseUrl === '/trees') {
+		//  	item = await Group.findOne(req.params.id);
+		//      itemCreatorUid = item.creator;
+		// }
+
+		if (itemCreatorUid !== result.uid) {
+			throw new ExpressError(
+				`Must be creator of '${item.name}' or admin to access this endpoint.`,
+				401
+			);
+		}
+		req.token = result;
+		return next();
+	} catch (err) {
+		handleFirebaseErrors(err, next);
 		return next(err);
 	}
 }
@@ -102,5 +149,6 @@ async function ensureCorrectUser(req, res, next) {
 module.exports = {
 	authRequired,
 	adminRequired,
-	ensureCorrectUser
+	ensureCorrectUser,
+	ensureIsCreator
 };
