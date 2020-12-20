@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 const { validate } = require('jsonschema');
 
-const Group = require('../models/group');
+const Tree = require('../models/tree');
 
 const ExpressError = require('../helpers/expressError');
 const {
@@ -12,36 +12,36 @@ const {
 	ensureCorrectUser,
 	ensureIsCreator
 } = require('../middleware/auth');
-const { groupNewSchema, groupUpdateSchema } = require('../schemas');
+const { treeNewSchema, treeUpdateSchema } = require('../schemas');
 
-/** GET / => {groups: [group, ...]} */
+/** GET / => {trees: [tree, ...]} */
 
 router.get('/', authRequired, async function(req, res, next) {
 	try {
-		const groups = await Group.findAll();
-		return res.json({ groups });
+		const trees = await Tree.findAll();
+		return res.json({ trees });
 	} catch (err) {
 		return next(err);
 	}
 });
 
-/** GET /[id] => {group: group} */
+/** GET /[id] => {tree: tree} */
 
 router.get('/:id', authRequired, async function(req, res, next) {
 	try {
-		const group = await Group.findOne(req.params.id);
-		return res.json({ group });
+		const tree = await Tree.findOne(req.params.id);
+		return res.json({ tree });
 	} catch (err) {
 		return next(err);
 	}
 });
 
-/** POST / {groupData}  => {newGroup: group} */
+/** POST / {treeData}  => {newTree: tree} */
 
 router.post('/', authRequired, async function(req, res, next) {
 	try {
 		delete req.body._token;
-		const validation = validate(req.body, groupNewSchema);
+		const validation = validate(req.body, treeNewSchema);
 
 		// Apply user's Firebase UID as the creator ID
 		req.body.creator = req.token.uid;
@@ -55,20 +55,20 @@ router.post('/', authRequired, async function(req, res, next) {
 			);
 		}
 
-		const newGroup = await Group.create(req.body);
-		return res.status(201).json({ newGroup });
+		const newTree = await Tree.create(req.body);
+		return res.status(201).json({ newTree });
 	} catch (err) {
 		return next(err);
 	}
 });
 
-/** PATCH /[id] {groupData} => {group: group} */
+/** PATCH /[id] {treeData} => {tree: tree} */
 
 router.patch('/:id', ensureIsCreator, async function(req, res, next) {
 	try {
 		delete req.body._token;
 
-		const validation = validate(req.body, groupUpdateSchema);
+		const validation = validate(req.body, treeUpdateSchema);
 		if (!validation.valid) {
 			return next({
 				status  : 400,
@@ -76,20 +76,20 @@ router.patch('/:id', ensureIsCreator, async function(req, res, next) {
 			});
 		}
 
-		const user = await Group.update(req.params.id, req.body);
+		const user = await Tree.update(req.params.id, req.body);
 		return res.json({ user });
 	} catch (err) {
 		return next(err);
 	}
 });
 
-/** DELETE /[id]  =>  {message: "Group with ID :id deleted"}  */
+/** DELETE /[id]  =>  {message: "Tree with ID :id deleted"}  */
 
 router.delete('/:id', ensureIsCreator, async function(req, res, next) {
 	try {
-		await Group.remove(req.params.id);
+		await Tree.remove(req.params.id);
 		return res.json({
-			message : `Group with ID '${req.params.id}' deleted`
+			message : `Tree with ID '${req.params.id}' deleted`
 		});
 	} catch (err) {
 		return next(err);

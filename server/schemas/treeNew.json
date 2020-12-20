@@ -67,5 +67,5 @@
     }
 
   },
-  "required": ["name", "creator", "geolocation"]
+  "required": ["name", "geolocation"]
 }

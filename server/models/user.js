@@ -1,6 +1,7 @@
 const db = require('../db');
 const ExpressError = require('../helpers/expressError');
 const partialUpdate = require('../helpers/partialUpdate');
+const formatCoordinates = require('../helpers/formatCoordinates');
 
 /** Related functions for users. */
 
@@ -10,8 +11,8 @@ class User {
 	static async register(data) {
 		console.log('Models - User.register - Start');
 
-		const home_geolocation = `${data.home_geolocation.longitude},
-		${data.home_geolocation.latitude}`;
+		// Convert coordinates into Point format for Postgresql: 'x,y'
+		const home_geolocation = formatCoordinates(data.home_geolocation);
 
 		try {
 			const result = await db.query(
@@ -125,8 +126,9 @@ class User {
 
 	static async update(username, data) {
 		if (data.hasOwnProperty('home_geolocation')) {
-			data.home_geolocation = `${data.home_geolocation
-				.longitude}, ${data.home_geolocation.latitude}`;
+			data.home_geolocation = formatCoordinates(
+				data.home_geolocation
+			);
 		}
 
 		let { query, values } = partialUpdate(

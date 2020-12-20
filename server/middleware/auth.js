@@ -4,7 +4,7 @@ const { verifyToken } = require('../firebase/firebaseAuth');
 const ExpressError = require('../helpers/expressError');
 const handleFirebaseErrors = require('../firebase/firebaseErrors');
 const Group = require('../models/group');
-// const Tree = require('../models/tree');
+const Tree = require('../models/tree');
 
 /** Middleware to use when they must provide a valid Firebase token.
  *
@@ -127,10 +127,10 @@ async function ensureIsCreator(req, res, next) {
 			item = await Group.findOne(req.params.id);
 			itemCreatorUid = item.creator;
 		}
-		// else if (req.baseUrl === '/trees') {
-		//  	item = await Group.findOne(req.params.id);
-		//      itemCreatorUid = item.creator;
-		// }
+		else if (req.baseUrl === '/trees') {
+			item = await Tree.findOne(req.params.id);
+			itemCreatorUid = item.creator;
+		}
 
 		if (itemCreatorUid !== result.uid) {
 			throw new ExpressError(
