@@ -19,7 +19,6 @@ async function authRequired(req, res, next) {
 	try {
 		const tokenStr = req.body._token || req.query._token;
 		let result = await verifyToken(tokenStr);
-		console.log(result);
 		if (result instanceof Error) {
 			throw result;
 		}
@@ -113,7 +112,6 @@ async function ensureCorrectUser(req, res, next) {
 async function ensureIsCreator(req, res, next) {
 	console.log('Middleware - ensureCorrectUser - Start');
 	try {
-		console.log('req:', req);
 		const tokenStr = req.body._token || req.query._token;
 
 		let result = await verifyToken(tokenStr);

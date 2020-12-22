@@ -15,7 +15,7 @@
       "$id": "/properties/common_name",
       "type": "string",
       "title": "The Common Name Schema",
-      "minLength": 1,
+      "minLength": 0,
       "maxLength": 55,
       "examples": ["Bigleaf Maple"]
     },
@@ -23,7 +23,7 @@
       "$id": "/properties/scientific_name",
       "type": "string",
       "title": "The Scientific Name Schema",
-      "minLength": 1,
+      "minLength": 0,
       "maxLength": 55,
       "examples": ["Acer macrophyllum"]
     },

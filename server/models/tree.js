@@ -17,13 +17,16 @@ class Tree {
 		try {
 			const result = await db.query(
 				`INSERT INTO trees 
-              (name, common_name, scientific_name, description, geolocation, creator) 
-            VALUES ($1, $2, $3, $4, $5, $6) 
-            RETURNING id, name, common_name, scientific_name, description, geolocation, favorites, creator, created_at`,
+              (name, common_name, scientific_name, height, dsh, leaf_type, description, geolocation, creator) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
+            RETURNING id, name, common_name, scientific_name, height, dsh, leaf_type, description, geolocation, favorites, creator, created_at`,
 				[
 					data.name,
 					data.common_name,
 					data.scientific_name,
+					data.height,
+					data.dsh,
+					data.leaf_type,
 					data.description,
 					geolocation,
 					data.creator
@@ -40,7 +43,7 @@ class Tree {
 
 	static async findAll() {
 		const result = await db.query(
-			`SELECT id, name, common_name, scientific_name, description, geolocation, favorites, creator, created_at
+			`SELECT id, name, common_name, scientific_name, height, dsh, leaf_type, description, geolocation, favorites, creator, created_at
           FROM trees
           ORDER BY name`
 		);
@@ -52,7 +55,7 @@ class Tree {
 
 	static async findOne(id) {
 		const treeRes = await db.query(
-			`SELECT id, name, common_name, scientific_name, description, geolocation, favorites, creator, created_at
+			`SELECT id, name, common_name, scientific_name, height, dsh, leaf_type, description, geolocation, favorites, creator, created_at
             FROM trees 
             WHERE id = $1`,
 			[ id ]

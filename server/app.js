@@ -1,6 +1,7 @@
 /** Express app for tree-markable. */
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 
 const ExpressError = require('./helpers/expressError');
 const usersRoutes = require('./routes/users');
@@ -10,6 +11,7 @@ const treesRoutes = require('./routes/trees');
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 // add basic logging system
 app.use(morgan('tiny'));
