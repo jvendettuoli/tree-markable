@@ -6,7 +6,8 @@ import SignUp from './SignUp';
 import Login from './Login';
 import SignOut from './SignOut';
 import Upload from './Upload';
-import LeafletMap from './LeafletMap';
+import LeafletMap from './SelectLocationMap';
+import TreeForm from './TreeForm';
 
 function Routes() {
 	return (
@@ -28,7 +29,7 @@ function Routes() {
 					<Upload />
 				</Route>
 				<Route exact path="/map">
-					<LeafletMap />
+					<TreeForm />
 				</Route>
 			</Switch>
 		</div>

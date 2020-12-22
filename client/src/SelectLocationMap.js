@@ -2,14 +2,20 @@ import React, { useState } from 'react';
 
 import {
 	MapContainer,
+	useMap,
 	useMapEvents,
 	Marker,
 	Popup,
 	TileLayer
 } from 'react-leaflet';
 
+import {
+	GeoSearchControl,
+	OpenStreetMapProvider
+} from 'leaflet-geosearch';
+import 'leaflet-geosearch/dist/geosearch.css';
+
 import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles({
@@ -19,7 +25,13 @@ const useStyles = makeStyles({
 	}
 });
 
-function LeafletMap() {
+// Set up search provider for Leaflet map
+const searchControl = new GeoSearchControl({
+	position : 'topright',
+	provider : new OpenStreetMapProvider()
+});
+
+function SelectLocationMap({ setLocation }) {
 	const [ clickCoords, setClickCoords ] = useState([
 		48.1181,
 		-123.4307
@@ -27,11 +39,15 @@ function LeafletMap() {
 
 	const classes = useStyles();
 
-	function GetCoordinates() {
+	const GetClickCoordinates = () => {
 		const [ position, setPosition ] = useState(null);
 		const map = useMapEvents({
 			click(evt) {
 				setClickCoords([ evt.latlng.lat, evt.latlng.lng ]);
+				setLocation({
+					lat : evt.latlng.lat,
+					lng : evt.latlng.lng
+				});
 				console.log('EVENT', evt.latlng);
 			}
 		});
@@ -41,7 +57,22 @@ function LeafletMap() {
 				<Popup>You are here</Popup>
 			</Marker>
 		);
-	}
+	};
+
+	const CenterOnUser = () => {
+		const map = useMap();
+		map.locate({ setView: true });
+
+		console.log('Mapcenter:', map.getCenter());
+
+		return null;
+	};
+
+	const SearchComponent = () => {
+		const map = useMap();
+		map.addControl(searchControl);
+		return null;
+	};
 
 	const loadingPlaceholder = <CircularProgress />;
 
@@ -49,7 +80,7 @@ function LeafletMap() {
 		<MapContainer
 			className={classes.mapContainer}
 			placeholder={loadingPlaceholder}
-			center={[ 48.1181, -123.4307 ]}
+			center={[ 48.09933034129291, -123.42563836030864 ]}
 			zoom={13}
 		>
 			<TileLayer
@@ -59,8 +90,10 @@ function LeafletMap() {
 			<Marker position={clickCoords}>
 				<Popup>{clickCoords}</Popup>
 			</Marker>
-			<GetCoordinates />
+			<GetClickCoordinates />
+			<SearchComponent />
+			<CenterOnUser />
 		</MapContainer>
 	);
 }
-export default LeafletMap;
+export default SelectLocationMap;
