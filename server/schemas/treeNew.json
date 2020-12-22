@@ -7,7 +7,6 @@
       "$id": "/properties/name",
       "type": "string",
       "title": "The Name Schema",
-      "default": "",
       "minLength": 1,
       "maxLength": 55,
       "examples": ["The Wiz Biz Tree"]
@@ -16,7 +15,6 @@
       "$id": "/properties/common_name",
       "type": "string",
       "title": "The Common Name Schema",
-      "default": "",
       "minLength": 1,
       "maxLength": 55,
       "examples": ["Bigleaf Maple"]
@@ -25,7 +23,6 @@
       "$id": "/properties/scientific_name",
       "type": "string",
       "title": "The Scientific Name Schema",
-      "default": "",
       "minLength": 1,
       "maxLength": 55,
       "examples": ["Acer macrophyllum"]
@@ -34,15 +31,35 @@
       "$id": "/properties/description",
       "type": "string",
       "title": "The Description Schema",
-      "default": "",
       "maxLength": 2000,
       "examples": ["This is a lovely tree on 5th and 8th that is 200yrs old!"]
+    },
+    "height": {
+      "$id": "/properties/height",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 500,
+      "title": "The Height Schema",
+      "examples": [1, 46.32, 100]
+    },
+    "dsh": {
+      "$id": "/properties/dsh",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 500,
+      "title": "The DSH Schema",
+      "examples": [10.5, 30]
+    },
+    "leaf_type": {
+      "$id": "/properties/leaf_type",
+      "type": "string",
+      "title": "The Leaf Type Schema",
+      "examples": ["deciduous", "evergreen"]
     },
     "creator": {
       "$id": "/properties/creator",
       "type": "string",
       "title": "The Creator Schema",
-      "default": "",
       "examples": ["username"]
     },
     "geolocation": {
@@ -50,7 +67,6 @@
       "type": "object",
       "title": "The Geolocation Schema",
       "required": ["latitude", "longitude"],
-      "default": "",
       "properties": {
         "latitude": {
           "type": "number",
