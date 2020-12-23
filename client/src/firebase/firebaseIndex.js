@@ -2,6 +2,7 @@ import firebase from 'firebase';
 import 'firebase/auth';
 import 'firebase/storage';
 
+// Setup Firebase configuration
 const firebaseConfig = {
 	apiKey            : process.env.REACT_APP_API_KEY,
 	authDomain        : process.env.REACT_APP_AUTHDOMAIN,
@@ -13,7 +14,7 @@ const firebaseConfig = {
 	measurementId     : process.env.REACT_APP_MEASUREMENT_ID
 };
 
-//Initialize Firebase
+//Initialize Firebase and setup Authentication and Storage
 firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 
