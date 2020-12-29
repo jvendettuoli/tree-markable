@@ -12,7 +12,7 @@ const handleFirebaseErrors = (err, next) => {
 	else if (err.code === 'auth/argument-error') {
 		return next(
 			new ExpressError(
-				'Firbase ID token has invalid signature.',
+				'Firebase ID token has invalid signature.',
 				401
 			)
 		);

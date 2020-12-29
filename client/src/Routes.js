@@ -3,10 +3,9 @@ import { Switch, Route } from 'react-router-dom';
 
 import Home from './Home';
 import SignUp from './SignUp';
-import Login from './Login';
+import SignIn from './SignIn';
 import SignOut from './SignOut';
 import Upload from './Upload';
-import LeafletMap from './SelectLocationMap';
 import TreeForm from './TreeForm';
 import ShowTreesMap from './ShowTreesMap';
 
@@ -21,8 +20,8 @@ function Routes() {
 				<Route exact path="/signup">
 					<SignUp />
 				</Route>
-				<Route exact path="/login">
-					<Login />
+				<Route exact path="/signin">
+					<SignIn />
 				</Route>
 				<Route exact path="/signout">
 					<SignOut />

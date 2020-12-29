@@ -16,7 +16,7 @@ const { treeNewSchema, treeUpdateSchema } = require('../schemas');
 
 /** GET / => {trees: [tree, ...]} */
 
-router.get('/', authRequired, async function(req, res, next) {
+router.get('/', async function(req, res, next) {
 	try {
 		const trees = await Tree.findAll();
 		return res.json({ trees });

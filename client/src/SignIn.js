@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { signIn, getToken } from './firebase/firebaseAuth';
+import { signInUser } from './actions/auth';
+import { useDispatch } from 'react-redux';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -8,13 +9,14 @@ import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles({});
 
-function Login() {
+function SignIn() {
 	const classes = useStyles();
 	const INITIAL_FORM_DATA = {
 		email    : '',
 		password : ''
 	};
 	const [ formData, setFormData ] = useState(INITIAL_FORM_DATA);
+	const dispatch = useDispatch();
 
 	const handleChange = (evt) => {
 		const { name, value } = evt.target;
@@ -27,12 +29,13 @@ function Login() {
 
 	const handleSubmit = (evt) => {
 		evt.preventDefault();
-		signIn(formData.email, formData.password);
-		getToken();
+		console.log('SignIn submit');
+		dispatch(signInUser(formData));
+		console.log('SignIn submit post');
 	};
 	return (
-		<Grid container className="Login">
-			Login Page
+		<Grid container className="SignIn">
+			SignIn Page
 			<form onSubmit={handleSubmit}>
 				<TextField
 					id="email"
@@ -51,9 +54,9 @@ function Login() {
 					value={formData.password}
 					autoComplete="password"
 				/>
-				<Button type="submit">Login</Button>
+				<Button type="submit">SignIn</Button>
 			</form>
 		</Grid>
 	);
 }
-export default Login;
+export default SignIn;

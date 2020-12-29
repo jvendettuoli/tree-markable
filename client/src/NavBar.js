@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 
 function a11yProps(index) {
 	return {
@@ -49,7 +47,11 @@ function NavBar() {
 						to="/signup"
 						{...a11yProps(1)}
 					/>
-					<LinkTab label="Login" to="/login" {...a11yProps(2)} />
+					<LinkTab
+						label="Sign In"
+						to="/signin"
+						{...a11yProps(2)}
+					/>
 					<LinkTab
 						label="Sign Out"
 						to="/signout"

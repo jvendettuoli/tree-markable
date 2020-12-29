@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import {
 	MapContainer,
@@ -18,6 +19,9 @@ import 'leaflet-geosearch/dist/geosearch.css';
 import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TreeMarkableApi from './TreeMarkableApi';
+import { getTreeFromApi, getTreesFromApi } from './actions/trees';
+import { signInAnonUser } from './actions/auth';
+import { resetAll } from './actions/reset';
 
 const useStyles = makeStyles({
 	mapContainer : {
@@ -34,24 +38,27 @@ const searchControl = new GeoSearchControl({
 
 function ShowTreesMap() {
 	const classes = useStyles();
-	const [ trees, setTrees ] = useState([]);
 	const [ treeMarkers, setTreeMarkers ] = useState([]);
 	const [ searchParams, setSearchParams ] = useState([]);
+	let userUid = useSelector((st) => st.auth.uid);
 	const [ isLoading, setIsLoading ] = useState(true);
+
+	const dispatch = useDispatch();
 
 	useEffect(
 		() => {
-			const getTrees = async (params) => {
-				const trees = await TreeMarkableApi.getTrees(params);
-				console.log('Trees', trees);
-				setTrees(trees);
+			if (isLoading) {
+				dispatch(getTreesFromApi());
 				setIsLoading(false);
-			};
-			getTrees(searchParams);
+			}
 		},
-		[ searchParams ]
+		[ isLoading, dispatch ]
 	);
 
+	let trees = useSelector((st) =>
+		Object.values(st.trees).map((tree) => tree)
+	);
+	console.log('TREEESSSSS', trees);
 	const CenterOnUser = () => {
 		const map = useMap();
 		map.locate({ setView: true });

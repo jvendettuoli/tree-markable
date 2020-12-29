@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { signUp } from './firebase/firebaseAuth';
+import { useDispatch } from 'react-redux';
+
+import { signUpUser } from './actions/auth';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -10,6 +12,7 @@ const useStyles = makeStyles({});
 
 function SignUp() {
 	const classes = useStyles();
+	const dispatch = useDispatch();
 	const INITIAL_FORM_DATA = {
 		email    : '',
 		password : ''
@@ -27,7 +30,7 @@ function SignUp() {
 
 	const handleSubmit = (evt) => {
 		evt.preventDefault();
-		signUp(formData.email, formData.password);
+		dispatch(signUpUser(formData));
 	};
 	return (
 		<Grid container className="Signup">
