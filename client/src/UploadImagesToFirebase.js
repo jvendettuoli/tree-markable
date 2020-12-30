@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { storageRef } from './firebase/firebaseStorage';
+import { useSelector } from 'react-redux';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -9,14 +10,27 @@ import Box from '@material-ui/core/Box';
 
 const useStyles = makeStyles({});
 
-function Upload() {
+function UploadImagesToFirebase({ collectionRef }) {
 	const classes = useStyles();
 	const INITIAL_FORM_DATA = {};
 	const [ formData, setFormData ] = useState(INITIAL_FORM_DATA);
 	const [ imgSrc, setImgSrc ] = useState('');
+	const uid = useSelector((st) => st.auth.uid);
 
 	const handleChange = (evt) => {
-		console.log(evt.target.files.item(0));
+		console.log(evt.target.files);
+
+		[ ...evt.target.files ].forEach((file, idx) => {
+			const imageRef = collectionRef.child(`${uid}/`);
+			if (idx === 0) {
+			}
+			else {
+				console.log(file);
+			}
+		});
+
+		const fileRef = collectionRef.child(``);
+
 		const file = evt.target.files.item(0);
 		const imagesRef = storageRef.child(`images/${file.name}`);
 
@@ -63,12 +77,13 @@ function Upload() {
 
 	return (
 		<Grid container className="Signup">
-			Upload File
+			UploadImagesToFirebase File
 			<Input
 				accept="image/*"
 				style={{ display: 'none' }}
 				id="file-upload"
 				type="file"
+				inputProps={{ multiple: true }}
 				onChange={handleChange}
 			/>
 			<Button htmlFor="file-upload" component="label">
@@ -96,4 +111,4 @@ function Upload() {
 		</Grid>
 	);
 }
-export default Upload;
+export default UploadImagesToFirebase;

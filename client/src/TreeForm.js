@@ -10,6 +10,11 @@ import useStyles from './styles/formStyle';
 
 import TreeMarkableApi from './TreeMarkableApi';
 import SelectLocationMap from './SelectLocationMap';
+import {
+	treesRef,
+	uploadImagesToFirebase
+} from './firebase/firebaseStorage';
+import ImagesInput from './ImagesInput';
 
 function TreeForm() {
 	const classes = useStyles();
@@ -26,6 +31,7 @@ function TreeForm() {
 	};
 	const [ formData, setFormData ] = useState(INITIAL_FORM_DATA);
 	const [ showSelectMap, setShowSelectMap ] = useState(false);
+	const [ imageFiles, setImageFiles ] = useState([]);
 
 	// Scroll to map when shown for selecting tree location
 	const mapToggleRef = useRef(null);
@@ -47,6 +53,11 @@ function TreeForm() {
 			...fData,
 			[name] : value
 		}));
+	};
+
+	const handleImagesInput = (files) => {
+		console.log('files,', files);
+		setImageFiles(files);
 	};
 
 	// passes clicked coordinates from map to formData
@@ -105,7 +116,9 @@ function TreeForm() {
 		console.log('newtree', newTree);
 
 		const res = await TreeMarkableApi.createTree(newTree);
-		console.log(res);
+		console.log('Trees Submit res', res);
+		console.log('ImageFiles', imageFiles);
+		await uploadImagesToFirebase(treesRef, res.id, imageFiles);
 	};
 	return (
 		<Grid container className="Signup">
@@ -213,7 +226,7 @@ function TreeForm() {
 					</Button>
 					{displaySelectMap()}
 				</Grid>
-
+				<ImagesInput handleImagesInput={handleImagesInput} />
 				<Button type="submit">Create Tree</Button>
 			</form>
 		</Grid>

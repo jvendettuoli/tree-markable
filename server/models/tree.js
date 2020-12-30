@@ -10,6 +10,7 @@ class Tree {
 
 	static async create(data) {
 		console.log('Models - Tree.create - Start');
+		console.log('Models - Tree.create - data', data);
 
 		// Convert coordinates into Point format for Postgresql: 'x,y'
 		const geolocation = formatCoordinates(data.geolocation);

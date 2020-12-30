@@ -5,9 +5,11 @@ import Home from './Home';
 import SignUp from './SignUp';
 import SignIn from './SignIn';
 import SignOut from './SignOut';
-import Upload from './Upload';
+import Upload from './UploadImagesToFirebase';
 import TreeForm from './TreeForm';
 import ShowTreesMap from './ShowTreesMap';
+import TreeList from './TreeList';
+import TreePage from './TreePage';
 
 function Routes() {
 	return (
@@ -29,8 +31,14 @@ function Routes() {
 				<Route exact path="/upload">
 					<Upload />
 				</Route>
-				<Route exact path="/map">
+				<Route exact path="/trees/new">
 					<TreeForm />
+				</Route>
+				<Route exact path="/trees">
+					<TreeList />
+				</Route>
+				<Route exact path="/trees/:id">
+					<TreePage />
 				</Route>
 			</Switch>
 		</div>

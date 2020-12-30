@@ -12,9 +12,10 @@ const INITIAL_STATE = {
 };
 
 function auth(state = INITIAL_STATE, action) {
-	console.log('Reducers Auth payload', action.payload);
 	switch (action.type) {
 		case AUTH_USER:
+			console.log('Reducers AUTH_USER - ACTION', action);
+
 			return {
 				...state,
 				uid           : action.payload.uid,
@@ -23,6 +24,8 @@ function auth(state = INITIAL_STATE, action) {
 				error         : null
 			};
 		case SIGN_OUT_USER:
+			console.log('Reducers SIGN_OUT_USER - ACTION', action);
+
 			return {
 				...state,
 				uid           : null,
@@ -31,6 +34,8 @@ function auth(state = INITIAL_STATE, action) {
 				error         : null
 			};
 		case AUTH_ERROR:
+			console.log('Reducers AUTH_ERROR - ACTION', action);
+
 			return {
 				...state,
 				error : action.payload.message

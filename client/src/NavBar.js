@@ -55,17 +55,22 @@ function NavBar() {
 					<LinkTab
 						label="Sign Out"
 						to="/signout"
-						{...a11yProps(2)}
+						{...a11yProps(3)}
 					/>
 					<LinkTab
 						label="Upload"
 						to="/upload"
-						{...a11yProps(2)}
+						{...a11yProps(4)}
 					/>
 					<LinkTab
-						label="Leaflet Map"
-						to="/map"
-						{...a11yProps(2)}
+						label="Create Tree"
+						to="/trees/new"
+						{...a11yProps(5)}
+					/>
+					<LinkTab
+						label="Show Trees"
+						to="/trees"
+						{...a11yProps(6)}
 					/>
 				</Tabs>
 			</AppBar>

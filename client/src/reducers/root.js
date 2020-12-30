@@ -7,7 +7,7 @@ import { combineReducers } from 'redux';
 import trees from './trees';
 import auth from './auth';
 const root = combineReducers({
-	trees,
-	auth
+	auth,
+	trees
 });
 export default root;

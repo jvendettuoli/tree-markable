@@ -10,7 +10,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:3001';
 class TreeMarkableApi {
 	static async request(endpoint, paramsOrData = {}, verb = 'get') {
 		try {
-			paramsOrData._token = getToken();
+			paramsOrData._token = await getToken();
 
 			console.debug('API Call:', endpoint, paramsOrData, verb);
 			const res = await axios({
