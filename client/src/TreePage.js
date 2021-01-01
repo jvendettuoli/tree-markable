@@ -15,13 +15,9 @@ import useStyles from './styles/formStyle';
 
 import { getTreesFromApi } from './actions/trees';
 import SelectLocationMap from './SelectLocationMap';
-import {
-	treesRef,
-	uploadImagesToFirebase
-} from './firebase/firebaseStorage';
 import ImagesInput from './ImagesInput';
 import {
-	treeRef,
+	treesRef,
 	downloadImageUrlsFromFirebase
 } from './firebase/firebaseStorage';
 
@@ -44,9 +40,7 @@ function TreePage() {
 					collectionRef,
 					id
 				);
-				console.log('useEffect ImageUrls', imgUrls);
 				setImageUrls((imageUrls) => imgUrls);
-
 				setIsLoading(false);
 			};
 
@@ -60,12 +54,13 @@ function TreePage() {
 	if (isLoading) {
 		return <div>Loading</div>;
 	}
-	console.log(imageUrls);
 
 	return (
 		<div className={classes.root}>
 			Tree Images
-			{imageUrls.album.map((imageUrl) => <img src={imageUrl} />)}
+			{imageUrls.album.map((imageUrl, idx) => (
+				<img key={`album-${idx}`} src={imageUrl} />
+			))}
 		</div>
 	);
 }

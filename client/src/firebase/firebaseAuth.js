@@ -25,7 +25,7 @@ const anonymousAuth = async () => {
 };
 
 /** Get Firebase token from currentUser if not null,
- * otherwise get from localStorage 
+ * otherwise returns undefined
  * 
  */
 const getToken = async () => {

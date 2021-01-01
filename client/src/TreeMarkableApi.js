@@ -4,8 +4,8 @@ import { getToken } from './firebase/firebaseAuth';
 const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:3001';
 
 /**
- * TreeMarkable API class contains static methods to help interact with the TreeMarkable
- * database.
+ * TreeMarkable API class contains static methods to help interact with
+ * the TreeMarkable database.
  */
 class TreeMarkableApi {
 	static async request(endpoint, paramsOrData = {}, verb = 'get') {

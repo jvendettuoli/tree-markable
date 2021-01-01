@@ -63,7 +63,7 @@ const uploadImagesToFirebase = async (collectionRef, id, files) => {
  * Returns an object {primary: 'imagePath', album:['imagePath1,...']}
  */
 const listImagePathsFromFirebase = async (collectionRef, id) => {
-	console.log('listImagePathsFromFirebase', collectionRef);
+	console.log('listImagePathsFromFirebase', collectionRef, id);
 
 	try {
 		const primaryRef = collectionRef.child(
