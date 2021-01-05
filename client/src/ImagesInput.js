@@ -10,7 +10,7 @@ import Box from '@material-ui/core/Box';
 
 import useStyles from './styles/formStyle';
 
-function ImagesInput({ handleImagesInput }) {
+function ImagesInput({ onImageFilesChange }) {
 	const classes = useStyles();
 	const [ imageUrls, setImageUrls ] = useState([]);
 
@@ -40,13 +40,11 @@ function ImagesInput({ handleImagesInput }) {
 		}
 
 		setImageUrls(urls);
-		console.log('imageUrls', imageUrls);
 	};
 
 	const handleChange = async (evt) => {
 		const files = evt.target.files;
-		handleImagesInput(files);
-
+		onImageFilesChange(files);
 		generateThumbnails(files);
 	};
 
@@ -76,4 +74,4 @@ function ImagesInput({ handleImagesInput }) {
 		</Grid>
 	);
 }
-export default ImagesInput;
+export default React.memo(ImagesInput);

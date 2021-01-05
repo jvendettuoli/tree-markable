@@ -105,7 +105,7 @@ class TreeMarkableApi {
 
 	static async getTrees(searchParams) {
 		console.log('TreeMarkableApi Class getTrees - Start');
-		let res = await this.request(`trees`);
+		let res = await this.request(`trees`, searchParams);
 		return res.trees;
 	}
 	static async getTree(treeId) {

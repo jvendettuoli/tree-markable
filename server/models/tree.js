@@ -40,16 +40,90 @@ class Tree {
 		}
 	}
 
-	/** Find all trees. */
+	/** Find all trees based on queries supplied. With no passed queries
+	 * will return all trees. */
 
-	static async findAll() {
-		const result = await db.query(
-			`SELECT id, name, common_name, scientific_name, height, dsh, leaf_type, description, geolocation, favorites, creator, created_at
-          FROM trees
-          ORDER BY name`
+	static async findAll(queries) {
+		console.log('findAll - queries', queries);
+
+		// Validate min and max dsh
+		if (queries.dsh_min >= queries.dsh_max) {
+			throw new ExpressError(
+				'Query parameters are invalid. Minimum dsh must be less than maximum dsh.',
+				400
+			);
+		}
+		// Validate min and max height
+		if (queries.height_min >= queries.height_max) {
+			throw new ExpressError(
+				'Query parameters are invalid. Minimum height must be less than maximum height.',
+				400
+			);
+		}
+
+		let queryIdx = 1;
+		let whereStatements = [];
+		let queryValues = [];
+		let baseQuery = `SELECT id, name, common_name, scientific_name, height, dsh, leaf_type, description, geolocation, favorites, creator, created_at
+		FROM trees`;
+
+		// Helper function to clean up space. Pushes where statement and value, and incremends queryIdx by 1.
+		const addQueryParam = (statement, value) => {
+			whereStatements.push(statement);
+			queryIdx += 1;
+			queryValues.push(value);
+		};
+
+		// For each included query parameter, add appropriate language
+		// to whereStatements and increment queryIdx by one.
+		if (queries.search) {
+			addQueryParam(
+				`to_tsvector(name) || to_tsvector(coalesce(common_name, '')) || to_tsvector(coalesce(scientific_name, ''))  @@ phraseto_tsquery($${queryIdx})`,
+				queries.search
+			);
+		}
+		if (queries.distance) {
+			const map_center = `point('-123.45642432008287', '48.1946608947504')`;
+
+			baseQuery = `SELECT id, name, common_name, scientific_name, height, dsh, leaf_type, description, geolocation, favorites, creator, created_at, (geolocation<@>${map_center}) as distance
+			FROM trees`;
+			whereStatements.push(
+				`(geolocation<@>${map_center}) <  $${queryIdx}`
+			);
+			queryIdx += 1;
+			queryValues.push(queries.distance);
+		}
+		if (queries.dsh_min) {
+			addQueryParam(`dsh >= $${queryIdx}`, queries.dsh_min);
+		}
+		if (queries.dsh_max) {
+			addQueryParam(`dsh <= $${queryIdx}`, queries.dsh_max);
+		}
+		if (queries.height_min) {
+			addQueryParam(`height >= $${queryIdx}`, queries.height_min);
+		}
+		if (queries.height_max) {
+			addQueryParam(`height <= $${queryIdx}`, queries.height_max);
+		}
+		if (queries.leaf_type) {
+			addQueryParam(`leaf_type = $${queryIdx}`, queries.leaf_type);
+		}
+
+		let finalQuery = '';
+		if (whereStatements.length > 0) {
+			finalQuery = baseQuery.concat(
+				' WHERE ',
+				whereStatements.join(' AND ')
+			);
+		}
+
+		const results = await db.query(
+			finalQuery ? finalQuery : baseQuery,
+			queryValues
 		);
 
-		return result.rows;
+		console.log(finalQuery, queryValues);
+		return results.rows;
 	}
 
 	/** Given a tree id, return data about tree. */

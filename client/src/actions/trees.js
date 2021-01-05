@@ -13,9 +13,9 @@ function getTreeFromApi(id) {
 		dispatch(gotTree(res));
 	};
 }
-function getTreesFromApi() {
+function getTreesFromApi(searchParams) {
 	return async function(dispatch) {
-		const res = await TreeMarkableApi.getTrees();
+		const res = await TreeMarkableApi.getTrees(searchParams);
 		console.log('Actions - getTreesFromApi res', res);
 		dispatch(gotTrees(res));
 	};

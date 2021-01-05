@@ -20,50 +20,61 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles({
 	mapContainer : {
-		width  : '90%',
-		height : '90vh'
+		width  : '50%',
+		height : '50vh'
 	}
 });
 
 // Set up search provider for Leaflet map
 const searchControl = new GeoSearchControl({
-	position : 'topright',
-	provider : new OpenStreetMapProvider()
+	position   : 'topright',
+	showMarker : false,
+	provider   : new OpenStreetMapProvider()
 });
 
-function SelectLocationMap({ setLocation }) {
-	const [ clickCoords, setClickCoords ] = useState([
-		48.1181,
-		-123.4307
-	]);
-
+function SelectLocationMap({
+	zoomLevel,
+	setZoomLevel,
+	mapCenter,
+	setMapCenter,
+	onMapCoordinatesChange
+}) {
 	const classes = useStyles();
+	const [ clickCoords, setClickCoords ] = useState(null);
 
 	const GetClickCoordinates = () => {
-		const [ position, setPosition ] = useState(null);
 		const map = useMapEvents({
 			click(evt) {
-				setClickCoords([ evt.latlng.lat, evt.latlng.lng ]);
-				setLocation({
+				setClickCoords(evt.latlng);
+
+				onMapCoordinatesChange({
 					lat : evt.latlng.lat,
 					lng : evt.latlng.lng
 				});
-				console.log('EVENT', evt.latlng);
+				console.log('clickCoords', clickCoords);
 			}
 		});
-
-		return position === null ? null : (
-			<Marker position={position}>
-				<Popup>You are here</Popup>
+		return clickCoords === null ? null : (
+			<Marker position={clickCoords}>
+				<Popup>Tree Geolocation: {`${clickCoords}`}</Popup>
 			</Marker>
 		);
+	};
+	const UpdateCenterAndZoom = () => {
+		const map = useMapEvents({
+			dragend() {
+				setMapCenter(map.getCenter());
+			},
+			zoomend() {
+				setZoomLevel(map.getZoom());
+			}
+		});
+		return null;
 	};
 
 	const CenterOnUser = () => {
 		const map = useMap();
-		map.locate({ setView: true });
-
-		console.log('Mapcenter:', map.getCenter());
+		map.locate({ setView: false });
 
 		return null;
 	};
@@ -71,6 +82,12 @@ function SelectLocationMap({ setLocation }) {
 	const SearchComponent = () => {
 		const map = useMap();
 		map.addControl(searchControl);
+		map.on('geosearch/showlocation', () => {
+			console.log('Search End', map.getCenter(), map.getZoom());
+			setMapCenter(map.getCenter());
+			setZoomLevel(map.getZoom());
+			console.log('map, soom', mapCenter, zoomLevel);
+		});
 		return null;
 	};
 
@@ -80,17 +97,16 @@ function SelectLocationMap({ setLocation }) {
 		<MapContainer
 			className={classes.mapContainer}
 			placeholder={loadingPlaceholder}
-			center={[ 48.09933034129291, -123.42563836030864 ]}
-			zoom={13}
+			center={mapCenter}
+			zoom={zoomLevel}
 		>
 			<TileLayer
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 				attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
 			/>
-			<Marker position={clickCoords}>
-				<Popup>{clickCoords}</Popup>
-			</Marker>
+
 			<GetClickCoordinates />
+			<UpdateCenterAndZoom />
 			<SearchComponent />
 			<CenterOnUser />
 		</MapContainer>

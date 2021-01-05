@@ -22,6 +22,7 @@ import TreeMarkableApi from './TreeMarkableApi';
 import { getTreeFromApi, getTreesFromApi } from './actions/trees';
 import { signInAnonUser } from './actions/auth';
 import { resetAll } from './actions/reset';
+import TreeSearchForm from './TreeSearchForm';
 
 const useStyles = makeStyles({
 	mapContainer : {
@@ -99,27 +100,33 @@ function ShowTreesMap() {
 	const loadingPlaceholder = <CircularProgress />;
 
 	return (
-		<MapContainer
-			className={classes.mapContainer}
-			placeholder={loadingPlaceholder}
-			center={[ 48.09933034129291, -123.42563836030864 ]}
-			zoom={13}
-		>
-			<TileLayer
-				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-				attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-			/>
-			<SearchComponent />
-			<CenterOnUser />
-			{trees.map((tree) => (
-				<Marker
-					key={`marker-${tree.id}`}
-					position={[ tree.geolocation.y, tree.geolocation.x ]}
-				>
-					<Popup>{tree.name}</Popup>
-				</Marker>
-			))}
-		</MapContainer>
+		<div>
+			<TreeSearchForm />
+			<MapContainer
+				className={classes.mapContainer}
+				placeholder={loadingPlaceholder}
+				center={[ 48.09933034129291, -123.42563836030864 ]}
+				zoom={13}
+			>
+				<TileLayer
+					url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+					attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+				/>
+				<SearchComponent />
+				<CenterOnUser />
+				{trees.map((tree) => (
+					<Marker
+						key={`marker-${tree.id}`}
+						position={[
+							tree.geolocation.y,
+							tree.geolocation.x
+						]}
+					>
+						<Popup>{tree.name}</Popup>
+					</Marker>
+				))}
+			</MapContainer>
+		</div>
 	);
 }
 export default ShowTreesMap;

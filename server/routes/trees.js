@@ -18,7 +18,9 @@ const { treeNewSchema, treeUpdateSchema } = require('../schemas');
 
 router.get('/', async function(req, res, next) {
 	try {
-		const trees = await Tree.findAll();
+		console.log('req', req.query);
+		delete req.query._token;
+		const trees = await Tree.findAll(req.query);
 		return res.json({ trees });
 	} catch (err) {
 		return next(err);

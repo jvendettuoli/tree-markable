@@ -6,7 +6,7 @@ import SignUp from './SignUp';
 import SignIn from './SignIn';
 import SignOut from './SignOut';
 import Upload from './UploadImagesToFirebase';
-import TreeForm from './TreeForm';
+import CreateNewTree from './CreateNewTree';
 import ShowTreesMap from './ShowTreesMap';
 import TreeList from './TreeList';
 import TreePage from './TreePage';
@@ -32,7 +32,7 @@ function Routes() {
 					<Upload />
 				</Route>
 				<Route exact path="/trees/new">
-					<TreeForm />
+					<CreateNewTree />
 				</Route>
 				<Route exact path="/trees">
 					<TreeList />

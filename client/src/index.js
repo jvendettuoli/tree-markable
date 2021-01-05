@@ -12,14 +12,12 @@ import App from './App';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 ReactDOM.render(
-	<React.StrictMode>
-		<Provider store={store}>
-			<PersistGate loading={null} persistor={persistedStore}>
-				<CssBaseline>
-					<App />
-				</CssBaseline>
-			</PersistGate>
-		</Provider>
-	</React.StrictMode>,
+	<Provider store={store}>
+		<PersistGate loading={null} persistor={persistedStore}>
+			<CssBaseline>
+				<App />
+			</CssBaseline>
+		</PersistGate>
+	</Provider>,
 	document.getElementById('root')
 );
