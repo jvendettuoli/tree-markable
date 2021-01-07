@@ -10,13 +10,30 @@ import App from './App';
 
 // Baseline Styles for Material-UI
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+import { lightGreen, brown } from '@material-ui/core/colors';
+
+const theme = createMuiTheme({
+	palette : {
+		primary   : {
+			main   : lightGreen[900],
+			accent : lightGreen.A400
+		},
+		secondary : {
+			main : brown[500]
+		}
+	}
+});
 
 ReactDOM.render(
 	<Provider store={store}>
 		<PersistGate loading={null} persistor={persistedStore}>
-			<CssBaseline>
-				<App />
-			</CssBaseline>
+			<ThemeProvider theme={theme}>
+				<CssBaseline>
+					<App />
+				</CssBaseline>
+			</ThemeProvider>
 		</PersistGate>
 	</Provider>,
 	document.getElementById('root')
