@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Slider from '@material-ui/core/Slider';
 import MenuItem from '@material-ui/core/MenuItem';
+import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 
 import useStyles from './styles/formStyle';
@@ -100,19 +101,38 @@ function CreateNewTree() {
 
 	return (
 		<div>
-			Create New Tree Form
+			<Typography variant="h4" gutterBottom>
+				Creat New Tree
+			</Typography>
 			<form onSubmit={handleSubmit} className={classes.form}>
 				<TreeFormBasicFields
 					formData={treeFormData}
 					onFormChange={handleTreeFormChange}
 				/>
+				<Typography variant="h5" gutterBottom>
+					Tree Location
+				</Typography>
 				<SelectCoordinates
 					formData={coordinates}
 					onCoordinatesChange={handleCoordinatesChange}
 					onMapCoordinatesChange={handleMapCoordinatesChange}
 				/>
-				<ImagesInput onImageFilesChange={handleImageFilesChange} />
-				<Button color="primary" variant="outlined" type="submit">
+				<Divider variant="middle" />
+				<div>
+					<Typography variant="h5" gutterBottom>
+						Add Images
+					</Typography>
+					<ImagesInput
+						onImageFilesChange={handleImageFilesChange}
+					/>
+					<Divider variant="middle" />
+				</div>
+
+				<Button
+					color="secondary"
+					variant="contained"
+					type="submit"
+				>
 					Create Tree
 				</Button>
 			</form>

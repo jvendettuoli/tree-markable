@@ -73,7 +73,7 @@ function SignUp() {
 	return (
 		<Grid container className={classes.form}>
 			<Typography variant="h3" gutterBottom>
-				Sign In
+				Sign Up
 			</Typography>
 			<Grid item>
 				<form onSubmit={handleSubmit} className={classes.form}>

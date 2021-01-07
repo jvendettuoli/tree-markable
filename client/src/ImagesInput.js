@@ -50,7 +50,6 @@ function ImagesInput({ onImageFilesChange }) {
 
 	return (
 		<Grid container className="ImagesInput">
-			Input Images
 			<Input
 				accept="image/*"
 				style={{ display: 'none' }}
@@ -59,7 +58,12 @@ function ImagesInput({ onImageFilesChange }) {
 				inputProps={{ multiple: true }}
 				onChange={handleChange}
 			/>
-			<Button htmlFor="file-upload" component="label">
+			<Button
+				variant="outlined"
+				color="primary"
+				htmlFor="file-upload"
+				component="label"
+			>
 				Choose Files
 			</Button>
 			<Grid item xs={12}>

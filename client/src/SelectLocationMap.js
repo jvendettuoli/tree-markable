@@ -21,7 +21,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 const useStyles = makeStyles({
 	mapContainer : {
 		width  : '100%',
-		height : '100%'
+		height : '70vh'
 	}
 });
 

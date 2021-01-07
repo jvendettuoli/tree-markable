@@ -26,13 +26,7 @@ import 'leaflet-geosearch/dist/geosearch.css';
 
 import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
-const useStyles = makeStyles({
-	mapContainer : {
-		width  : '90%',
-		height : '90vh'
-	}
-});
+import useStyles from './styles/formStyle';
 
 function SelectCoordinates({
 	formData,
@@ -90,30 +84,36 @@ function SelectCoordinates({
 	return (
 		<div>
 			<Grid item container ref={mapToggleRef}>
-				<TextField
-					id="lat"
-					name="lat"
-					label="Latitude"
-					type="number"
-					inputProps={{ step: 'any', min: -90, max: 90 }}
-					InputLabelProps={{ shrink: true }}
-					placeholder="-90 to 90 (eg. 48.10045)"
-					onChange={handleChange}
-					value={formData.lat}
-					required
-				/>
-				<TextField
-					id="lng"
-					name="lng"
-					label="Longitude"
-					type="number"
-					inputProps={{ step: 'any', min: -180, max: 180 }}
-					InputLabelProps={{ shrink: true }}
-					placeholder="-180 to 180 (eg. -123.45316)"
-					onChange={handleChange}
-					value={formData.lng}
-					required
-				/>
+				<Grid item xs={12} md={6}>
+					<TextField
+						id="lat"
+						name="lat"
+						label="Latitude"
+						type="number"
+						inputProps={{ step: 'any', min: -90, max: 90 }}
+						fullWidth
+						InputLabelProps={{ shrink: true }}
+						placeholder="-90 to 90 (eg. 48.10045)"
+						onChange={handleChange}
+						value={formData.lat}
+						required
+					/>
+				</Grid>
+				<Grid item xs={12} md={6}>
+					<TextField
+						id="lng"
+						name="lng"
+						label="Longitude"
+						type="number"
+						inputProps={{ step: 'any', min: -180, max: 180 }}
+						fullWidth
+						InputLabelProps={{ shrink: true }}
+						placeholder="-180 to 180 (eg. -123.45316)"
+						onChange={handleChange}
+						value={formData.lng}
+						required
+					/>
+				</Grid>
 			</Grid>
 			<Button
 				variant="outlined"
