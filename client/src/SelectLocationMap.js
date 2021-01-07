@@ -112,4 +112,4 @@ function SelectLocationMap({
 		</MapContainer>
 	);
 }
-export default SelectLocationMap;
+export default React.memo(SelectLocationMap);

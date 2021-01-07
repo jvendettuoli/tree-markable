@@ -23,13 +23,7 @@ import { getTreeFromApi, getTreesFromApi } from './actions/trees';
 import { signInAnonUser } from './actions/auth';
 import { resetAll } from './actions/reset';
 import TreeSearchForm from './TreeSearchForm';
-
-const useStyles = makeStyles({
-	mapContainer : {
-		width  : '90%',
-		height : '90vh'
-	}
-});
+import useStyles from './styles/leafletMap';
 
 // Set up search provider for Leaflet map
 const searchControl = new GeoSearchControl({
@@ -100,7 +94,8 @@ function ShowTreesMap() {
 	const loadingPlaceholder = <CircularProgress />;
 
 	return (
-		<div>
+		<main className={classes.content}>
+			<div className={classes.toolbar} />
 			<TreeSearchForm />
 			<MapContainer
 				className={classes.mapContainer}
@@ -126,7 +121,7 @@ function ShowTreesMap() {
 					</Marker>
 				))}
 			</MapContainer>
-		</div>
+		</main>
 	);
 }
 export default ShowTreesMap;

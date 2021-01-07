@@ -13,35 +13,33 @@ import TreePage from './TreePage';
 
 function Routes() {
 	return (
-		<div className="Routes">
-			<Switch>
-				<Route exact path="/">
-					<Home />
-					<ShowTreesMap />
-				</Route>
-				<Route exact path="/signup">
-					<SignUp />
-				</Route>
-				<Route exact path="/signin">
-					<SignIn />
-				</Route>
-				<Route exact path="/signout">
-					<SignOut />
-				</Route>
-				<Route exact path="/upload">
-					<Upload />
-				</Route>
-				<Route exact path="/trees/new">
-					<CreateNewTree />
-				</Route>
-				<Route exact path="/trees">
-					<TreeList />
-				</Route>
-				<Route exact path="/trees/:id">
-					<TreePage />
-				</Route>
-			</Switch>
-		</div>
+		<Switch>
+			<Route exact path="/">
+				<Home />
+				<ShowTreesMap />
+			</Route>
+			<Route exact path="/signup">
+				<SignUp />
+			</Route>
+			<Route exact path="/signin">
+				<SignIn />
+			</Route>
+			<Route exact path="/signout">
+				<SignOut />
+			</Route>
+			<Route exact path="/upload">
+				<Upload />
+			</Route>
+			<Route exact path="/trees/new">
+				<CreateNewTree />
+			</Route>
+			<Route exact path="/trees">
+				<TreeList />
+			</Route>
+			<Route exact path="/trees/:id">
+				<TreePage />
+			</Route>
+		</Switch>
 	);
 }
 

@@ -112,7 +112,9 @@ function CreateNewTree() {
 					onMapCoordinatesChange={handleMapCoordinatesChange}
 				/>
 				<ImagesInput onImageFilesChange={handleImageFilesChange} />
-				<Button type="submit">Create Tree</Button>
+				<Button color="primary" variant="outlined" type="submit">
+					Create Tree
+				</Button>
 			</form>
 		</div>
 	);
