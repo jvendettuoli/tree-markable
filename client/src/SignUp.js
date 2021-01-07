@@ -5,6 +5,7 @@ import { signUpUser } from './actions/auth';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
@@ -70,50 +71,60 @@ function SignUp() {
 	};
 
 	return (
-		<Grid container className="Signup">
-			Signup Page
-			<form onSubmit={handleSubmit} className={classes.form}>
-				<TextField
-					id="username"
-					name="username"
-					label="Username"
-					onChange={handleChange}
-					value={formData.username}
-					autoComplete="username"
-				/>
-				<TextField
-					id="email"
-					name="email"
-					label="Email"
-					onChange={handleChange}
-					value={formData.email}
-					autoComplete="email"
-				/>
-				<TextField
-					id="password"
-					name="password"
-					label="Password"
-					type="password"
-					onChange={handleChange}
-					value={formData.password}
-					autoComplete="password"
-				/>
-				<TextField
-					id="img_url"
-					name="img_url"
-					label="Profile Image URL"
-					onChange={handleChange}
-					value={formData.img_url}
-					autoComplete="img_url"
-				/>
-				Select Home Location
-				<SelectCoordinates
-					formData={coordinates}
-					onCoordinatesChange={handleCoordinatesChange}
-					onMapCoordinatesChange={handleMapCoordinatesChange}
-				/>
-				<Button type="submit">Signup</Button>
-			</form>
+		<Grid container className={classes.form}>
+			<Typography variant="h3" gutterBottom>
+				Sign In
+			</Typography>
+			<Grid item>
+				<form onSubmit={handleSubmit} className={classes.form}>
+					<TextField
+						id="username"
+						name="username"
+						label="Username"
+						onChange={handleChange}
+						value={formData.username}
+						autoComplete="username"
+					/>
+					<TextField
+						id="email"
+						name="email"
+						label="Email"
+						onChange={handleChange}
+						value={formData.email}
+						autoComplete="email"
+					/>
+					<TextField
+						id="password"
+						name="password"
+						label="Password"
+						type="password"
+						onChange={handleChange}
+						value={formData.password}
+						autoComplete="password"
+					/>
+					<TextField
+						id="img_url"
+						name="img_url"
+						label="Profile Image URL"
+						onChange={handleChange}
+						value={formData.img_url}
+						autoComplete="img_url"
+					/>
+					Select Home Location
+					<SelectCoordinates
+						formData={coordinates}
+						onCoordinatesChange={handleCoordinatesChange}
+						onMapCoordinatesChange={handleMapCoordinatesChange}
+					/>
+					<Button
+						variant="contained"
+						color="secondary"
+						type="submit"
+					>
+						Sign Up
+					</Button>
+				</form>
+			</Grid>
 		</Grid>
 	);
 }

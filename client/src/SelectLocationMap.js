@@ -20,8 +20,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles({
 	mapContainer : {
-		width  : '50%',
-		height : '50vh'
+		width  : '100%',
+		height : '100%'
 	}
 });
 

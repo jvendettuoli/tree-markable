@@ -45,7 +45,7 @@ function NavAppBar({ handleDrawerToggle, ...props }) {
 		setAnchorEl(null);
 	};
 
-	const handleLogout = () => {
+	const handleSignOut = () => {
 		handleClose();
 		dispatch(signOutUser());
 	};
@@ -94,8 +94,8 @@ function NavAppBar({ handleDrawerToggle, ...props }) {
 							<MenuItem onClick={handleClose}>
 								Profile
 							</MenuItem>
-							<MenuItem onClick={handleLogout}>
-								Logout
+							<MenuItem onClick={handleSignOut}>
+								Sign Out
 							</MenuItem>
 						</Menu>
 					</div>

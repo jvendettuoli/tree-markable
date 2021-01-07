@@ -4,10 +4,10 @@ import { useDispatch } from 'react-redux';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-
-const useStyles = makeStyles({});
+import useStyles from './styles/formStyle';
 
 function SignIn() {
 	const classes = useStyles();
@@ -34,28 +34,38 @@ function SignIn() {
 		console.log('SignIn submit post');
 	};
 	return (
-		<Grid container className="SignIn">
-			SignIn Page
-			<form onSubmit={handleSubmit}>
-				<TextField
-					id="email"
-					name="email"
-					label="Email"
-					onChange={handleChange}
-					value={formData.email}
-					autoComplete="email"
-				/>
-				<TextField
-					id="password"
-					name="password"
-					label="Password"
-					type="password"
-					onChange={handleChange}
-					value={formData.password}
-					autoComplete="password"
-				/>
-				<Button type="submit">SignIn</Button>
-			</form>
+		<Grid container className={classes.form}>
+			<Grid item>
+				<Typography variant="h3" gutterBottom>
+					Sign In
+				</Typography>
+				<form onSubmit={handleSubmit} className={classes.form}>
+					<TextField
+						id="email"
+						name="email"
+						label="Email"
+						onChange={handleChange}
+						value={formData.email}
+						autoComplete="email"
+					/>
+					<TextField
+						id="password"
+						name="password"
+						label="Password"
+						type="password"
+						onChange={handleChange}
+						value={formData.password}
+						autoComplete="password"
+					/>
+					<Button
+						color="secondary"
+						variant="contained"
+						type="submit"
+					>
+						Sign In
+					</Button>
+				</form>
+			</Grid>
 		</Grid>
 	);
 }

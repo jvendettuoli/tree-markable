@@ -89,8 +89,7 @@ function SelectCoordinates({
 
 	return (
 		<div>
-			SelectCoordinates
-			<Grid item container>
+			<Grid item container ref={mapToggleRef}>
 				<TextField
 					id="lat"
 					name="lat"
@@ -118,12 +117,16 @@ function SelectCoordinates({
 			</Grid>
 			<Button
 				variant="outlined"
+				color="seconary"
+				fullWidth
 				onClick={toggleSelectMap}
-				ref={mapToggleRef}
 			>
 				{selectMapBtn()}
 			</Button>
-			<div style={setDisplayMapStyle()}>
+			<div
+				className={classes.mapContainer}
+				style={setDisplayMapStyle()}
+			>
 				<SelectLocationMap
 					mapCenter={mapCenter}
 					setMapCenter={setMapCenter}
