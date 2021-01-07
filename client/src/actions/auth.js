@@ -52,6 +52,7 @@ function signInUser(credentials) {
 }
 
 function signOutUser() {
+	console.log('Auth - signOutUser');
 	return async function(dispatch) {
 		try {
 			await signOut();

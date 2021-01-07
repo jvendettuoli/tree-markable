@@ -6,8 +6,7 @@ import { verifyAuth } from './actions/auth';
 import { useTheme } from '@material-ui/core/styles';
 
 import Routes from './Routes';
-import NavBar from './NavBar';
-import NavDrawer from './NavDrawer';
+import Navigation from './Navigation';
 
 import useStyles from './styles/navDrawer';
 
@@ -29,9 +28,9 @@ function App() {
 	return (
 		<BrowserRouter>
 			<div className="App">
-				<NavDrawer>
+				<Navigation>
 					<Routes />
-				</NavDrawer>
+				</Navigation>
 			</div>
 		</BrowserRouter>
 	);

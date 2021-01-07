@@ -28,7 +28,11 @@ const useStyles = makeStyles((theme) => {
 			}
 		},
 		// necessary for content to be below app bar
-		toolbar     : theme.mixins.toolbar,
+		toolbar     : {
+			...theme.mixins.toolbar,
+			display: 'flex',
+			justifyContent: 'space-between'
+		},
 		drawerPaper : {
 			width : drawerWidth
 		},

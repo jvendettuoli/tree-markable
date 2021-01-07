@@ -14,7 +14,7 @@ const INITIAL_STATE = {
 function auth(state = INITIAL_STATE, action) {
 	switch (action.type) {
 		case AUTH_USER:
-			console.log('Reducers AUTH_USER - ACTION', action);
+			console.log('Reducers AUTH_USER - action', action);
 
 			return {
 				...state,
@@ -24,7 +24,7 @@ function auth(state = INITIAL_STATE, action) {
 				error         : null
 			};
 		case SIGN_OUT_USER:
-			console.log('Reducers SIGN_OUT_USER - ACTION', action);
+			console.log('Reducers SIGN_OUT_USER - action', action);
 
 			return {
 				...state,
@@ -34,7 +34,7 @@ function auth(state = INITIAL_STATE, action) {
 				error         : null
 			};
 		case AUTH_ERROR:
-			console.log('Reducers AUTH_ERROR - ACTION', action);
+			console.log('Reducers AUTH_ERROR - action', action);
 
 			return {
 				...state,
