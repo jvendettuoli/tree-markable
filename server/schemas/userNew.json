@@ -68,5 +68,5 @@
       "examples": [{"latitude": 48.09137995448585, "longitude": -123.48034399738893}]
     }
   },
-  "required": ["username","email", "firebase_id", "is_admin"]
+  "required": ["username","email", "firebase_id"]
 }

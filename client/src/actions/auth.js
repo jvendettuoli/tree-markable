@@ -9,17 +9,26 @@ import {
 	signOut,
 	anonymousAuth
 } from '../firebase/firebaseAuth';
+import TreeMarkableApi from '../TreeMarkableApi';
 import { auth } from '../firebase/firebaseIndex';
 import { AUTH_ERROR, AUTH_USER, SIGN_OUT_USER } from './types';
 
-function signUpUser(credentials) {
+function signUpUser(credentials, userData) {
+	console.log('Auth - signUpUser - ', credentials, userData);
 	return async function(dispatch) {
 		try {
-			const res = await signUp(
+			// create user in FirebaseAuth
+			const firebaseRes = await signUp(
 				credentials.email,
 				credentials.password
 			);
-			dispatch(authUser(res.user));
+			console.log('firebaseRes', firebaseRes);
+			// create user in TreeMarkable Database
+			await TreeMarkableApi.registerUser({
+				...userData,
+				firebase_id : firebaseRes.user.uid
+			});
+			dispatch(authUser(firebaseRes.user));
 		} catch (err) {
 			console.log('signUpUser error', err);
 			dispatch(authError(err));
