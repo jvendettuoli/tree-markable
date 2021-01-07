@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
+
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
@@ -16,11 +17,16 @@ function a11yProps(index) {
 function LinkTab(props) {
 	return <Tab component={Link} {...props} />;
 }
+function DropdownTab(props) {}
 
 const useStyles = makeStyles((theme) => ({
-	root : {
+	root      : {
 		flexGrow        : 1,
 		backgroundColor : theme.palette.background.paper
+	},
+	indicator : {
+		backgroundColor : theme.palette.primary.accent,
+		height          : '3px'
 	}
 }));
 
@@ -33,10 +39,11 @@ function NavBar() {
 	};
 
 	return (
-		<div className={classes.root}>
+		<nav className={classes.root}>
 			<AppBar position="static">
 				<Tabs
 					variant="fullWidth"
+					TabIndicatorProps={{ className: classes.indicator }}
 					value={value}
 					onChange={handleChange}
 					aria-label="nav tabs example"
@@ -48,33 +55,13 @@ function NavBar() {
 						{...a11yProps(1)}
 					/>
 					<LinkTab
-						label="Sign In"
-						to="/signin"
-						{...a11yProps(2)}
-					/>
-					<LinkTab
-						label="Sign Out"
-						to="/signout"
-						{...a11yProps(3)}
-					/>
-					<LinkTab
-						label="Upload"
-						to="/upload"
-						{...a11yProps(4)}
-					/>
-					<LinkTab
-						label="Create Tree"
+						label="Create"
 						to="/trees/new"
-						{...a11yProps(5)}
-					/>
-					<LinkTab
-						label="Show Trees"
-						to="/trees"
-						{...a11yProps(6)}
+						{...a11yProps(2)}
 					/>
 				</Tabs>
 			</AppBar>
-		</div>
+		</nav>
 	);
 }
 
