@@ -8,7 +8,7 @@ import SignOut from './SignOut';
 import Upload from './UploadImagesToFirebase';
 import CreateNewTree from './CreateNewTree';
 import ShowTreesMap from './ShowTreesMap';
-import TreeList from './TreeList';
+import ExploreTrees from './ExploreTrees';
 import TreePage from './TreePage';
 
 function Routes() {
@@ -34,7 +34,7 @@ function Routes() {
 				<CreateNewTree />
 			</Route>
 			<Route exact path="/trees">
-				<TreeList />
+				<ExploreTrees />
 			</Route>
 			<Route exact path="/trees/:id">
 				<TreePage />

@@ -23,6 +23,7 @@ import { getTreeFromApi, getTreesFromApi } from './actions/trees';
 import { signInAnonUser } from './actions/auth';
 import { resetAll } from './actions/reset';
 import TreeSearchForm from './TreeSearchForm';
+import TreeMarker from './TreeMarker';
 import useStyles from './styles/leafletMap';
 
 // Set up search provider for Leaflet map
@@ -117,7 +118,9 @@ function ShowTreesMap() {
 							tree.geolocation.x
 						]}
 					>
-						<Popup>{tree.name}</Popup>
+						<Popup>
+							<TreeMarker tree={tree} />
+						</Popup>
 					</Marker>
 				))}
 			</MapContainer>

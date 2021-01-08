@@ -10,6 +10,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
+import { DataGrid } from '@material-ui/data-grid';
+
 import useStyles from './styles/formStyle';
 
 import { getTreesFromApi } from './actions/trees';
@@ -55,28 +57,35 @@ function TreeList() {
 		Object.values(st.trees).map((tree) => tree)
 	);
 
+	const columns = [
+		{ field: 'name', headerName: 'Name', width: 150 },
+		{ field: 'common_name', headerName: 'Common Name', width: 150 },
+		{
+			field      : 'scientific_Name',
+			headerName : 'Scientific Name',
+			width      : 200
+		},
+		{ field: 'height', headerName: 'Height', width: 80 },
+		{ field: 'dsh', headerName: 'DSH', width: 80 }
+	];
+
+	// const handleChange = (evt) => {
+	// 	setSelectedRows(evt.rowIds);
+	// };
+
 	if (isLoading) {
 		return <div>Loading</div>;
 	}
-
 	return (
-		<div className={classes.root}>
-			TEST
-			<List component="nav" aria-label="trees list">
-				<ListItem button>
-					<ListItemText primary="test" />
-				</ListItem>
-				{trees.map((tree) => {
-					return (
-						<ListItemLink
-							key={tree.id}
-							href={`trees/${tree.id}`}
-						>
-							<ListItemText primary={tree.name} />
-						</ListItemLink>
-					);
-				})}
-			</List>
+		<div style={{ height: '85vh' }}>
+			<DataGrid
+				rows={trees}
+				columns={columns}
+				pageSize={10}
+				checkboxSelection
+				autoHeight
+				// onSelectionChange={handleChange}
+			/>
 		</div>
 	);
 }

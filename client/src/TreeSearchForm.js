@@ -62,83 +62,94 @@ function TreeSearchForm() {
 	};
 
 	return (
-		<Grid item xs={6}>
-			<form onSubmit={handleSubmit} className={classes.form}>
-				<TextField
-					id="search"
-					name="search"
-					label="Search"
-					placeholder="Search Tree Name, Common Name, Scientific Name..."
-					onChange={handleChange}
-					value={formData.search}
-				/>
-				<TextField
-					id="leaf_type"
-					name="leaf_type"
-					label="Leaf Type"
-					select
-					onChange={handleChange}
-					value={formData.leaf_type}
-				>
-					<MenuItem value="">Both</MenuItem>
-					<MenuItem value="deciduous">Deciduous</MenuItem>
-					<MenuItem value="evergreen">Evergreen</MenuItem>
-				</TextField>
-				<TextField
-					id="distance"
-					name="distance"
-					label="Miles from Map Center"
-					type="number"
-					inputProps={{ min: 0, step: 1 }}
-					onChange={handleChange}
-					value={formData.distance}
-				/>
-				<Grid item xs={6}>
-					Height
+		<form onSubmit={handleSubmit} className={classes.form}>
+			<Grid container>
+				<Grid item xs={12} className={classes.form}>
 					<TextField
-						id="height_min"
-						name="height_min"
-						label="Min"
-						type="number"
-						inputProps={{ min: 0, max: 500, step: 0.01 }}
+						id="search"
+						name="search"
+						label="Search"
+						placeholder="Search Tree Name, Common Name, Scientific Name..."
 						onChange={handleChange}
-						value={formData.height_min}
+						value={formData.search}
 					/>
 					<TextField
-						id="height_max"
-						name="height_max"
-						label="Max"
-						type="number"
-						inputProps={{ min: 1, max: 500, step: 0.01 }}
+						id="leaf_type"
+						name="leaf_type"
+						label="Leaf Type"
+						select
 						onChange={handleChange}
-						value={formData.height_max}
+						value={formData.leaf_type}
+					>
+						<MenuItem value="">Both</MenuItem>
+						<MenuItem value="deciduous">Deciduous</MenuItem>
+						<MenuItem value="evergreen">Evergreen</MenuItem>
+					</TextField>
+					<TextField
+						id="distance"
+						name="distance"
+						label="Miles from Map Center"
+						type="number"
+						inputProps={{ min: 0, step: 1 }}
+						onChange={handleChange}
+						value={formData.distance}
 					/>
 				</Grid>
-				<Grid item xs={6}>
-					DSH
-					<TextField
-						id="dsh_min"
-						name="dsh_min"
-						label="Min"
-						type="number"
-						inputProps={{ min: 0, max: 500, step: 0.01 }}
-						onChange={handleChange}
-						value={formData.dsh_min}
-					/>
-					<TextField
-						id="dsh_max"
-						name="dsh_max"
-						label="Max"
-						type="number"
-						inputProps={{ min: 1, max: 500, step: 0.01 }}
-						onChange={handleChange}
-						value={formData.dsh_max}
-					/>
+				<Grid container item xs={12}>
+					<Grid item xs={6}>
+						Height
+						<TextField
+							id="height_min"
+							name="height_min"
+							label="Min"
+							type="number"
+							inputProps={{ min: 0, max: 500, step: 0.01 }}
+							onChange={handleChange}
+							value={formData.height_min}
+						/>
+						<TextField
+							id="height_max"
+							name="height_max"
+							label="Max"
+							type="number"
+							inputProps={{ min: 1, max: 500, step: 0.01 }}
+							onChange={handleChange}
+							value={formData.height_max}
+						/>
+					</Grid>
+					<Grid item xs={6}>
+						DSH
+						<TextField
+							id="dsh_min"
+							name="dsh_min"
+							label="Min"
+							type="number"
+							inputProps={{ min: 0, max: 500, step: 0.01 }}
+							onChange={handleChange}
+							value={formData.dsh_min}
+						/>
+						<TextField
+							id="dsh_max"
+							name="dsh_max"
+							label="Max"
+							type="number"
+							inputProps={{ min: 1, max: 500, step: 0.01 }}
+							onChange={handleChange}
+							value={formData.dsh_max}
+						/>
+					</Grid>
 				</Grid>
 
-				<Button type="submit">Search</Button>
-			</form>
-		</Grid>
+				<Button
+					fullWidth
+					variant="outlined"
+					color="secondary"
+					type="submit"
+				>
+					Search
+				</Button>
+			</Grid>
+		</form>
 	);
 }
 
