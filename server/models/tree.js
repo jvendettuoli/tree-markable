@@ -18,9 +18,9 @@ class Tree {
 		try {
 			const result = await db.query(
 				`INSERT INTO trees 
-              (name, common_name, scientific_name, height, dsh, leaf_type, description, geolocation, creator) 
+              (name, common_name, scientific_name, height, dsh, leaf_type, fruit_bearing, description, geolocation, creator) 
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
-            RETURNING id, name, common_name, scientific_name, height, dsh, leaf_type, description, geolocation, favorites, creator, created_at`,
+            RETURNING id, name, common_name, scientific_name, height, dsh, leaf_type, fruit_bearing, description, geolocation, favorites, creator, created_at`,
 				[
 					data.name,
 					data.common_name,
@@ -28,6 +28,7 @@ class Tree {
 					data.height,
 					data.dsh,
 					data.leaf_type,
+					data.fruit_bearing,
 					data.description,
 					geolocation,
 					data.creator
@@ -64,7 +65,7 @@ class Tree {
 		let queryIdx = 1;
 		let whereStatements = [];
 		let queryValues = [];
-		let baseQuery = `SELECT id, name, common_name, scientific_name, height, dsh, leaf_type, description, geolocation, favorites, creator, created_at
+		let baseQuery = `SELECT id, name, common_name, scientific_name, height, dsh, leaf_type, description, geolocation, fruit_bearing, favorites, creator, created_at
 		FROM trees`;
 
 		// Helper function to clean up space. Pushes where statement and value, and incremends queryIdx by 1.
@@ -85,7 +86,7 @@ class Tree {
 		if (queries.distance) {
 			const map_center = `point('-123.45642432008287', '48.1946608947504')`;
 
-			baseQuery = `SELECT id, name, common_name, scientific_name, height, dsh, leaf_type, description, geolocation, favorites, creator, created_at, (geolocation<@>${map_center}) as distance
+			baseQuery = `SELECT id, name, common_name, scientific_name, height, dsh, leaf_type, description, geolocation, fruit_bearing, favorites, creator, created_at, (geolocation<@>${map_center}) as distance
 			FROM trees`;
 			whereStatements.push(
 				`(geolocation<@>${map_center}) <  $${queryIdx}`
@@ -107,6 +108,12 @@ class Tree {
 		}
 		if (queries.leaf_type) {
 			addQueryParam(`leaf_type = $${queryIdx}`, queries.leaf_type);
+		}
+		if (queries.fruit_bearing) {
+			addQueryParam(
+				`fruit_bearing = $${queryIdx}`,
+				queries.fruit_bearing
+			);
 		}
 
 		let finalQuery = '';
@@ -130,7 +137,7 @@ class Tree {
 
 	static async findOne(id) {
 		const treeRes = await db.query(
-			`SELECT id, name, common_name, scientific_name, height, dsh, leaf_type, description, geolocation, favorites, creator, created_at
+			`SELECT id, name, common_name, scientific_name, height, dsh, leaf_type, description, geolocation, fruit_bearing, favorites, creator, created_at
             FROM trees 
             WHERE id = $1`,
 			[ id ]

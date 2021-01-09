@@ -56,6 +56,11 @@
       "title": "The Leaf Type Schema",
       "examples": ["deciduous", "evergreen"]
     },
+    "fruit_bearing": {
+      "$id": "/properties/fruit_bearing",
+      "type": "boolean",
+      "examples": [false, true]
+    },
     "creator": {
       "$id": "/properties/creator",
       "type": "string",

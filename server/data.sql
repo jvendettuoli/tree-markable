@@ -34,6 +34,7 @@ CREATE TABLE trees(
     height DECIMAL,
     dsh DECIMAL,
     leaf_type TEXT,
+    fruit_bearing BOOLEAN,
     favorites INTEGER NOT NULL DEFAULT 0,
     creator TEXT NOT NULL REFERENCES users ON DELETE CASCADE,
     modified_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
