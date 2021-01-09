@@ -72,10 +72,17 @@ const listImagePathsFromFirebase = async (collectionRef, id) => {
 		const albumRef = collectionRef.child(`${id}/${IMAGES}/${ALBUM}`);
 		const primaryRes = await primaryRef.listAll();
 		const albumRes = await albumRef.listAll();
+		console.log('albumRef', albumRes);
+		console.log('albumRef.items', albumRes.items);
+		console.log('primaryRes', primaryRes);
+		console.log('primaryRes.items', primaryRes.items);
 
-		const albumImagePaths = albumRes.items.map(
-			(item) => item.fullPath
-		);
+		if (primaryRes.items.length === 0) return;
+
+		const albumImagePaths =
+			!albumRes.items.length === 0
+				? albumRes.items.map((item) => item.fullPath)
+				: [];
 
 		const imagePaths = {
 			primary : primaryRes.items[0].fullPath,
@@ -85,7 +92,7 @@ const listImagePathsFromFirebase = async (collectionRef, id) => {
 		console.log('imagePaths', imagePaths);
 		return imagePaths;
 	} catch (err) {
-		console.log('listImagePathsFromFirebase - err', err);
+		console.error('listImagePathsFromFirebase - err', err);
 	}
 };
 
@@ -109,6 +116,8 @@ const downloadImageUrlsFromFirebase = async (collectionRef, id) => {
 			id
 		);
 
+		if (!imagePaths) return;
+
 		const primaryImageUrl = await storageRef
 			.child(`${imagePaths.primary}`)
 			.getDownloadURL();
@@ -126,7 +135,7 @@ const downloadImageUrlsFromFirebase = async (collectionRef, id) => {
 		console.log('imageUrls', imageUrls);
 		return imageUrls;
 	} catch (err) {
-		console.log('downloadImageUrlsFromFirebase err - ', err);
+		console.error('downloadImageUrlsFromFirebase err - ', err);
 	}
 };
 

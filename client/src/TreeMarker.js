@@ -61,7 +61,9 @@ function TreeMarker({ tree }) {
 					collectionRef,
 					id
 				);
-				setImageUrls((imageUrls) => imgUrls);
+				if (imgUrls) {
+					setImageUrls(imgUrls);
+				}
 				setIsLoading(false);
 			};
 
@@ -80,7 +82,9 @@ function TreeMarker({ tree }) {
 			return 'No Images';
 		}
 		else {
-			<img width="50px" height="auto" src={imageUrls.primary} />;
+			return (
+				<img width="100px" height="auto" src={imageUrls.primary} />
+			);
 		}
 	};
 
@@ -88,6 +92,9 @@ function TreeMarker({ tree }) {
 		<Grid container>
 			<Grid item xs={12}>
 				{tree.name}
+			</Grid>
+			<Grid item xs={12}>
+				{showPrimaryImage()}
 			</Grid>
 
 			<Grid item xs={12}>
@@ -119,14 +126,7 @@ function TreeMarker({ tree }) {
 					</IconButton>
 				</Grid>
 				<Grid item xs={4}>
-					<IconButton
-						button
-						color="primary"
-						containerElement={
-							<Link to={`/trees/${tree.id}`} />
-						}
-						linkButton={true}
-					>
+					<IconButton color="primary">
 						<AddIcon />
 					</IconButton>
 				</Grid>

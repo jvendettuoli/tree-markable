@@ -46,6 +46,8 @@ function NavDrawer(props) {
 					</ListItemIcon>
 					<ListItemText primary="Home" />
 				</ListItem>
+				<Divider />
+
 				<ListItem>
 					<ListItemIcon>
 						<AddIcon />

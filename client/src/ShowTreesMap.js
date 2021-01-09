@@ -54,7 +54,7 @@ function ShowTreesMap() {
 	let trees = useSelector((st) =>
 		Object.values(st.trees).map((tree) => tree)
 	);
-	console.log('TREEESSSSS', trees);
+	console.log('ShowTreesMap - trees', trees);
 	const CenterOnUser = () => {
 		const map = useMap();
 		map.locate({ setView: true });
@@ -95,8 +95,7 @@ function ShowTreesMap() {
 	const loadingPlaceholder = <CircularProgress />;
 
 	return (
-		<main className={classes.content}>
-			<div className={classes.toolbar} />
+		<div className="ShowTreesMap">
 			<TreeSearchForm />
 			<MapContainer
 				className={classes.mapContainer}
@@ -124,7 +123,7 @@ function ShowTreesMap() {
 					</Marker>
 				))}
 			</MapContainer>
-		</main>
+		</div>
 	);
 }
 export default ShowTreesMap;
