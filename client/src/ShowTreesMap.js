@@ -117,7 +117,7 @@ function ShowTreesMap() {
 							tree.geolocation.x
 						]}
 					>
-						<Popup>
+						<Popup className={classes.treeMarkerPopup}>
 							<TreeMarker tree={tree} />
 						</Popup>
 					</Marker>

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, withRouter, useHistory } from 'react-router-dom';
 
 import {
 	MapContainer,
@@ -28,11 +28,17 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Box from '@material-ui/core/Box';
 
-import useStyles from './styles/formStyle';
+import useStyles from './styles/markerCard';
 
 import { getTreesFromApi } from './actions/trees';
 import SelectLocationMap from './SelectLocationMap';
@@ -45,6 +51,7 @@ import {
 
 function TreeMarker({ tree }) {
 	const classes = useStyles();
+	const history = useHistory();
 
 	const [ isLoading, setIsLoading ] = useState(true);
 	const [ imageUrls, setImageUrls ] = useState({
@@ -54,6 +61,7 @@ function TreeMarker({ tree }) {
 
 	const dispatch = useDispatch();
 
+	// Get Image Urls to display tree image, if it exists
 	useEffect(
 		() => {
 			const getImageUrls = async (collectionRef, id) => {
@@ -74,64 +82,83 @@ function TreeMarker({ tree }) {
 		[ isLoading, dispatch ]
 	);
 
+	// On add tree icon click, add tree to users saved trees
+	const handleAddTreeClick = () => {
+		console.log('savetree click');
+	};
+
 	const showPrimaryImage = () => {
 		if (isLoading) {
-			return <CircularProgress />;
+			return (
+				<Box display="flex" justifyContent="center">
+					<CircularProgress />
+				</Box>
+			);
 		}
 		else if (imageUrls.primary === '') {
-			return 'No Images';
+			return '';
 		}
 		else {
 			return (
-				<img width="100px" height="auto" src={imageUrls.primary} />
+				<CardMedia
+					className={classes.media}
+					image={imageUrls.primary}
+					title={`${tree.name}`}
+				/>
 			);
 		}
 	};
 
 	return (
-		<Grid container>
-			<Grid item xs={12}>
-				{tree.name}
-			</Grid>
-			<Grid item xs={12}>
-				{showPrimaryImage()}
-			</Grid>
-
-			<Grid item xs={12}>
-				{`(${tree.geolocation.y}, ${tree.geolocation.x})`}
-			</Grid>
-			<Grid item xs={12}>
-				{tree.common_name ? (
-					`Common Name: ${tree.common_name}`
-				) : (
-					''
-				)}
-			</Grid>
-			<Grid item xs={12}>
-				{tree.scientific_name ? (
-					`Scientific Name: ${tree.scientific_name}`
-				) : (
-					''
-				)}
-			</Grid>
-			<Grid container item xs={12}>
-				<Grid item xs={4}>
-					<IconButton>
-						<MessageIcon />
-					</IconButton>
+		<Card className={classes.root} elevation={0}>
+			{showPrimaryImage()}
+			<CardContent className={classes.content}>
+				<Typography gutterBottom variant="h5" component="h2">
+					{tree.name}
+				</Typography>
+				<Typography variant="body2" color="textSecondary">
+					{tree.common_name}
+				</Typography>
+				<Typography
+					variant="body2"
+					color="textSecondary"
+					component="i"
+				>
+					{tree.scientific_name}
+				</Typography>
+				<Typography
+					variant="caption"
+					color="textSecondary"
+					component="p"
+				>
+					{`(${tree.geolocation.y.toFixed(
+						5
+					)}, ${tree.geolocation.x.toFixed(5)})`}
+				</Typography>
+			</CardContent>
+			<CardActions className={classes.actions}>
+				<Grid container xs={12}>
+					<Grid item xs={4}>
+						<IconButton>
+							<MessageIcon />
+						</IconButton>
+					</Grid>
+					<Grid item xs={4}>
+						<IconButton
+							component={Link}
+							to={`/trees${tree.id}`}
+						>
+							<NatureIcon color="primary" />
+						</IconButton>
+					</Grid>
+					<Grid item xs={4}>
+						<IconButton>
+							<AddIcon />
+						</IconButton>
+					</Grid>
 				</Grid>
-				<Grid item xs={4}>
-					<IconButton color="primary">
-						<NatureIcon />
-					</IconButton>
-				</Grid>
-				<Grid item xs={4}>
-					<IconButton color="primary">
-						<AddIcon />
-					</IconButton>
-				</Grid>
-			</Grid>
-		</Grid>
+			</CardActions>
+		</Card>
 	);
 }
 export default TreeMarker;
