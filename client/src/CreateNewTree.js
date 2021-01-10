@@ -26,7 +26,8 @@ function CreateNewTree() {
 		scientific_name : '',
 		height          : '',
 		dsh             : '',
-		leaf_type       : ''
+		leaf_type       : '',
+		fruit_bearing   : false
 	};
 	const classes = useStyles();
 	const [ treeFormData, setTreeFormData ] = useState(
@@ -37,7 +38,10 @@ function CreateNewTree() {
 
 	const handleTreeFormChange = (data) => {
 		console.log('handleTreeFormChange', data);
-		const { name, value } = data;
+		let { name, value } = data;
+		if (name === 'fruit_bearing') {
+			value = data.checked;
+		}
 
 		setTreeFormData((fData) => ({
 			...fData,

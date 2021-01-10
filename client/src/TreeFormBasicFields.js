@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 import Typography from '@material-ui/core/Typography';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Slider from '@material-ui/core/Slider';
@@ -94,6 +97,18 @@ function TreeFormBasicFields({ formData, onFormChange }) {
 				<MenuItem value="deciduous">Deciduous</MenuItem>
 				<MenuItem value="evergreen">Evergreen</MenuItem>
 			</TextField>
+			<FormControlLabel
+				control={
+					<Checkbox
+						id="fruit_bearing"
+						name="fruit_bearing"
+						onChange={handleChange}
+						checked={formData.fruit_bearing}
+						color="primary"
+					/>
+				}
+				label="Fruit Bearing? Consider adding what type of fruit to the description!"
+			/>
 		</Grid>
 	);
 }
