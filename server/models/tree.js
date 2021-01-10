@@ -19,7 +19,7 @@ class Tree {
 			const result = await db.query(
 				`INSERT INTO trees 
               (name, common_name, scientific_name, height, dsh, leaf_type, fruit_bearing, description, geolocation, creator) 
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
             RETURNING id, name, common_name, scientific_name, height, dsh, leaf_type, fruit_bearing, description, geolocation, favorites, creator, created_at`,
 				[
 					data.name,
