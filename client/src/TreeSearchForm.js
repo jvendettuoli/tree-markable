@@ -8,6 +8,8 @@ import TextField from '@material-ui/core/TextField';
 import Slider from '@material-ui/core/Slider';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import { getTreeFromApi, getTreesFromApi } from './actions/trees';
 
@@ -18,18 +20,22 @@ function TreeSearchForm() {
 	const dispatch = useDispatch();
 
 	const [ formData, setFormData ] = useState({
-		search     : '',
-		distance   : '',
-		leaf_type  : '',
-		height_min : '',
-		height_max : '',
-		dsh_min    : '',
-		dsh_max    : ''
+		search        : '',
+		distance      : '',
+		leaf_type     : '',
+		fruit_bearing : false,
+		height_min    : '',
+		height_max    : '',
+		dsh_min       : '',
+		dsh_max       : ''
 	});
 
 	const handleChange = (evt) => {
 		const name = evt.target.name;
-		const value = evt.target.value;
+		const value =
+			name === 'fruit_bearing'
+				? evt.target.checked
+				: evt.target.value;
 
 		setFormData((fData) => ({
 			...fData,
@@ -42,13 +48,14 @@ function TreeSearchForm() {
 		setFormData(formData);
 
 		const searchParams = {
-			search     : formData.search,
-			distance   : parseFloat(formData.distance) || '',
-			leaf_type  : formData.leaf_type,
-			height_min : parseFloat(formData.height_min) || '',
-			height_max : parseFloat(formData.height_max) || '',
-			dsh_min    : parseFloat(formData.dsh_min) || '',
-			dsh_max    : parseFloat(formData.dsh_max) || ''
+			search        : formData.search,
+			distance      : parseFloat(formData.distance) || '',
+			leaf_type     : formData.leaf_type,
+			fruit_bearing : formData.fruit_bearing || '',
+			height_min    : parseFloat(formData.height_min) || '',
+			height_max    : parseFloat(formData.height_max) || '',
+			dsh_min       : parseFloat(formData.dsh_min) || '',
+			dsh_max       : parseFloat(formData.dsh_max) || ''
 		};
 
 		for (let field in searchParams) {
@@ -136,6 +143,18 @@ function TreeSearchForm() {
 							inputProps={{ min: 1, max: 500, step: 0.01 }}
 							onChange={handleChange}
 							value={formData.dsh_max}
+						/>
+						<FormControlLabel
+							control={
+								<Checkbox
+									id="fruit_bearing"
+									name="fruit_bearing"
+									onChange={handleChange}
+									checked={formData.fruit_bearing}
+									color="primary"
+								/>
+							}
+							label="Fruit Bearing"
 						/>
 					</Grid>
 				</Grid>

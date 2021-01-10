@@ -137,7 +137,7 @@ function TreeMarker({ tree }) {
 				</Typography>
 			</CardContent>
 			<CardActions className={classes.actions}>
-				<Grid container xs={12}>
+				<Grid container>
 					<Grid item xs={4}>
 						<IconButton>
 							<MessageIcon />
