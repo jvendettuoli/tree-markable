@@ -58,7 +58,7 @@ router.post('/', authRequired, async function(req, res, next) {
 	}
 });
 
-/** PATCH /[handle] {userData} => {user: updatedUser} */
+/** PATCH /[username] {userData} => {user: updatedUser} */
 
 router.patch('/:username', ensureCorrectUser, async function(
 	req,
@@ -111,7 +111,7 @@ router.patch('/:username', ensureCorrectUser, async function(
 	}
 });
 
-/** DELETE /[handle]  =>  {message: "User deleted"}  */
+/** DELETE /[username]  =>  {message: "User deleted"}  */
 
 router.delete('/:username', ensureCorrectUser, async function(
 	req,
@@ -123,6 +123,29 @@ router.delete('/:username', ensureCorrectUser, async function(
 		await User.remove(req.params.username);
 		return res.json({
 			message : `User '${req.params.username}' deleted`
+		});
+	} catch (err) {
+		return next(err);
+	}
+});
+
+/**
+ * User to Tree routes
+ */
+
+/** ADD TREE TO USER /[username]/trees/[id] => {savedTrees}*/
+
+router.post('/:username/trees/:id', ensureCorrectUser, async function(
+	req,
+	res,
+	next
+) {
+	try {
+		console.log(req.token);
+		await User.addTree(req.token.uid, req.params.id);
+		return res.json({
+			message : `Tree '${req.params.username}' added to User '${req
+				.params.username}'`
 		});
 	} catch (err) {
 		return next(err);

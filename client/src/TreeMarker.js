@@ -43,6 +43,7 @@ import useStyles from './styles/markerCard';
 import { getTreesFromApi } from './actions/trees';
 import SelectLocationMap from './SelectLocationMap';
 import ImagesInput from './ImagesInput';
+import TreeMarkableApi from './TreeMarkableApi';
 
 import {
 	treesRef,
@@ -58,7 +59,7 @@ function TreeMarker({ tree }) {
 		primary : '',
 		album   : []
 	});
-
+	const username = useSelector((st) => st.auth.username);
 	const dispatch = useDispatch();
 
 	// Get Image Urls to display tree image, if it exists
@@ -83,10 +84,13 @@ function TreeMarker({ tree }) {
 	);
 
 	// On add tree icon click, add tree to users saved trees
-	const handleAddTreeClick = () => {
+	const handleAddTreeClick = async () => {
 		console.log('savetree click');
+		const res = await TreeMarkableApi.userAddTree(username, tree.id);
+		console.log('handeAddTreeClick res', res);
 	};
 
+	// If tree has a primary image, show it on popup, else show nothing
 	const showPrimaryImage = () => {
 		if (isLoading) {
 			return (
@@ -95,9 +99,7 @@ function TreeMarker({ tree }) {
 				</Box>
 			);
 		}
-		else if (imageUrls.primary === '') {
-			return '';
-		}
+		else if (imageUrls.primary === '') return '';
 		else {
 			return (
 				<CardMedia
@@ -152,7 +154,7 @@ function TreeMarker({ tree }) {
 						</IconButton>
 					</Grid>
 					<Grid item xs={4}>
-						<IconButton>
+						<IconButton onClick={handleAddTreeClick}>
 							<AddIcon />
 						</IconButton>
 					</Grid>

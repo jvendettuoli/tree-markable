@@ -170,6 +170,17 @@ class User {
 			throw notFound;
 		}
 	}
-}
 
+	/**
+	 * User to Tree relationships
+	 */
+
+	/**Create a user to tree relationship, given user id and tree id. */
+	static async addTree(uid, treeId) {
+		await db.query(
+			`INSERT INTO users_trees (user_id, tree_id) VALUES ($1, $2)`,
+			[ uid, treeId ]
+		);
+	}
+}
 module.exports = User;

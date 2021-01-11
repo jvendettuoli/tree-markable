@@ -6,6 +6,7 @@ import { AUTH_ERROR, AUTH_USER, SIGN_OUT_USER } from '../actions/types';
 
 const INITIAL_STATE = {
 	uid           : null,
+	username      : null,
 	token         : null,
 	authenticated : false,
 	error         : null
@@ -19,6 +20,7 @@ function auth(state = INITIAL_STATE, action) {
 			return {
 				...state,
 				uid           : action.payload.uid,
+				username      : action.payload.displayName,
 				token         : action.payload.refreshToken,
 				authenticated : true,
 				error         : null
@@ -29,6 +31,7 @@ function auth(state = INITIAL_STATE, action) {
 			return {
 				...state,
 				uid           : null,
+				username      : null,
 				token         : null,
 				authenticated : false,
 				error         : null
