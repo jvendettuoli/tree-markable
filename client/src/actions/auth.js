@@ -1,6 +1,8 @@
 /**
- * Action creator for fetching a tree from the TreeMarkable API by the tree id.
- * Returns an object with the returned tree data.
+ * Action creators for handling authentication of user. When user signs in
+ * and is authenticated, updates store. Resets store on user sign out.
+ * 
+ * Also updates user store to keep current user synced with authentication.
  */
 
 import {
@@ -11,7 +13,13 @@ import {
 } from '../firebase/firebaseAuth';
 import TreeMarkableApi from '../TreeMarkableApi';
 import { auth } from '../firebase/firebaseIndex';
-import { AUTH_ERROR, AUTH_USER, SIGN_OUT_USER } from './types';
+import {
+	AUTH_ERROR,
+	AUTH_USER,
+	SIGN_OUT_USER,
+	LOAD_CURR_USER,
+	RESET_CURR_USER
+} from './types';
 
 function signUpUser(credentials, userData) {
 	console.log('Auth - signUpUser - ', credentials, userData);
@@ -27,12 +35,16 @@ function signUpUser(credentials, userData) {
 				...userData,
 				uid : firebaseRes.user.uid
 			});
+			const currUserData = {
+				...apiRes,
+				token : firebaseRes.user.refreshToken
+			};
 			dispatch(
 				authUser({
-					...apiRes,
 					token : firebaseRes.user.refreshToken
 				})
 			);
+			dispatch(loadCurrUser(currUserData));
 		} catch (err) {
 			console.log('signUpUser error', err);
 			dispatch(authError(err));
@@ -52,12 +64,16 @@ function signInUser(credentials) {
 			const apiRes = await TreeMarkableApi.getUser(
 				firebaseRes.user.displayName
 			);
+			const currUserData = {
+				...apiRes,
+				token : firebaseRes.user.refreshToken
+			};
 			dispatch(
 				authUser({
-					...apiRes,
 					token : firebaseRes.user.refreshToken
 				})
 			);
+			dispatch(loadCurrUser(currUserData));
 		} catch (err) {
 			console.log('signInUser error', err);
 			dispatch(authError(err));
@@ -71,6 +87,7 @@ function signOutUser() {
 		try {
 			await signOut();
 			dispatch({ type: SIGN_OUT_USER });
+			dispatch({ type: RESET_CURR_USER });
 		} catch (err) {
 			console.log('signOutUser error', err);
 			dispatch(authError(err));
@@ -98,10 +115,12 @@ function verifyAuth() {
 					const apiRes = await TreeMarkableApi.getUser(
 						user.displayName
 					);
-
-					dispatch(
-						authUser({ ...apiRes, token: user.refreshToken })
-					);
+					const currUserData = {
+						...apiRes,
+						token : user.refreshToken
+					};
+					dispatch(authUser({ token: user.refreshToken }));
+					dispatch(loadCurrUser(currUserData));
 				}
 				else {
 					console.log('verifyAuth - no user');
@@ -121,6 +140,9 @@ function authUser(user) {
 }
 function authError(error) {
 	return { type: AUTH_ERROR, payload: error };
+}
+function loadCurrUser(user) {
+	return { type: LOAD_CURR_USER, payload: user };
 }
 
 export { signUpUser, signInUser, signOutUser, signInAnonUser, verifyAuth };

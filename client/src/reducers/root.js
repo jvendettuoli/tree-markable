@@ -6,10 +6,10 @@
 import { combineReducers } from 'redux';
 import trees from './trees';
 import auth from './auth';
-import users from './users';
+import currUser from './currUser';
 const root = combineReducers({
 	auth,
-	users,
+	currUser,
 	trees
 });
 export default root;

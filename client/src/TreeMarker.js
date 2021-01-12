@@ -18,7 +18,10 @@ import {
 	Group as GroupIcon,
 	Explore as ExploreIcon,
 	Home as HomeIcon,
-	Message as MessageIcon
+	Message as MessageIcon,
+	Check as CheckIcon,
+	FavoriteBorder as FavoriteBorderIcon,
+	Favorite as FavoriteIcon
 } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -49,6 +52,7 @@ import {
 	treesRef,
 	downloadImageUrlsFromFirebase
 } from './firebase/firebaseStorage';
+import { addToSavedTrees, removeFromSavedTrees } from './actions/currUser';
 
 function TreeMarker({ tree }) {
 	const classes = useStyles();
@@ -59,7 +63,8 @@ function TreeMarker({ tree }) {
 		primary : '',
 		album   : []
 	});
-	const username = useSelector((st) => st.auth.user.username);
+	const username = useSelector((st) => st.currUser.username);
+	const savedTreeIds = useSelector((st) => st.currUser.savedTreeIds);
 	const dispatch = useDispatch();
 
 	// Get Image Urls to display tree image, if it exists
@@ -85,9 +90,14 @@ function TreeMarker({ tree }) {
 
 	// On add tree icon click, add tree to users saved trees
 	const handleAddTreeClick = async () => {
-		console.log('savetree click');
-		const res = await TreeMarkableApi.userAddTree(username, tree.id);
-		console.log('handeAddTreeClick res', res);
+		console.log('savetree click', tree);
+		dispatch(addToSavedTrees(username, tree.id));
+	};
+
+	// On remove tree icon click, remove tree to users saved trees
+	const handleRemoveTreeClick = async () => {
+		console.log('removeTree click');
+		dispatch(removeFromSavedTrees(username, tree.id));
 	};
 
 	// If tree has a primary image, show it on popup. Show
@@ -109,6 +119,27 @@ function TreeMarker({ tree }) {
 					image={imageUrls.primary}
 					title={`${tree.name}`}
 				/>
+			);
+		}
+	};
+
+	const savedTreeIcon = () => {
+		if (savedTreeIds.includes(tree.id)) {
+			return (
+				<Grid container item xs={4}>
+					<IconButton onClick={handleRemoveTreeClick}>
+						<FavoriteIcon htmlColor="red" />
+					</IconButton>
+				</Grid>
+			);
+		}
+		else {
+			return (
+				<Grid container item xs={4}>
+					<IconButton onClick={handleAddTreeClick}>
+						<FavoriteBorderIcon htmlColor="pink" />
+					</IconButton>
+				</Grid>
 			);
 		}
 	};
@@ -155,14 +186,7 @@ function TreeMarker({ tree }) {
 							<NatureIcon color="primary" />
 						</IconButton>
 					</Grid>
-					<Grid item xs={4}>
-						{
-
-						}
-						<IconButton onClick={handleAddTreeClick}>
-							<AddIcon />
-						</IconButton>
-					</Grid>
+					{savedTreeIcon()}
 				</Grid>
 			</CardActions>
 		</Card>

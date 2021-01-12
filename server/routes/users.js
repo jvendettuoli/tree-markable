@@ -133,23 +133,8 @@ router.delete('/:username', ensureCorrectUser, async function(
  * User to Tree routes
  */
 
-/** ADD TREE TO USER /[username]/trees/[id] => {savedTrees}*/
+/** GET user's saved trees /[username]/trees => {savedTrees}*/
 
-router.post('/:username/trees/:id', ensureCorrectUser, async function(
-	req,
-	res,
-	next
-) {
-	try {
-		await User.addTree(req.token.uid, req.params.id);
-		return res.json({
-			message : `Tree '${req.params.username}' added to User '${req
-				.params.username}'`
-		});
-	} catch (err) {
-		return next(err);
-	}
-});
 router.get('/:username/trees', ensureCorrectUser, async function(
 	req,
 	res,
@@ -165,4 +150,41 @@ router.get('/:username/trees', ensureCorrectUser, async function(
 	}
 });
 
+/** ADD TREE TO USER /[username]/trees/[id] => 
+ * {message: 'Tree [id] added to User [username]'}*/
+
+router.post('/:username/trees/:id', authRequired, async function(
+	req,
+	res,
+	next
+) {
+	try {
+		await User.addTree(req.token.uid, req.params.id);
+		return res.json({
+			message : `Tree '${req.params.username}' added to User '${req
+				.params.username}'`
+		});
+	} catch (err) {
+		return next(err);
+	}
+});
+
+/** REMOVE TREE FROM USER /[username]/trees/[id] => 
+ * {message: 'Tree [id] removed from User [username]'}*/
+
+router.delete('/:username/trees/:id', authRequired, async function(
+	req,
+	res,
+	next
+) {
+	try {
+		await User.removeTree(req.token.uid, req.params.id);
+		return res.json({
+			message : `Tree '${req.params
+				.username}' removed from User '${req.params.username}'`
+		});
+	} catch (err) {
+		return next(err);
+	}
+});
 module.exports = router;

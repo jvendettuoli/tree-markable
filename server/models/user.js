@@ -74,7 +74,7 @@ class User {
 
 	static async findByUsername(username) {
 		const userRes = await db.query(
-			`SELECT firebase_id, username, email, img_url, home_geolocation, is_admin, created_at, json_agg(u_t.tree_id) AS savedTrees
+			`SELECT firebase_id, username, email, img_url, home_geolocation, is_admin, created_at, json_agg(u_t.tree_id) AS saved_tree_ids
 			FROM users as u
 			LEFT JOIN users_trees AS u_t ON u.firebase_id = u_t.user_id
 			WHERE username = $1
@@ -84,6 +84,7 @@ class User {
 		console.log('findByUsername', userRes);
 
 		const user = userRes.rows[0];
+		if (user.saved_tree_ids[0] === null) user.saved_tree_ids = [];
 
 		if (!user) {
 			const error = new ExpressError(
@@ -99,7 +100,7 @@ class User {
 
 	static async findByUid(uid) {
 		const userRes = await db.query(
-			`SELECT firebase_id, username, email, img_url, home_geolocation, is_admin, created_at, json_agg(u_t.tree_id) AS savedTrees
+			`SELECT firebase_id, username, email, img_url, home_geolocation, is_admin, created_at, json_agg(u_t.tree_id) AS saved_tree_ids
 			FROM users as u
 			LEFT JOIN users_trees AS u_t ON u.firebase_id = u_t.user_id
 			WHERE firebase_id = $1
@@ -108,6 +109,7 @@ class User {
 		);
 
 		const user = userRes.rows[0];
+		if (user.saved_tree_ids[0] === null) user.saved_tree_ids = [];
 
 		if (!user) {
 			const error = new ExpressError(
@@ -180,19 +182,32 @@ class User {
 	 * User to Tree relationships
 	 */
 
-	/**Create a user to tree relationship, given user id and tree id. */
-	static async addTree(uid, treeId) {
-		await db.query(
-			`INSERT INTO users_trees (user_id, tree_id) VALUES ($1, $2)`,
-			[ uid, treeId ]
-		);
-	}
+	/**Get all user-tree relations by user uid. */
 	static async getTrees(uid) {
 		const result = await db.query(
-			`SELECT FROM users_trees WHERE user_id = $1`,
+			`SELECT FROM users_trees 
+			WHERE user_id = $1 
+			GROUP BY user_id`,
 			[ uid ]
 		);
 		return result;
+	}
+	/**Create a user to tree relationship, given user id and tree id. */
+	static async addTree(uid, treeId) {
+		await db.query(
+			`INSERT INTO users_trees (user_id, tree_id) 
+			VALUES ($1, $2)`,
+			[ uid, treeId ]
+		);
+	}
+	/**Remove a user to tree relationship, given user id and tree id. */
+	static async removeTree(uid, treeId) {
+		await db.query(
+			`DELETE FROM users_trees 
+			WHERE user_id = $1
+			AND tree_id = $2`,
+			[ uid, treeId ]
+		);
 	}
 }
 module.exports = User;

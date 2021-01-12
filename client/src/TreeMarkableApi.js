@@ -141,10 +141,14 @@ class TreeMarkableApi {
 		);
 		return res.message;
 	}
-	static async userGetSavedTrees(username) {
-		console.log('TreeMarkableApi Class userGetSavedTrees - Start');
-		let res = await this.request(`users/${username}/trees`);
-		return res.savedTrees;
+	static async userRemoveTree(username, treeId) {
+		console.log('TreeMarkableApi Class userRemoveTree - Start');
+		let res = await this.request(
+			`users/${username}/trees/${treeId}`,
+			{},
+			'delete'
+		);
+		return res.message;
 	}
 }
 
