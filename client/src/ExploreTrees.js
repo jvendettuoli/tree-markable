@@ -61,7 +61,7 @@ function ExploreTrees() {
 	const theme = useTheme();
 	const classes = useStyles(theme);
 	const dispatch = useDispatch();
-	let userUid = useSelector((st) => st.auth.uid);
+	let userUid = useSelector((st) => st.auth.user.uid);
 
 	const [ treeMarkers, setTreeMarkers ] = useState([]);
 	const [ searchParams, setSearchParams ] = useState([]);

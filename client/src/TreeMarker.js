@@ -59,7 +59,7 @@ function TreeMarker({ tree }) {
 		primary : '',
 		album   : []
 	});
-	const username = useSelector((st) => st.auth.username);
+	const username = useSelector((st) => st.auth.user.username);
 	const dispatch = useDispatch();
 
 	// Get Image Urls to display tree image, if it exists
@@ -157,7 +157,7 @@ function TreeMarker({ tree }) {
 					</Grid>
 					<Grid item xs={4}>
 						{
-							
+
 						}
 						<IconButton onClick={handleAddTreeClick}>
 							<AddIcon />

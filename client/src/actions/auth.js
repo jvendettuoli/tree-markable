@@ -27,7 +27,12 @@ function signUpUser(credentials, userData) {
 				...userData,
 				uid : firebaseRes.user.uid
 			});
-			dispatch(authUser(apiRes));
+			dispatch(
+				authUser({
+					...apiRes,
+					token : firebaseRes.user.refreshToken
+				})
+			);
 		} catch (err) {
 			console.log('signUpUser error', err);
 			dispatch(authError(err));

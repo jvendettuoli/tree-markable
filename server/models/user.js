@@ -74,11 +74,14 @@ class User {
 
 	static async findByUsername(username) {
 		const userRes = await db.query(
-			`SELECT firebase_id, username, email, img_url, home_geolocation, is_admin, created_at
-            FROM users 
-            WHERE username = $1`,
+			`SELECT firebase_id, username, email, img_url, home_geolocation, is_admin, created_at, json_agg(u_t.tree_id) AS savedTrees
+			FROM users as u
+			LEFT JOIN users_trees AS u_t ON u.firebase_id = u_t.user_id
+			WHERE username = $1
+			GROUP BY u.firebase_id`,
 			[ username ]
 		);
+		console.log('findByUsername', userRes);
 
 		const user = userRes.rows[0];
 
@@ -96,9 +99,11 @@ class User {
 
 	static async findByUid(uid) {
 		const userRes = await db.query(
-			`SELECT firebase_id, username, email, img_url, home_geolocation, is_admin, created_at
-            FROM users 
-            WHERE firebase_id = $1`,
+			`SELECT firebase_id, username, email, img_url, home_geolocation, is_admin, created_at, json_agg(u_t.tree_id) AS savedTrees
+			FROM users as u
+			LEFT JOIN users_trees AS u_t ON u.firebase_id = u_t.user_id
+			WHERE firebase_id = $1
+			GROUP BY u.firebase_id`,
 			[ uid ]
 		);
 
