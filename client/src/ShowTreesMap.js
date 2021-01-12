@@ -18,11 +18,6 @@ import 'leaflet-geosearch/dist/geosearch.css';
 
 import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import TreeMarkableApi from './TreeMarkableApi';
-import { getTreeFromApi, getTreesFromApi } from './actions/trees';
-import { signInAnonUser } from './actions/auth';
-import { resetAll } from './actions/reset';
-import TreeSearchForm from './TreeSearchForm';
 import TreeMarker from './TreeMarker';
 import useStyles from './styles/leafletMap';
 
@@ -32,29 +27,9 @@ const searchControl = new GeoSearchControl({
 	provider : new OpenStreetMapProvider()
 });
 
-function ShowTreesMap() {
+function ShowTreesMap({ trees }) {
 	const classes = useStyles();
-	const [ treeMarkers, setTreeMarkers ] = useState([]);
-	const [ searchParams, setSearchParams ] = useState([]);
-	let userUid = useSelector((st) => st.auth.uid);
-	const [ isLoading, setIsLoading ] = useState(true);
 
-	const dispatch = useDispatch();
-
-	useEffect(
-		() => {
-			if (isLoading) {
-				dispatch(getTreesFromApi());
-				setIsLoading(false);
-			}
-		},
-		[ isLoading, dispatch ]
-	);
-
-	let trees = useSelector((st) =>
-		Object.values(st.trees).map((tree) => tree)
-	);
-	console.log('ShowTreesMap - trees', trees);
 	const CenterOnUser = () => {
 		const map = useMap();
 		map.locate({ setView: true });
@@ -67,36 +42,10 @@ function ShowTreesMap() {
 		return null;
 	};
 
-	const createMarkers = (items) => {
-		return items.map((item) => {
-			<Marker
-				key={`marker-${item.id}`}
-				position={[ item.geolocation.y, item.geolocation.y ]}
-			>
-				<Popup>{item.name}</Popup>
-			</Marker>;
-		});
-	};
-
-	if (isLoading) {
-		return (
-			<div
-				style={{
-					display        : 'flex',
-					justifyContent : 'center',
-					marginTop      : 80
-				}}
-			>
-				<CircularProgress style={{ color: 'black' }} size={120} />
-			</div>
-		);
-	}
-
 	const loadingPlaceholder = <CircularProgress />;
 
 	return (
 		<div className="ShowTreesMap">
-			<TreeSearchForm />
 			<MapContainer
 				className={classes.mapContainer}
 				placeholder={loadingPlaceholder}

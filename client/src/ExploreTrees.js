@@ -21,6 +21,7 @@ import Box from '@material-ui/core/Box';
 
 import { getTreesFromApi } from './actions/trees';
 import ShowTreesMap from './ShowTreesMap';
+import TreeSearchForm from './TreeSearchForm';
 import TreeList from './TreeList';
 
 function TabPanel(props) {
@@ -30,8 +31,8 @@ function TabPanel(props) {
 		<div
 			role="tabpanel"
 			hidden={value !== index}
-			id={`full-width-tabpanel-${index}`}
-			aria-labelledby={`full-width-tab-${index}`}
+			id={`map-list-tabpanel-${index}`}
+			aria-labelledby={`map-list-tab-${index}`}
 			{...other}
 		>
 			{value === index && <Box>{children}</Box>}
@@ -41,8 +42,8 @@ function TabPanel(props) {
 
 function a11yProps(index) {
 	return {
-		id              : `full-width-tab-${index}`,
-		'aria-controls' : `full-width-tabpanel-${index}`
+		id              : `map-list-tab-${index}`,
+		'aria-controls' : `map-list-tabpanel-${index}`
 	};
 }
 
@@ -52,8 +53,7 @@ const useStyles = makeStyles((theme) => ({
 		width           : '100%'
 	},
 	indicator : {
-		backgroundColor : theme.palette.secondary.main,
-		height          : '3px'
+		backgroundColor : theme.palette.secondary.main
 	}
 }));
 
@@ -96,6 +96,7 @@ function ExploreTrees() {
 
 	return (
 		<div className={classes.root}>
+			<TreeSearchForm />
 			<AppBar position="static" color="default">
 				<Tabs
 					value={value}
@@ -103,24 +104,19 @@ function ExploreTrees() {
 					indicatorColor="secondary"
 					textColor="secondary"
 					variant="fullWidth"
-					aria-label="full width tabs example"
+					aria-label="map and list view tabs"
 				>
 					<Tab label="Map" {...a11yProps(0)} />
 					<Tab label="List" {...a11yProps(1)} />
 				</Tabs>
 			</AppBar>
-			<SwipeableViews
-				axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-				index={value}
-				onChangeIndex={handleChangeIndex}
-			>
-				<TabPanel value={value} index={0} dir={theme.direction}>
-					<ShowTreesMap />
-				</TabPanel>
-				<TabPanel value={value} index={1} dir={theme.direction}>
-					<TreeList />
-				</TabPanel>
-			</SwipeableViews>
+
+			<TabPanel value={value} index={0}>
+				<ShowTreesMap trees={trees} />
+			</TabPanel>
+			<TabPanel value={value} index={1}>
+				<TreeList trees={trees} />
+			</TabPanel>
 		</div>
 	);
 }

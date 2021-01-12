@@ -34,28 +34,8 @@ function ListItemLink(props) {
 	return <ListItem button component="a" {...props} />;
 }
 
-function TreeList() {
+function TreeList({ trees }) {
 	const classes = useStyles();
-	const [ treeMarkers, setTreeMarkers ] = useState([]);
-	const [ searchParams, setSearchParams ] = useState([]);
-	let userUid = useSelector((st) => st.auth.uid);
-	const [ isLoading, setIsLoading ] = useState(true);
-
-	const dispatch = useDispatch();
-
-	useEffect(
-		() => {
-			if (isLoading) {
-				dispatch(getTreesFromApi());
-				setIsLoading(false);
-			}
-		},
-		[ isLoading, dispatch ]
-	);
-
-	let trees = useSelector((st) =>
-		Object.values(st.trees).map((tree) => tree)
-	);
 
 	const columns = [
 		{ field: 'name', headerName: 'Name', width: 150 },
@@ -73,9 +53,6 @@ function TreeList() {
 	// 	setSelectedRows(evt.rowIds);
 	// };
 
-	if (isLoading) {
-		return <div>Loading</div>;
-	}
 	return (
 		<div style={{ height: '85vh' }}>
 			<DataGrid
