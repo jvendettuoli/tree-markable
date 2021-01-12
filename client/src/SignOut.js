@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { signOutUser } from './actions/auth';
+import { resetUser } from './actions/users';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -16,6 +17,7 @@ function Login() {
 
 	const handleClick = (evt) => {
 		dispatch(signOutUser());
+		dispatch(resetUser());
 	};
 
 	return (

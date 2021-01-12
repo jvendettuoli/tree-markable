@@ -141,12 +141,25 @@ router.post('/:username/trees/:id', ensureCorrectUser, async function(
 	next
 ) {
 	try {
-		console.log(req.token);
 		await User.addTree(req.token.uid, req.params.id);
 		return res.json({
 			message : `Tree '${req.params.username}' added to User '${req
 				.params.username}'`
 		});
+	} catch (err) {
+		return next(err);
+	}
+});
+router.get('/:username/trees', ensureCorrectUser, async function(
+	req,
+	res,
+	next
+) {
+	try {
+		console.log(req.token);
+		const savedTrees = await User.getTrees(req.token.uid);
+		console.log('savedTrees', savedTrees);
+		return res.json(savedTrees);
 	} catch (err) {
 		return next(err);
 	}

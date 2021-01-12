@@ -22,13 +22,12 @@ function signUpUser(credentials, userData) {
 				credentials.email,
 				credentials.password
 			);
-			console.log('firebaseRes', firebaseRes);
 			// create user in TreeMarkable Database
-			await TreeMarkableApi.registerUser({
+			const apiRes = await TreeMarkableApi.registerUser({
 				...userData,
-				firebase_id : firebaseRes.user.uid
+				uid : firebaseRes.user.uid
 			});
-			dispatch(authUser(firebaseRes.user));
+			dispatch(authUser(apiRes));
 		} catch (err) {
 			console.log('signUpUser error', err);
 			dispatch(authError(err));
@@ -36,14 +35,24 @@ function signUpUser(credentials, userData) {
 	};
 }
 function signInUser(credentials) {
+	console.log('Auth - signInUser', credentials);
+
 	return async function(dispatch) {
 		try {
-			console.log('SignInUser');
-			const res = await signIn(
+			const firebaseRes = await signIn(
 				credentials.email,
 				credentials.password
 			);
-			dispatch(authUser(res.user));
+
+			const apiRes = await TreeMarkableApi.getUser(
+				firebaseRes.user.displayName
+			);
+			dispatch(
+				authUser({
+					...apiRes,
+					token : firebaseRes.user.refreshToken
+				})
+			);
 		} catch (err) {
 			console.log('signInUser error', err);
 			dispatch(authError(err));
@@ -79,10 +88,15 @@ function signInAnonUser() {
 function verifyAuth() {
 	return function(dispatch) {
 		try {
-			const unsubscribe = auth.onAuthStateChanged((user) => {
+			const unsubscribe = auth.onAuthStateChanged(async (user) => {
 				if (user) {
-					console.log('verifyAuth - user', user);
-					dispatch(authUser(user));
+					const apiRes = await TreeMarkableApi.getUser(
+						user.displayName
+					);
+
+					dispatch(
+						authUser({ ...apiRes, token: user.refreshToken })
+					);
 				}
 				else {
 					console.log('verifyAuth - no user');

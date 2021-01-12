@@ -90,7 +90,9 @@ function TreeMarker({ tree }) {
 		console.log('handeAddTreeClick res', res);
 	};
 
-	// If tree has a primary image, show it on popup, else show nothing
+	// If tree has a primary image, show it on popup. Show
+	// loading circle while retrieving image from storage.
+	// Show nothing if no image is saved in storage
 	const showPrimaryImage = () => {
 		if (isLoading) {
 			return (
@@ -154,6 +156,9 @@ function TreeMarker({ tree }) {
 						</IconButton>
 					</Grid>
 					<Grid item xs={4}>
+						{
+							
+						}
 						<IconButton onClick={handleAddTreeClick}>
 							<AddIcon />
 						</IconButton>

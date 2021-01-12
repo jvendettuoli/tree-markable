@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { signUpUser } from './actions/auth';
 
@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 
 import useStyles from './styles/formStyle';
 import SelectCoordinates from './SelectCoordinates';
+import { getUserFromApi } from './actions/users';
 // TODO change geolocation request to use my location
 
 function SignUp() {

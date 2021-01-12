@@ -141,6 +141,11 @@ class TreeMarkableApi {
 		);
 		return res.message;
 	}
+	static async userGetSavedTrees(username) {
+		console.log('TreeMarkableApi Class userGetSavedTrees - Start');
+		let res = await this.request(`users/${username}/trees`);
+		return res.savedTrees;
+	}
 }
 
 export default TreeMarkableApi;

@@ -182,5 +182,12 @@ class User {
 			[ uid, treeId ]
 		);
 	}
+	static async getTrees(uid) {
+		const result = await db.query(
+			`SELECT FROM users_trees WHERE user_id = $1`,
+			[ uid ]
+		);
+		return result;
+	}
 }
 module.exports = User;
