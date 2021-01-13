@@ -61,19 +61,22 @@ function ExploreTrees() {
 	const theme = useTheme();
 	const classes = useStyles(theme);
 	const dispatch = useDispatch();
-	let userUid = useSelector((st) => st.currUser.uid);
 
-	const [ treeMarkers, setTreeMarkers ] = useState([]);
-	const [ searchParams, setSearchParams ] = useState([]);
 	const [ isLoading, setIsLoading ] = useState(true);
 	const [ value, setValue ] = useState(0);
+	const [ getLocation, setGetLocation ] = useState(false);
+	const [ mapCenter, setMapCenter ] = useState([
+		48.09933034129291,
+		-123.42563836030864
+	]);
+	const [ zoomLevel, setZoomLevel ] = useState(13);
 
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
 	};
 
-	const handleChangeIndex = (index) => {
-		setValue(index);
+	const handleGetLocationChange = (coords) => {
+		setMapCenter(coords);
 	};
 
 	useEffect(
@@ -96,7 +99,10 @@ function ExploreTrees() {
 
 	return (
 		<div className={classes.root}>
-			<TreeSearchForm />
+			<TreeSearchForm
+				mapCenter={mapCenter}
+				setGetLocation={setGetLocation}
+			/>
 			<AppBar position="static" color="default">
 				<Tabs
 					value={value}
@@ -110,13 +116,23 @@ function ExploreTrees() {
 					<Tab label="List" {...a11yProps(1)} />
 				</Tabs>
 			</AppBar>
-
-			<TabPanel value={value} index={0}>
-				<ShowTreesMap trees={trees} />
-			</TabPanel>
-			<TabPanel value={value} index={1}>
-				<TreeList trees={trees} />
-			</TabPanel>
+			<Paper elevation={4}>
+				<TabPanel value={value} index={0}>
+					<ShowTreesMap
+						mapCenter={mapCenter}
+						setMapCenter={setMapCenter}
+						zoomLevel={zoomLevel}
+						setZoomLevel={setZoomLevel}
+						getLocation={getLocation}
+						setGetLocation={setGetLocation}
+						onGetLocationChange={handleGetLocationChange}
+						trees={trees}
+					/>
+				</TabPanel>
+				<TabPanel value={value} index={1}>
+					<TreeList trees={trees} />
+				</TabPanel>
+			</Paper>
 		</div>
 	);
 }

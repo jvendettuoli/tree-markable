@@ -84,7 +84,7 @@ class Tree {
 			);
 		}
 		if (queries.distance) {
-			const map_center = `point('-123.45642432008287', '48.1946608947504')`;
+			const map_center = `point('${queries.map_center_x}', '${queries.map_center_y}')`;
 
 			baseQuery = `SELECT id, name, common_name, scientific_name, height, dsh, leaf_type, description, geolocation, fruit_bearing, favorites, creator, created_at, (geolocation<@>${map_center}) as distance
 			FROM trees`;

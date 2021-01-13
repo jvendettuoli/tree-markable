@@ -4,6 +4,9 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import Tooltip from '@material-ui/core/Tooltip';
+import Divider from '@material-ui/core/Divider';
+import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Slider from '@material-ui/core/Slider';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -11,13 +14,15 @@ import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { getTreeFromApi, getTreesFromApi } from './actions/trees';
+import { getTreesFromApi } from './actions/trees';
 
 import useStyles from './styles/formStyle';
 
-function TreeSearchForm() {
+function TreeSearchForm({ mapCenter, setGetLocation }) {
 	const classes = useStyles();
 	const dispatch = useDispatch();
+
+	console.log('TreeSearchForm - mapCenter', mapCenter);
 
 	const [ formData, setFormData ] = useState({
 		search        : '',
@@ -50,6 +55,8 @@ function TreeSearchForm() {
 		const searchParams = {
 			search        : formData.search,
 			distance      : parseFloat(formData.distance) || '',
+			map_center_x  : mapCenter[1],
+			map_center_y  : mapCenter[0],
 			leaf_type     : formData.leaf_type,
 			fruit_bearing : formData.fruit_bearing || '',
 			height_min    : parseFloat(formData.height_min) || '',
@@ -68,43 +75,31 @@ function TreeSearchForm() {
 		dispatch(getTreesFromApi(searchParams));
 	};
 
+	const handleGetLocationClick = () => {
+		console.log('handleGetLocationClick - click');
+		setGetLocation(true);
+	};
+
 	return (
 		<form onSubmit={handleSubmit} className={classes.form}>
 			<Grid container>
+				<Typography variant="h3">Explore Trees</Typography>
 				<Grid item xs={12} className={classes.form}>
 					<TextField
 						id="search"
 						name="search"
-						label="Search"
+						label="Search Term"
 						placeholder="Search Tree Name, Common Name, Scientific Name..."
 						onChange={handleChange}
 						value={formData.search}
 					/>
-					<TextField
-						id="leaf_type"
-						name="leaf_type"
-						label="Leaf Type"
-						select
-						onChange={handleChange}
-						value={formData.leaf_type}
-					>
-						<MenuItem value="">Any</MenuItem>
-						<MenuItem value="deciduous">Deciduous</MenuItem>
-						<MenuItem value="evergreen">Evergreen</MenuItem>
-					</TextField>
-					<TextField
-						id="distance"
-						name="distance"
-						label="Miles from Map Center"
-						type="number"
-						inputProps={{ min: 0, step: 1 }}
-						onChange={handleChange}
-						value={formData.distance}
-					/>
 				</Grid>
-				<Grid container item xs={12}>
+
+				<Grid container item xs={12} md={6}>
 					<Grid item xs={6}>
-						Height
+						<Typography variant="subtitle1">
+							Height (ft.)
+						</Typography>
 						<TextField
 							id="height_min"
 							name="height_min"
@@ -125,13 +120,19 @@ function TreeSearchForm() {
 						/>
 					</Grid>
 					<Grid item xs={6}>
-						DSH
+						<Typography variant="subtitle1">
+							DSH (in.)
+						</Typography>
 						<TextField
 							id="dsh_min"
 							name="dsh_min"
 							label="Min"
 							type="number"
-							inputProps={{ min: 0, max: 500, step: 0.01 }}
+							inputProps={{
+								min  : 0,
+								max  : 500,
+								step : 0.01
+							}}
 							onChange={handleChange}
 							value={formData.dsh_min}
 						/>
@@ -144,6 +145,29 @@ function TreeSearchForm() {
 							onChange={handleChange}
 							value={formData.dsh_max}
 						/>
+					</Grid>
+				</Grid>
+				<Grid container item xs={12} md={6}>
+					<Grid item xs={6} md={12}>
+						<TextField
+							id="leaf_type"
+							name="leaf_type"
+							label="Leaf Type"
+							select
+							onChange={handleChange}
+							value={formData.leaf_type}
+							fullWidth
+						>
+							<MenuItem value="">Any</MenuItem>
+							<MenuItem value="deciduous">
+								Deciduous
+							</MenuItem>
+							<MenuItem value="evergreen">
+								Evergreen
+							</MenuItem>
+						</TextField>
+					</Grid>
+					<Grid item xs={6} md={12}>
 						<FormControlLabel
 							control={
 								<Checkbox
@@ -155,10 +179,36 @@ function TreeSearchForm() {
 								/>
 							}
 							label="Fruit Bearing"
+							labelPlacement="top"
 						/>
 					</Grid>
 				</Grid>
-
+				<Grid container alignItems="center" item xs={12}>
+					<Grid item md={8}>
+						<TextField
+							id="distance"
+							name="distance"
+							label="Miles from Map Center"
+							type="number"
+							fullWidth
+							inputProps={{ min: 0, step: 1 }}
+							onChange={handleChange}
+							value={formData.distance}
+						/>
+					</Grid>
+					<Grid container justify="center" item md={4}>
+						<Tooltip title="Requires user location permission">
+							<Button
+								size="small"
+								color="primary"
+								variant="contained"
+								onClick={handleGetLocationClick}
+							>
+								Center on Me
+							</Button>
+						</Tooltip>
+					</Grid>
+				</Grid>
 				<Button
 					fullWidth
 					variant="outlined"
