@@ -31,7 +31,6 @@ const anonymousAuth = async () => {
 const getToken = async () => {
 	if (auth.currentUser !== null) {
 		const token = await auth.currentUser.getIdToken(true);
-		console.log('token', token);
 		return token;
 	}
 	return;
