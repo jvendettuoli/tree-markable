@@ -79,17 +79,21 @@ const listImagePathsFromFirebase = async (collectionRef, id) => {
 
 		if (primaryRes.items.length === 0) return;
 
-		const albumImagePaths =
-			!albumRes.items.length === 0
-				? albumRes.items.map((item) => item.fullPath)
-				: [];
+		const albumImagePaths = !(albumRes.items.length === 0)
+			? albumRes.items.map((item) => item.fullPath)
+			: [];
+
+		console.log(
+			'listImagePathsFromFirebase - albumImagePaths',
+			albumImagePaths
+		);
 
 		const imagePaths = {
 			primary : primaryRes.items[0].fullPath,
 			album   : albumImagePaths
 		};
 
-		console.log('imagePaths', imagePaths);
+		console.log('listImagePathsFromFirebase - imagePaths', imagePaths);
 		return imagePaths;
 	} catch (err) {
 		console.error('listImagePathsFromFirebase - err', err);
@@ -116,6 +120,10 @@ const downloadImageUrlsFromFirebase = async (collectionRef, id) => {
 			id
 		);
 
+		console.log(
+			'downloadImageUrlsFromFirebase - imagePaths',
+			imagePaths
+		);
 		if (!imagePaths) return;
 
 		const primaryImageUrl = await storageRef

@@ -40,7 +40,10 @@ function TreePage() {
 					collectionRef,
 					id
 				);
-				setImageUrls((imageUrls) => imgUrls);
+				console.log('imgUrls', imgUrls);
+				if (imgUrls) {
+					setImageUrls(imgUrls);
+				}
 				setIsLoading(false);
 			};
 
@@ -55,12 +58,27 @@ function TreePage() {
 		return <div>Loading</div>;
 	}
 
+	const displayAnyImages = (imageUrls) => {
+		console.log('imageUrls', imageUrls);
+		if (imageUrls.primary === '') return 'No primary Images';
+		else if (imageUrls.album.length === 0) {
+			return;
+		}
+		else {
+			return (
+				<div>
+					<img src={imageUrls.primary} />
+					{imageUrls.album.map((imageUrl, idx) => (
+						<img key={`album-${idx}`} src={imageUrl} />
+					))}
+				</div>
+			);
+		}
+	};
+
 	return (
 		<div className={classes.root}>
-			Tree Images
-			{imageUrls.album.map((imageUrl, idx) => (
-				<img key={`album-${idx}`} src={imageUrl} />
-			))}
+			Tree Images{displayAnyImages(imageUrls)}
 		</div>
 	);
 }
