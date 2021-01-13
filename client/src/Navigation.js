@@ -51,7 +51,7 @@ function Navigation(props) {
 		<div className={classes.root}>
 			<NavAppBar handleDrawerToggle={handleDrawerToggle} />
 			<nav className={classes.drawer} aria-label="navigation drawer">
-				<Hidden smUp implementation="js">
+				<Hidden mdUp implementation="js">
 					<Drawer
 						container={container}
 						variant="temporary"
@@ -70,7 +70,7 @@ function Navigation(props) {
 						<NavDrawer />
 					</Drawer>
 				</Hidden>
-				<Hidden xsDown implementation="js">
+				<Hidden smDown implementation="js">
 					<Drawer
 						classes={{
 							paper : classes.drawerPaper

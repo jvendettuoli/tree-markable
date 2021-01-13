@@ -10,28 +10,28 @@ const useStyles = makeStyles((theme) => {
 			display : 'flex'
 		},
 		drawer      : {
-			[theme.breakpoints.up('sm')]: {
+			[theme.breakpoints.up('md')]: {
 				width      : drawerWidth,
 				flexShrink : 0
 			}
 		},
 		appBar      : {
-			[theme.breakpoints.up('sm')]: {
+			[theme.breakpoints.up('md')]: {
 				width      : `calc(100% - ${drawerWidth}px)`,
 				marginLeft : drawerWidth
 			}
 		},
 		menuButton  : {
 			marginRight                  : theme.spacing(2),
-			[theme.breakpoints.up('sm')]: {
+			[theme.breakpoints.up('md')]: {
 				display : 'none'
 			}
 		},
 		// necessary for content to be below app bar
 		toolbar     : {
 			...theme.mixins.toolbar,
-			display: 'flex',
-			justifyContent: 'space-between'
+			display        : 'flex',
+			justifyContent : 'space-between'
 		},
 		drawerPaper : {
 			width : drawerWidth
