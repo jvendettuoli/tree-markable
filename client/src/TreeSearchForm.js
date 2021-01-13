@@ -88,7 +88,7 @@ function TreeSearchForm() {
 						onChange={handleChange}
 						value={formData.leaf_type}
 					>
-						<MenuItem value="">Both</MenuItem>
+						<MenuItem value="">Any</MenuItem>
 						<MenuItem value="deciduous">Deciduous</MenuItem>
 						<MenuItem value="evergreen">Evergreen</MenuItem>
 					</TextField>

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
@@ -19,6 +20,7 @@ import {
 import ImagesInput from './ImagesInput';
 
 function CreateNewTree() {
+	const history = useHistory();
 	const INITIAL_TREE_FORM_DATA = {
 		name            : '',
 		description     : '',
@@ -100,7 +102,7 @@ function CreateNewTree() {
 		console.log('ImageFiles', imageFiles);
 		await uploadImagesToFirebase(treesRef, res.id, imageFiles);
 
-		// TODO Add push to tree details page
+		history.push(`/trees/${res.id}`);
 	};
 
 	return (

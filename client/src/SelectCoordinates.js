@@ -117,7 +117,7 @@ function SelectCoordinates({
 			</Grid>
 			<Button
 				variant="outlined"
-				color="seconary"
+				color="secondary"
 				fullWidth
 				onClick={toggleSelectMap}
 			>
