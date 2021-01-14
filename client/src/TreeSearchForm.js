@@ -12,6 +12,7 @@ import Slider from '@material-ui/core/Slider';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
+import Paper from '@material-ui/core/Paper';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import { getTreesFromApi } from './actions/trees';
@@ -141,7 +142,11 @@ function TreeSearchForm({ mapCenter, setGetLocation }) {
 							name="dsh_max"
 							label="Max"
 							type="number"
-							inputProps={{ min: 1, max: 500, step: 0.01 }}
+							inputProps={{
+								min  : 1,
+								max  : 500,
+								step : 0.01
+							}}
 							onChange={handleChange}
 							value={formData.dsh_max}
 						/>

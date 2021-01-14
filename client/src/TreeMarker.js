@@ -40,6 +40,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Box from '@material-ui/core/Box';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import useStyles from './styles/markerCard';
 
@@ -127,18 +128,22 @@ function TreeMarker({ tree }) {
 		if (savedTreeIds.includes(tree.id)) {
 			return (
 				<Grid container item xs={4}>
-					<IconButton onClick={handleRemoveTreeClick}>
-						<FavoriteIcon htmlColor="red" />
-					</IconButton>
+					<Tooltip title="Favorite">
+						<IconButton onClick={handleRemoveTreeClick}>
+							<FavoriteIcon htmlColor="red" />
+						</IconButton>
+					</Tooltip>
 				</Grid>
 			);
 		}
 		else {
 			return (
 				<Grid container item xs={4}>
-					<IconButton onClick={handleAddTreeClick}>
-						<FavoriteBorderIcon htmlColor="pink" />
-					</IconButton>
+					<Tooltip title="Unfavorite">
+						<IconButton onClick={handleAddTreeClick}>
+							<FavoriteBorderIcon htmlColor="pink" />
+						</IconButton>
+					</Tooltip>
 				</Grid>
 			);
 		}
@@ -179,12 +184,14 @@ function TreeMarker({ tree }) {
 						</IconButton>
 					</Grid>
 					<Grid item xs={4}>
-						<IconButton
-							component={Link}
-							to={`/trees${tree.id}`}
-						>
-							<NatureIcon color="primary" />
-						</IconButton>
+						<Tooltip title="Details">
+							<IconButton
+								component={Link}
+								to={`/trees${tree.id}`}
+							>
+								<NatureIcon color="primary" />
+							</IconButton>
+						</Tooltip>
 					</Grid>
 					{savedTreeIcon()}
 				</Grid>

@@ -81,7 +81,6 @@ class User {
 			GROUP BY u.firebase_id`,
 			[ username ]
 		);
-		console.log('findByUsername', userRes);
 
 		const user = userRes.rows[0];
 		if (user.saved_tree_ids[0] === null) user.saved_tree_ids = [];
