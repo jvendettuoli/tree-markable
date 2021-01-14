@@ -141,9 +141,7 @@ router.get('/:username/trees', ensureCorrectUser, async function(
 	next
 ) {
 	try {
-		console.log(req.token);
 		const savedTrees = await User.getTrees(req.token.uid);
-		console.log('savedTrees', savedTrees);
 		return res.json(savedTrees);
 	} catch (err) {
 		return next(err);
