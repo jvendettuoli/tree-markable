@@ -16,6 +16,7 @@ import useStyles from './styles/formStyle';
 import { getTreesFromApi } from './actions/trees';
 import SelectLocationMap from './SelectLocationMap';
 import ImagesInput from './ImagesInput';
+import Carousel from './Carousel';
 import {
 	treesRef,
 	downloadImageUrlsFromFirebase
@@ -78,7 +79,28 @@ function TreePage() {
 
 	return (
 		<div className={classes.root}>
-			Tree Images{displayAnyImages(imageUrls)}
+			<Grid container>
+				<Grid item xs={12}>
+					<Carousel
+						imageUrls={[
+							imageUrls.primary,
+							...imageUrls.album
+						]}
+					/>
+				</Grid>
+				<Grid container item xs={12}>
+					<Grid xs={12} md={6}>
+						Details
+					</Grid>
+					<Grid xs={12} md={6}>
+						Map
+					</Grid>
+				</Grid>
+				<Grid item xs={12}>
+					Comments
+				</Grid>
+			</Grid>
+			{/* Tree Images{displayAnyImages(imageUrls)} */}
 		</div>
 	);
 }

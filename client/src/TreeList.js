@@ -120,7 +120,7 @@ function TreeList({ trees }) {
 		{ field: 'leaf_type', headerName: 'Leaf Type' },
 		{
 			field      : 'link',
-			headerName : 'Map',
+			headerName : 'Details',
 			renderCell : (params) => <DetailsLinkBtn to={params.value} />
 		}
 	];

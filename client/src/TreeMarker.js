@@ -187,7 +187,7 @@ function TreeMarker({ tree }) {
 						<Tooltip title="Details">
 							<IconButton
 								component={Link}
-								to={`/trees${tree.id}`}
+								to={`/trees/${tree.id}`}
 							>
 								<NatureIcon color="primary" />
 							</IconButton>
