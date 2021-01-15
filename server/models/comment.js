@@ -2,6 +2,9 @@ const db = require('../db');
 const ExpressError = require('../helpers/expressError');
 const partialUpdate = require('../helpers/partialUpdate');
 
+const TREES = 'trees';
+const GROUPS = 'groups';
+
 /** Related functions for comments. */
 
 class Comment {
@@ -19,6 +22,12 @@ class Comment {
             RETURNING id, text, author, created_at`,
 				[ data.text, data.author ]
 			);
+
+			// Add Comment to relationship table
+			if (data.type === TREES)
+				Comment.addCommentOnTree(data.id, result.rows[0].id);
+			if (data.type === GROUPS)
+				Comment.addCommentOnTree(data.id, result.rows[0].id);
 
 			return result.rows[0];
 		} catch (err) {
@@ -105,6 +114,20 @@ class Comment {
 			);
 			throw notFound;
 		}
+	}
+
+	/**
+	 * Comment on Trees relationships
+	 */
+	/** Add Comment to a Tree */
+	static async addCommentOnTree(treeId, commentId) {
+		await db.query(
+			`INSERT INTO trees_comments 
+			(tree_id, comment_id)
+			VALUES ($1, $2)
+			`,
+			[ treeId, commentId ]
+		);
 	}
 }
 
