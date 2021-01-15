@@ -7,6 +7,7 @@ const ExpressError = require('./helpers/expressError');
 const usersRoutes = require('./routes/users');
 const groupsRoutes = require('./routes/groups');
 const treesRoutes = require('./routes/trees');
+const commentsRoutes = require('./routes/comments');
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(morgan('tiny'));
 app.use('/users', usersRoutes);
 app.use('/groups', groupsRoutes);
 app.use('/trees', treesRoutes);
+app.use('/comments', commentsRoutes);
 
 /** 404 handler */
 app.use(function(req, res, next) {
