@@ -65,7 +65,7 @@ function NavDrawer(props) {
 						<ListItemIcon>
 							<NatureIcon />
 						</ListItemIcon>
-						<ListItemText primary="Trees" />
+						<ListItemText primary="Tree" />
 					</ListItem>
 					<ListItem
 						button
@@ -77,7 +77,7 @@ function NavDrawer(props) {
 						<ListItemIcon>
 							<GroupIcon />
 						</ListItemIcon>
-						<ListItemText primary="Groups" />
+						<ListItemText primary="Group" />
 					</ListItem>
 				</List>
 			</List>
