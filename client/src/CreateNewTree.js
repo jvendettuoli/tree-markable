@@ -108,7 +108,7 @@ function CreateNewTree() {
 	return (
 		<div>
 			<Typography variant="h4" gutterBottom>
-				Creat New Tree
+				Create New Tree
 			</Typography>
 			<form onSubmit={handleSubmit} className={classes.form}>
 				<TreeFormBasicFields
