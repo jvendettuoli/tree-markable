@@ -16,7 +16,6 @@ function Routes() {
 		<Switch>
 			<Route exact path="/">
 				<Home />
-				<ShowTreesMap />
 			</Route>
 			<Route exact path="/signup">
 				<SignUp />

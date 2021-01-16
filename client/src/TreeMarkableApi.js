@@ -128,6 +128,39 @@ class TreeMarkableApi {
 		let res = await this.request(`trees/${treeId}`, 'delete');
 		return res.message;
 	}
+	/**
+     * Comment Requests
+     */
+
+	static async getComments(type, id) {
+		console.log('TreeMarkableApi Class getComments - Start');
+		let res = await this.request(`comments/${type}/${id}`);
+		return res.comments;
+	}
+	static async getComment(commentId) {
+		console.log('TreeMarkableApi Class getComment - Start');
+		let res = await this.request(`comments/${commentId}`);
+		return res.comment;
+	}
+	static async createComment(data) {
+		console.log('TreeMarkableApi Class createComment - Start', data);
+		let res = await this.request(`comments`, data, 'post');
+		return res.newComment;
+	}
+	static async updateComment(commentId, data) {
+		console.log('TreeMarkableApi Class updateComment - Start');
+		let res = await this.request(
+			`comments/${commentId}`,
+			data,
+			'patch'
+		);
+		return res.comment;
+	}
+	static async deleteComment(commentId) {
+		console.log('TreeMarkableApi Class deleteComment - Start');
+		let res = await this.request(`comments/${commentId}`, 'delete');
+		return res.message;
+	}
 
 	/**
 	 * User - Tree Relationship Requests

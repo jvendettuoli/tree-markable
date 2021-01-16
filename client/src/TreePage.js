@@ -18,6 +18,7 @@ import SelectLocationMap from './SelectLocationMap';
 import ImagesInput from './ImagesInput';
 import Carousel from './Carousel';
 import ShowTreeMap from './ShowTreeMap';
+import CommentsContainer from './CommentsContainer';
 import {
 	treesRef,
 	downloadImageUrlsFromFirebase
@@ -126,10 +127,10 @@ function TreePage() {
 						<Typography>{tree.description}</Typography>
 					</Grid>
 
-					{treeFieldLabels.map((item) => {
+					{treeFieldLabels.map((item, idx) => {
 						return (
 							item.value && (
-								<React.Fragment>
+								<React.Fragment key={`label-${idx}`}>
 									<Grid item xs={6}>
 										<Typography
 											variant={
@@ -158,7 +159,7 @@ function TreePage() {
 					<ShowTreeMap tree={tree} />
 				</Grid>
 				<Grid item xs={12}>
-					Comments
+					<CommentsContainer type="trees" id={tree.id} />
 				</Grid>
 			</Grid>
 		</div>
