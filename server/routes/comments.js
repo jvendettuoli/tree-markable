@@ -12,12 +12,34 @@ const {
 	ensureIsCreator
 } = require('../middleware/auth');
 
+const TREES = 'trees';
+const GROUPS = 'groups';
+
 /** GET / => {comments: [comment, ...]} */
 
 router.get('/', authRequired, async function(req, res, next) {
 	try {
 		delete req.query._token;
 		const comments = await Comment.findAll(req.query);
+		return res.json({ comments });
+	} catch (err) {
+		return next(err);
+	}
+});
+/** GET /[type]/[id] => {comments: [comment, ...]}
+ *  Gets comments for a specific tree or group
+ */
+
+router.get('/:type/:id', authRequired, async function(req, res, next) {
+	try {
+		delete req.query._token;
+		console.log(
+			'GET comments/:type/:id - params.type',
+			req.params.type
+		);
+		let comments;
+		if (req.params.type === TREES)
+			comments = await Comment.getCommentsOnTree(req.params.id);
 		return res.json({ comments });
 	} catch (err) {
 		return next(err);
@@ -42,7 +64,8 @@ router.post('/', authRequired, async function(req, res, next) {
 		delete req.body._token;
 
 		// Apply user's Firebase UID as the author ID
-		req.body.author = req.token.uid;
+		req.body.author_id = req.token.uid;
+		req.body.author_name = req.token.name;
 
 		const newComment = await Comment.create(req.body);
 		return res.status(201).json({ newComment });

@@ -17,10 +17,10 @@ class Comment {
 		try {
 			const result = await db.query(
 				`INSERT INTO comments 
-              (text, author) 
-            VALUES ($1, $2) 
-            RETURNING id, text, author, created_at`,
-				[ data.text, data.author ]
+              (text, author_name, author_id) 
+            VALUES ($1, $2, $3) 
+            RETURNING id, text, author_name, created_at`,
+				[ data.text, data.author_name, data.author_id ]
 			);
 
 			// Add Comment to relationship table
@@ -39,7 +39,7 @@ class Comment {
 
 	static async findAll() {
 		const result = await db.query(
-			`SELECT id, text, author, created_at
+			`SELECT id, text, author_name, created_at
           FROM comments
           ORDER BY created_at`
 		);
@@ -51,7 +51,7 @@ class Comment {
 
 	static async findOne(id) {
 		const commentRes = await db.query(
-			`SELECT id, text, author, created_at
+			`SELECT id, text, author_name, created_at
 			FROM comments
 			WHERE id = $1
 			ORDER BY created_at`,
@@ -128,6 +128,20 @@ class Comment {
 			`,
 			[ treeId, commentId ]
 		);
+	}
+	static async getCommentsOnTree(treeId) {
+		console.log('Models - Comment.getCommentsOnTree - Start', treeId);
+
+		const result = await db.query(
+			`SELECT c.id, c.text, c.author_name, c.created_at 
+				FROM trees_comments AS t_c
+				LEFT JOIN comments AS c ON t_c.comment_id= c.id
+				WHERE tree_id = $1
+				ORDER BY c.created_at`,
+			[ treeId ]
+		);
+
+		return result.rows;
 	}
 }
 

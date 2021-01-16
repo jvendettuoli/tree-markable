@@ -90,10 +90,10 @@ async function seed() {
 
 		await db.query(
 			`INSERT INTO trees
-            (name, common_name, scientific_name, description, geolocation, favorites, creator)
+            (name, common_name, scientific_name, description, geolocation, leaf_type, fruit_bearing, favorites, creator)
             VALUES
-            ('Test Tree 1', 'Bigleaf Maple', 'Acer Macrophyllum', 'Beautiful bigleaf maple on the corner of 8th and 6th', '-123.48034399738893,49.0913799544858', 0, $1),
-            ('Test Tree 2', 'Cottonwood', 'Populus balsamifera', 'Beautiful cottonwood on the corner of 9th and 5th', '-122.48034399738893,48.0913799544858', 0, $2);`,
+            ('Test Tree 1', 'Bigleaf Maple', 'Acer Macrophyllum', 'Beautiful bigleaf maple on the corner of 8th and 6th', '-123.48034399738893,49.0913799544858', 'deciduous', true,  0, $1),
+            ('Test Tree 2', 'Cottonwood', 'Populus balsamifera', 'Beautiful cottonwood on the corner of 9th and 5th', '-122.48034399738893,48.0913799544858', 'evergreen', false, 0, $2);`,
 			[ userRecords[0].uid, userRecords[2].uid ]
 		);
 	} catch (err) {
