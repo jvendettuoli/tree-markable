@@ -11,7 +11,9 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
+import Divider from '@material-ui/core/Divider';
 import CardContent from '@material-ui/core/CardContent';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
@@ -21,6 +23,7 @@ import { getTreeFromApi, getTreesFromApi } from './actions/trees';
 import SelectLocationMap from './SelectLocationMap';
 import ImagesInput from './ImagesInput';
 import Carousel from './Carousel';
+import Comment from './Comment';
 import ShowTreeMap from './ShowTreeMap';
 import {
 	treesRef,
@@ -86,42 +89,21 @@ function CommentsContainer({ type, id }) {
 
 	return (
 		<Grid container className="CommentsContainer">
-			<Typography variant="h4">Comments</Typography>
-			{comments.map((comment) => (
-				<Grid
-					key={`comment-${comment.id}`}
-					container
-					wrap="nowrap"
-				>
-					<Grid item>
-						<Avatar>{comment.author_name[0]}</Avatar>
-					</Grid>
-					<Grid container item>
-						<Grid item>
-							<Typography>{comment.text}</Typography>
-						</Grid>
-						<Grid container item justify="space-between">
-							<Typography variant="caption">
-								Posted By: {comment.author_name}
-							</Typography>
-							<Typography variant="caption">
-								{new Date(
-									comment.created_at
-								).toLocaleDateString('en-gb', {
-									year  : 'numeric',
-									month : 'long',
-									day   : 'numeric'
-								})}
-							</Typography>
-						</Grid>
-					</Grid>
-				</Grid>
-			))}
-
-			<Grid container>
+			<Typography variant="h4" gutterBottom>
+				Comments
+			</Typography>
+			<Grid container item>
+				{comments.map((comment) => (
+					<Comment
+						key={`comment-${comment.id}`}
+						comment={comment}
+					/>
+				))}
+			</Grid>
+			<Grid container item>
 				<Card>
 					<CardContent>
-						<Grid container alignItems="center">
+						<Grid container alignItems="center" spacing={2}>
 							<Grid item>
 								<Avatar className={classes.userAvatar}>
 									{username[0]}
