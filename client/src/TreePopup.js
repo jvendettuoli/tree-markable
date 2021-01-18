@@ -48,6 +48,7 @@ import { getTreesFromApi } from './actions/trees';
 import SelectLocationMap from './SelectLocationMap';
 import ImagesInput from './ImagesInput';
 import TreeMarkableApi from './TreeMarkableApi';
+import FavoriteIconBtn from './FavoriteIconBtn';
 
 import {
 	treesRef,
@@ -55,7 +56,7 @@ import {
 } from './firebase/firebaseStorage';
 import { addToSavedTrees, removeFromSavedTrees } from './actions/currUser';
 
-function TreeMarker({ tree }) {
+function TreePopup({ tree }) {
 	const classes = useStyles();
 	const history = useHistory();
 
@@ -89,18 +90,6 @@ function TreeMarker({ tree }) {
 		[ isLoading, dispatch ]
 	);
 
-	// On add tree icon click, add tree to users saved trees
-	const handleAddTreeClick = async () => {
-		console.log('savetree click', tree);
-		dispatch(addToSavedTrees(username, tree.id));
-	};
-
-	// On remove tree icon click, remove tree to users saved trees
-	const handleRemoveTreeClick = async () => {
-		console.log('removeTree click');
-		dispatch(removeFromSavedTrees(username, tree.id));
-	};
-
 	// If tree has a primary image, show it on popup. Show
 	// loading circle while retrieving image from storage.
 	// Show nothing if no image is saved in storage
@@ -120,31 +109,6 @@ function TreeMarker({ tree }) {
 					image={imageUrls.primary}
 					title={`${tree.name}`}
 				/>
-			);
-		}
-	};
-
-	const savedTreeIcon = () => {
-		if (savedTreeIds.includes(tree.id)) {
-			return (
-				<Grid container item xs={4}>
-					<Tooltip title="Favorite">
-						<IconButton onClick={handleRemoveTreeClick}>
-							<FavoriteIcon htmlColor="red" />
-						</IconButton>
-					</Tooltip>
-				</Grid>
-			);
-		}
-		else {
-			return (
-				<Grid container item xs={4}>
-					<Tooltip title="Unfavorite">
-						<IconButton onClick={handleAddTreeClick}>
-							<FavoriteBorderIcon htmlColor="pink" />
-						</IconButton>
-					</Tooltip>
-				</Grid>
 			);
 		}
 	};
@@ -193,10 +157,12 @@ function TreeMarker({ tree }) {
 							</IconButton>
 						</Tooltip>
 					</Grid>
-					{savedTreeIcon()}
+					<Grid container item xs={4}>
+						<FavoriteIconBtn treeId={tree.id} />
+					</Grid>
 				</Grid>
 			</CardActions>
 		</Card>
 	);
 }
-export default TreeMarker;
+export default TreePopup;

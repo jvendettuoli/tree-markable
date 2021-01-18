@@ -21,7 +21,7 @@ import useStyles from './styles/markerCard';
 
 import { addToSavedTrees, removeFromSavedTrees } from './actions/currUser';
 
-function FavoriteIconBtn({ tree }) {
+function FavoriteIconBtn({ treeId }) {
 	const classes = useStyles();
 	const [ isFav, setIsFav ] = useState(null);
 	const username = useSelector((st) => st.currUser.username);
@@ -31,19 +31,19 @@ function FavoriteIconBtn({ tree }) {
 	useEffect(
 		() => {
 			const checkFavStatus = (treeId, savedTreeIds) => {
-				setIsFav(savedTreeIds.includes(tree.id));
+				setIsFav(savedTreeIds.includes(treeId));
 			};
-			checkFavStatus(tree.id, savedTreeIds);
+			checkFavStatus(treeId, savedTreeIds);
 		},
-		[ savedTreeIds, tree ]
+		[ savedTreeIds, treeId ]
 	);
 
 	const handleClick = async () => {
 		if (isFav) {
-			dispatch(removeFromSavedTrees(username, tree.id));
+			dispatch(removeFromSavedTrees(username, treeId));
 		}
 		else {
-			dispatch(addToSavedTrees(username, tree.id));
+			dispatch(addToSavedTrees(username, treeId));
 		}
 		setIsFav(!isFav);
 	};

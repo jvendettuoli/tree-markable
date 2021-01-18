@@ -18,7 +18,7 @@ import 'leaflet-geosearch/dist/geosearch.css';
 
 import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import TreeMarker from './TreeMarker';
+import TreePopup from './TreePopup';
 import useStyles from './styles/leafletMap';
 
 // Set up search provider for Leaflet map
@@ -100,7 +100,7 @@ function ShowTreesMap({
 						]}
 					>
 						<Popup className={classes.treeMarkerPopup}>
-							<TreeMarker tree={tree} />
+							<TreePopup tree={tree} />
 						</Popup>
 					</Marker>
 				))}
