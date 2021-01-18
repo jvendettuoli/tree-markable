@@ -77,8 +77,8 @@ router.patch('/:id', ensureIsCreator, async function(req, res, next) {
 			});
 		}
 
-		const user = await Tree.update(req.params.id, req.body);
-		return res.json({ user });
+		const updatedTree = await Tree.update(req.params.id, req.body);
+		return res.json({ updatedTree });
 	} catch (err) {
 		return next(err);
 	}

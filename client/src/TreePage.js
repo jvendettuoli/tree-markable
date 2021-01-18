@@ -24,6 +24,7 @@ import {
 	downloadImageUrlsFromFirebase
 } from './firebase/firebaseStorage';
 import FavoriteIconBtn from './FavoriteIconBtn';
+import EditIconBtn from './EditIconBtn';
 
 function TreePage() {
 	const classes = useStyles();
@@ -124,6 +125,7 @@ function TreePage() {
 					<Grid container item xs={12} alignItems="center">
 						<Typography variant="h3">{tree.name}</Typography>
 						<FavoriteIconBtn treeId={tree.id} />
+						<EditIconBtn type={'trees'} id={tree.id} />
 					</Grid>
 					<Grid item xs={12}>
 						<Typography>{tree.description}</Typography>

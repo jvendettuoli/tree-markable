@@ -4,6 +4,7 @@
 
 export const LOAD_TREE = 'LOAD_TREE';
 export const LOAD_TREES = 'LOAD_TREES';
+export const TREE_ERROR = 'TREE_ERROR';
 
 export const LOAD_SAVED_TREE = 'LOAD_SAVED_TREE';
 export const REMOVE_SAVED_TREE = 'REMOVE_SAVED_TREE';

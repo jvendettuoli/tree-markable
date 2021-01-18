@@ -10,6 +10,7 @@ import CreateNewTree from './CreateNewTree';
 import ShowTreesMap from './ShowTreesMap';
 import ExploreTrees from './ExploreTrees';
 import TreePage from './TreePage';
+import EditTree from './EditTree';
 
 function Routes() {
 	return (
@@ -29,14 +30,17 @@ function Routes() {
 			<Route exact path="/upload">
 				<Upload />
 			</Route>
-			<Route exact path="/trees/new">
-				<CreateNewTree />
-			</Route>
 			<Route exact path="/trees">
 				<ExploreTrees />
 			</Route>
+			<Route exact path="/trees/new">
+				<CreateNewTree />
+			</Route>
 			<Route exact path="/trees/:id">
 				<TreePage />
+			</Route>
+			<Route exact path="/trees/:id/edit">
+				<EditTree />
 			</Route>
 		</Switch>
 	);

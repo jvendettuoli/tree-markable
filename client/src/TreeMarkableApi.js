@@ -121,7 +121,7 @@ class TreeMarkableApi {
 	static async updateTree(treeId, data) {
 		console.log('TreeMarkableApi Class updateTree - Start');
 		let res = await this.request(`trees/${treeId}`, data, 'patch');
-		return res.tree;
+		return res.updatedTree;
 	}
 	static async deleteTree(treeId) {
 		console.log('TreeMarkableApi Class deleteTree - Start');

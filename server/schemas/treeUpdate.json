@@ -36,7 +36,7 @@
     },
     "height": {
       "$id": "/properties/height",
-      "type": "number",
+      "type": ["number", "null"],
       "minimum": 0,
       "maximum": 500,
       "title": "The Height Schema",
@@ -44,7 +44,7 @@
     },
     "dsh": {
       "$id": "/properties/dsh",
-      "type": "number",
+      "type": ["number", "null"],
       "minimum": 0,
       "maximum": 500,
       "title": "The DSH Schema",
@@ -52,7 +52,7 @@
     },
     "leaf_type": {
       "$id": "/properties/leaf_type",
-      "type": "string",
+      "type": ["string","null"],
       "title": "The Leaf Type Schema",
       "examples": ["deciduous", "evergreen"]
     },

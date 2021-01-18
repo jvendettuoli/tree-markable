@@ -19,7 +19,7 @@ function addToSavedTrees(username, treeId) {
 			dispatch(treeSaved(treeId));
 		} catch (err) {
 			console.log('addToSavedTrees error', err);
-			dispatch(gotCurrUserError(err));
+			dispatch(currUserError(err));
 		}
 	};
 }
@@ -31,12 +31,12 @@ function removeFromSavedTrees(username, treeId) {
 			dispatch(treeRemoved(treeId));
 		} catch (err) {
 			console.log('removeFromSavedTrees error', err);
-			dispatch(gotCurrUserError(err));
+			dispatch(currUserError(err));
 		}
 	};
 }
 
-function gotCurrUserError(error) {
+function currUserError(error) {
 	return { type: LOAD_CURR_USER_ERROR, payload: error };
 }
 function treeSaved(treeId) {
