@@ -80,8 +80,11 @@ router.patch('/:id', ensureIsCreator, async function(req, res, next) {
 	try {
 		delete req.body._token;
 
-		const user = await Comment.update(req.params.id, req.body);
-		return res.json({ user });
+		const updatedComment = await Comment.update(
+			req.params.id,
+			req.body
+		);
+		return res.json({ updatedComment });
 	} catch (err) {
 		return next(err);
 	}

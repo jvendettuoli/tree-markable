@@ -16,7 +16,12 @@ import CardContent from '@material-ui/core/CardContent';
 import Avatar from '@material-ui/core/Avatar';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
-import SendIcon from '@material-ui/icons/Send';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import {
+	MoreVert as MoreVertIcon,
+	Send as SendIcon
+} from '@material-ui/icons';
 
 import { getTreeFromApi, getTreesFromApi } from './actions/trees';
 import SelectLocationMap from './SelectLocationMap';
@@ -29,27 +34,138 @@ import {
 } from './firebase/firebaseStorage';
 
 import TreeMarkableApi from './TreeMarkableApi';
+import EditIconBtn from './EditIconBtn';
 
 const useStyles = makeStyles((theme) => ({
-	avatar : {
+	avatarOther : {
 		backgroundColor : theme.palette.secondary.light
+	},
+	avatarOwn   : {
+		backgroundColor : theme.palette.primary.light
 	}
 }));
 
-function CommentsContainer({ comment }) {
+function Comment({ onDelete, username, comment }) {
 	const classes = useStyles();
+	const [ editing, setEditing ] = useState(false);
+	const [ editText, setEditText ] = useState(comment.text);
+	const [ anchorEl, setAnchorEl ] = useState(null);
+	const open = Boolean(anchorEl);
+
+	const handleClick = (evt) => {
+		setAnchorEl(evt.currentTarget);
+	};
+
+	const handleEditClick = () => {
+		setAnchorEl(null);
+		setEditing(true);
+	};
+	const handleDeleteClick = async () => {
+		setAnchorEl(null);
+		await TreeMarkableApi.deleteComment(comment.id);
+		onDelete();
+	};
+
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
+	const handleChange = (evt) => {
+		setEditText(evt.target.value);
+	};
+
+	const handleSubmit = async (evt) => {
+		evt.preventDefault();
+		setEditText(editText.trim());
+		if (editText !== comment.text) {
+			const res = await TreeMarkableApi.updateComment(comment.id, {
+				text : editText
+			});
+			comment.text = res.text;
+		}
+		setEditing(false);
+	};
 
 	return (
 		<Grid container item wrap="nowrap" style={{ marginBottom: 15 }}>
 			<Grid item style={{ marginRight: 15 }}>
-				<Avatar className={classes.avatar}>
+				<Avatar
+					className={
+						username === comment.author_name ? (
+							classes.avatarOwn
+						) : (
+							classes.avatarOther
+						)
+					}
+				>
 					{comment.author_name[0]}
 				</Avatar>
 			</Grid>
-			<Grid container item>
-				<Grid item>
-					<Typography>{comment.text}</Typography>
-				</Grid>
+			<Grid container item alignItems="center">
+				{editing ? (
+					<Grid
+						container
+						wrap="nowrap"
+						item
+						justify="space-between"
+					>
+						<Grid item style={{ width: '100%' }}>
+							<form
+								onSubmit={handleSubmit}
+								id="edit-comment"
+							>
+								<TextField
+									id="text"
+									onChange={handleChange}
+									type="text"
+									fullWidth
+									multiline
+									value={editText}
+								/>
+							</form>
+						</Grid>
+						<Grid item>
+							<IconButton form="edit-comment" type="submit">
+								<SendIcon />
+							</IconButton>
+						</Grid>
+					</Grid>
+				) : (
+					<Grid
+						container
+						wrap="nowrap"
+						item
+						justify="space-between"
+					>
+						<Grid item>
+							<Typography>{comment.text}</Typography>
+						</Grid>
+						<Grid item>
+							<IconButton
+								aria-label="more"
+								aria-controls="long-menu"
+								aria-haspopup="true"
+								onClick={handleClick}
+							>
+								<MoreVertIcon fontSize="small" />
+							</IconButton>
+							<Menu
+								id="long-menu"
+								anchorEl={anchorEl}
+								keepMounted
+								open={open}
+								onClose={handleClose}
+							>
+								<MenuItem onClick={handleEditClick}>
+									Edit
+								</MenuItem>
+								<MenuItem onClick={handleDeleteClick}>
+									Delete
+								</MenuItem>
+							</Menu>
+						</Grid>
+					</Grid>
+				)}
 				<Grid container item justify="space-between">
 					<Typography variant="caption">
 						Posted By: {comment.author_name}
@@ -68,4 +184,4 @@ function CommentsContainer({ comment }) {
 		</Grid>
 	);
 }
-export default CommentsContainer;
+export default Comment;

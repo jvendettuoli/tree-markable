@@ -47,6 +47,7 @@ function CommentsContainer({ type, id }) {
 	};
 	const [ formData, setFormData ] = useState(INITIAL_STATE);
 	const [ isLoading, setIsLoading ] = useState(true);
+	const [ commentDeleted, setCommentDeleted ] = useState(false);
 	const [ comments, setComments ] = useState([]);
 	const username = useSelector((st) => st.currUser.username);
 
@@ -62,11 +63,16 @@ function CommentsContainer({ type, id }) {
 				console.log('getComments - comments', comments);
 				setComments(comments);
 				setIsLoading(false);
+				setCommentDeleted(false);
 			};
 			getComments(type, id);
 		},
-		[ isLoading, type, id ]
+		[ isLoading, type, id, commentDeleted ]
 	);
+
+	const handleDeleteComment = () => {
+		setCommentDeleted(true);
+	};
 
 	const handleChange = (evt) => {
 		const { name, value } = evt.target;
@@ -93,43 +99,61 @@ function CommentsContainer({ type, id }) {
 				Comments
 			</Typography>
 			<Grid container item>
-				{comments.map((comment) => (
-					<Comment
-						key={`comment-${comment.id}`}
-						comment={comment}
-					/>
-				))}
+				{comments.length > 0 ? (
+					comments.map((comment) => (
+						<Comment
+							key={`comment-${comment.id}`}
+							onDelete={handleDeleteComment}
+							comment={comment}
+							username={username}
+						/>
+					))
+				) : (
+					<Typography>No Comments</Typography>
+				)}
 			</Grid>
-			<Grid container item>
-				<Card>
-					<CardContent>
-						<Grid container alignItems="center" spacing={2}>
-							<Grid item>
-								<Avatar className={classes.userAvatar}>
-									{username[0]}
-								</Avatar>
+			{username && (
+				<Grid container item>
+					<Card>
+						<CardContent>
+							<Grid
+								container
+								alignItems="center"
+								spacing={2}
+							>
+								<Grid item>
+									<Avatar className={classes.userAvatar}>
+										{username[0]}
+									</Avatar>
+								</Grid>
+								<Grid item>
+									<form
+										id="comment"
+										onSubmit={handleSubmit}
+									>
+										<TextField
+											id="text"
+											name="text"
+											placeholder="Add comment..."
+											fullWidth
+											onChange={handleChange}
+											value={formData.text}
+										/>
+									</form>
+								</Grid>
+								<Grid item>
+									<IconButton
+										form="comment"
+										type="submit"
+									>
+										<SendIcon />
+									</IconButton>
+								</Grid>
 							</Grid>
-							<Grid item>
-								<form id="comment" onSubmit={handleSubmit}>
-									<TextField
-										id="text"
-										name="text"
-										placeholder="Add comment..."
-										fullWidth
-										onChange={handleChange}
-										value={formData.text}
-									/>
-								</form>
-							</Grid>
-							<Grid item>
-								<IconButton form="comment" type="submit">
-									<SendIcon />
-								</IconButton>
-							</Grid>
-						</Grid>
-					</CardContent>
-				</Card>
-			</Grid>
+						</CardContent>
+					</Card>
+				</Grid>
+			)}
 		</Grid>
 	);
 }

@@ -51,7 +51,7 @@ class Comment {
 
 	static async findOne(id) {
 		const commentRes = await db.query(
-			`SELECT id, text, author_name, created_at
+			`SELECT id, text, author_name, author_id, created_at
 			FROM comments
 			WHERE id = $1
 			ORDER BY created_at`,
