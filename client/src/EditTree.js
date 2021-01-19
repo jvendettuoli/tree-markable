@@ -29,13 +29,13 @@ function EditTree() {
 	const history = useHistory();
 	const INITIAL_TREE_FORM_DATA = {
 		name            : tree.name,
-		description     : tree.description,
-		common_name     : tree.common_name,
-		scientific_name : tree.scientific_name,
-		height          : tree.height,
-		dsh             : tree.dsh,
-		leaf_type       : tree.leaf_type,
-		fruit_bearing   : tree.fruit_bearing
+		description     : tree.description || '',
+		common_name     : tree.common_name || '',
+		scientific_name : tree.scientific_name || '',
+		height          : tree.height || '',
+		dsh             : tree.dsh || '',
+		leaf_type       : tree.leaf_type || '',
+		fruit_bearing   : tree.fruit_bearing || false
 	};
 	const classes = useStyles();
 	const [ treeFormData, setTreeFormData ] = useState(
@@ -92,17 +92,10 @@ function EditTree() {
 			geolocation : {
 				latitude  : parseFloat(coordinates.lat),
 				longitude : parseFloat(coordinates.lng)
-			}
+			},
+			height      : treeFormData.height || null,
+			dsh         : treeFormData.dsh || null
 		};
-
-		for (let field in editTree) {
-			if (editTree[field] === '') {
-				editTree[field] = null;
-			}
-			else if (field === 'height' || field === 'dsh') {
-				editTree[field] = parseFloat(editTree[field]);
-			}
-		}
 
 		console.log('editTree', editTree);
 		dispatch(updateTreeInApi(id, editTree));

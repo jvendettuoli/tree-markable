@@ -90,7 +90,7 @@ function ExploreTrees() {
 	);
 
 	let trees = useSelector((st) =>
-		Object.values(st.trees).map((tree) => tree)
+		Object.values(st.trees.trees).map((tree) => tree)
 	);
 
 	if (isLoading) {

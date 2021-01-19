@@ -29,7 +29,8 @@ import EditIconBtn from './EditIconBtn';
 function TreePage() {
 	const classes = useStyles();
 	const { id } = useParams();
-	const tree = useSelector((st) => st.trees[id]);
+	const tree = useSelector((st) => st.trees.trees[id]);
+	const uid = useSelector((st) => st.currUser.uid);
 	console.log('TreePage - tree', tree);
 	const [ isLoading, setIsLoading ] = useState(true);
 	const [ imageUrls, setImageUrls ] = useState({
@@ -121,15 +122,27 @@ function TreePage() {
 				<Grid item xs={12}>
 					{displayImages(imageUrls)}
 				</Grid>
-				<Grid container item xs={12} md={6}>
+				<Grid
+					container
+					item
+					xs={12}
+					md={6}
+					alignItems="flex-start"
+				>
 					<Grid container item xs={12} alignItems="center">
 						<Typography variant="h3">{tree.name}</Typography>
-						<FavoriteIconBtn treeId={tree.id} />
-						<EditIconBtn type={'trees'} id={tree.id} />
+						<Grid item>
+							<FavoriteIconBtn treeId={tree.id} />
+							{uid === tree.creator && (
+								<EditIconBtn type={'trees'} id={tree.id} />
+							)}
+						</Grid>
 					</Grid>
-					<Grid item xs={12}>
-						<Typography>{tree.description}</Typography>
-					</Grid>
+					{tree.description && (
+						<Grid item xs={12}>
+							<Typography>{tree.description}</Typography>
+						</Grid>
+					)}
 
 					{treeFieldLabels.map((item, idx) => {
 						return (

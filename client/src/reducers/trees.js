@@ -2,9 +2,14 @@
  * treeReducer with cases for reseting data and loading a tree.
  */
 
-import { LOAD_TREE, LOAD_TREES, RESET_ALL } from '../actions/types';
+import {
+	LOAD_TREE,
+	LOAD_TREES,
+	TREE_ERROR,
+	RESET_ALL
+} from '../actions/types';
 
-const INITIAL_STATE = [];
+const INITIAL_STATE = { trees: {}, error: null };
 
 function trees(state = INITIAL_STATE, action) {
 	switch (action.type) {
@@ -15,7 +20,11 @@ function trees(state = INITIAL_STATE, action) {
 			console.log('REDUCERS LOAD_TREE - action', action);
 			return {
 				...state,
-				[action.payload.id]: { ...action.payload }
+				trees : {
+					...state.trees,
+					[action.payload.id]: { ...action.payload }
+				},
+				error : null
 			};
 		case LOAD_TREES:
 			console.log('REDUCERS LOAD_TREES - action', action);
@@ -24,7 +33,11 @@ function trees(state = INITIAL_STATE, action) {
 				return obj;
 			}, {});
 
-			return treesObj;
+			return { trees: treesObj, error: null };
+		case TREE_ERROR:
+			console.log('REDUCERS TREE_ERROR - action', action);
+
+			return { ...state, error: action.payload };
 
 		default:
 			return state;
