@@ -10,7 +10,7 @@ import Box from '@material-ui/core/Box';
 
 import useStyles from './styles/formStyle';
 
-function ImagesInput({ onImageFilesChange }) {
+function ImagesInput({ allowMultiple = true, onImageFilesChange }) {
 	const classes = useStyles();
 	const [ imageUrls, setImageUrls ] = useState([]);
 
@@ -55,7 +55,7 @@ function ImagesInput({ onImageFilesChange }) {
 				style={{ display: 'none' }}
 				id="file-upload"
 				type="file"
-				inputProps={{ multiple: true }}
+				inputProps={{ multiple: allowMultiple }}
 				onChange={handleChange}
 			/>
 			<Button
@@ -64,7 +64,7 @@ function ImagesInput({ onImageFilesChange }) {
 				htmlFor="file-upload"
 				component="label"
 			>
-				Choose Files
+				{allowMultiple ? 'Choose Files' : 'Choose File'}
 			</Button>
 			<Grid item xs={12}>
 				{imageUrls.map((url) => (

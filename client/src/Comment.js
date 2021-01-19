@@ -51,6 +51,7 @@ function Comment({ onDelete, username, comment }) {
 	const [ editText, setEditText ] = useState(comment.text);
 	const [ anchorEl, setAnchorEl ] = useState(null);
 	const open = Boolean(anchorEl);
+	const isCommentAuthor = username === comment.author_name;
 
 	const handleClick = (evt) => {
 		setAnchorEl(evt.currentTarget);
@@ -91,7 +92,7 @@ function Comment({ onDelete, username, comment }) {
 			<Grid item style={{ marginRight: 15 }}>
 				<Avatar
 					className={
-						username === comment.author_name ? (
+						isCommentAuthor ? (
 							classes.avatarOwn
 						) : (
 							classes.avatarOther
@@ -140,30 +141,32 @@ function Comment({ onDelete, username, comment }) {
 						<Grid item>
 							<Typography>{comment.text}</Typography>
 						</Grid>
-						<Grid item>
-							<IconButton
-								aria-label="more"
-								aria-controls="long-menu"
-								aria-haspopup="true"
-								onClick={handleClick}
-							>
-								<MoreVertIcon fontSize="small" />
-							</IconButton>
-							<Menu
-								id="long-menu"
-								anchorEl={anchorEl}
-								keepMounted
-								open={open}
-								onClose={handleClose}
-							>
-								<MenuItem onClick={handleEditClick}>
-									Edit
-								</MenuItem>
-								<MenuItem onClick={handleDeleteClick}>
-									Delete
-								</MenuItem>
-							</Menu>
-						</Grid>
+						{isCommentAuthor && (
+							<Grid item>
+								<IconButton
+									aria-label="more"
+									aria-controls="long-menu"
+									aria-haspopup="true"
+									onClick={handleClick}
+								>
+									<MoreVertIcon fontSize="small" />
+								</IconButton>
+								<Menu
+									id="long-menu"
+									anchorEl={anchorEl}
+									keepMounted
+									open={open}
+									onClose={handleClose}
+								>
+									<MenuItem onClick={handleEditClick}>
+										Edit
+									</MenuItem>
+									<MenuItem onClick={handleDeleteClick}>
+										Delete
+									</MenuItem>
+								</Menu>
+							</Grid>
+						)}
 					</Grid>
 				)}
 				<Grid container item justify="space-between">

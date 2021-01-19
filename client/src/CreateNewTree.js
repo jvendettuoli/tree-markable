@@ -96,13 +96,16 @@ function CreateNewTree() {
 		}
 
 		console.log('newtree', newTree);
+		try {
+			const res = await TreeMarkableApi.createTree(newTree);
+			console.log('Trees Submit res', res);
+			console.log('ImageFiles', imageFiles);
+			await uploadImagesToFirebase(treesRef, res.id, imageFiles);
 
-		const res = await TreeMarkableApi.createTree(newTree);
-		console.log('Trees Submit res', res);
-		console.log('ImageFiles', imageFiles);
-		await uploadImagesToFirebase(treesRef, res.id, imageFiles);
-
-		history.push(`/trees/${res.id}`);
+			history.push(`/trees/${res.id}`);
+		} catch (err) {
+			console.log('TreeForm Errors', err);
+		}
 	};
 
 	return (

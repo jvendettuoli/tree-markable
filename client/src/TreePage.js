@@ -129,7 +129,13 @@ function TreePage() {
 					md={6}
 					alignItems="flex-start"
 				>
-					<Grid container item xs={12} alignItems="center">
+					<Grid
+						container
+						item
+						xs={12}
+						alignItems="center"
+						wrap="nowrap"
+					>
 						<Typography variant="h3">{tree.name}</Typography>
 						<Grid item>
 							<FavoriteIconBtn treeId={tree.id} />
