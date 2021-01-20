@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, withRouter, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import AppBar from '@material-ui/core/AppBar';
@@ -29,12 +29,13 @@ import useStyles from './styles/navDrawer';
 import { signOutUser } from './actions/auth';
 
 function NavAppBar({ handleDrawerToggle, ...props }) {
-	const { windo } = props;
+	const { window } = props;
+	const history = useHistory();
 	const theme = useTheme();
 	const classes = useStyles(theme);
 	const isLoggedIn = useSelector((st) => st.auth.authenticated);
 	const dispatch = useDispatch();
-	const [ anchorEl, setAnchorEl ] = React.useState(null);
+	const [ anchorEl, setAnchorEl ] = useState(null);
 	const open = Boolean(anchorEl);
 
 	const handleMenu = (event) => {
@@ -48,6 +49,7 @@ function NavAppBar({ handleDrawerToggle, ...props }) {
 	const handleSignOut = () => {
 		handleClose();
 		dispatch(signOutUser());
+		history.push('/');
 	};
 
 	return (
@@ -62,9 +64,14 @@ function NavAppBar({ handleDrawerToggle, ...props }) {
 				>
 					<MenuIcon />
 				</IconButton>
-				<Typography variant="h6" noWrap>
-					Tree-Markable
-				</Typography>
+				<Hidden mdUp implementation="js">
+					<Typography variant="h6" noWrap>
+						Tree-Markable
+					</Typography>
+				</Hidden>
+				<Hidden smDown implementation="js">
+					<div />
+				</Hidden>
 				{isLoggedIn ? (
 					<div>
 						<IconButton

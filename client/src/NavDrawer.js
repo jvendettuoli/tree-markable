@@ -2,6 +2,8 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 
 import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -29,10 +31,24 @@ function NavDrawer(props) {
 		<div>
 			<Paper
 				className={classes.toolbar}
-				style={{ backgroundColor: theme.palette.primary.main }}
+				style={{
+					backgroundColor : theme.palette.primary.dark,
+					justifyContent  : 'center',
+					alignItems      : 'center'
+				}}
 				square
 				elevation={5}
-			/>
+			>
+				<Typography
+					align="center"
+					variant="h5"
+					noWrap
+					style={{ color: 'white' }}
+				>
+					Tree-Markable
+				</Typography>
+			</Paper>
+
 			<Divider />
 			<List>
 				<ListItem

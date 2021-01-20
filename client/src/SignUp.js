@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { signUpUser } from './actions/auth';
@@ -16,6 +17,7 @@ import { getUserFromApi } from './actions/currUser';
 
 function SignUp() {
 	const classes = useStyles();
+	const history = useHistory();
 	const dispatch = useDispatch();
 	const INITIAL_FORM_DATA = {
 		username : '',
@@ -47,7 +49,6 @@ function SignUp() {
 
 	const handleMapCoordinatesChange = (coords) => {
 		console.log('handleMapCoordinatesChange', coords);
-
 		setCoordinates(coords);
 	};
 
@@ -69,6 +70,7 @@ function SignUp() {
 			is_admin         : false
 		};
 		dispatch(signUpUser(credentials, userData));
+		history.push('/');
 	};
 
 	return (

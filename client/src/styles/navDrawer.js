@@ -3,8 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 const drawerWidth = 200;
 
 const useStyles = makeStyles((theme) => {
-	console.log('inuseSTyles- theme', theme);
-	console.log('inuseSTyles- theme', theme.spacing(3));
 	return {
 		root        : {
 			display : 'flex'
@@ -30,8 +28,9 @@ const useStyles = makeStyles((theme) => {
 		// necessary for content to be below app bar
 		toolbar     : {
 			...theme.mixins.toolbar,
-			display        : 'flex',
-			justifyContent : 'space-between'
+			display         : 'flex',
+			justifyContent  : 'space-between',
+			backgroundColor : theme.palette.primary.dark
 		},
 		drawerPaper : {
 			width : drawerWidth

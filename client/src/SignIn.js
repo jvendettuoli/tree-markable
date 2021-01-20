@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { signInUser } from './actions/auth';
 import { useDispatch } from 'react-redux';
 
@@ -15,6 +16,7 @@ function SignIn() {
 		email    : '',
 		password : ''
 	};
+	const history = useHistory();
 	const [ formData, setFormData ] = useState(INITIAL_FORM_DATA);
 	const dispatch = useDispatch();
 
@@ -29,9 +31,8 @@ function SignIn() {
 
 	const handleSubmit = (evt) => {
 		evt.preventDefault();
-		console.log('SignIn submit');
 		dispatch(signInUser(formData));
-		console.log('SignIn submit post');
+		history.push('/');
 	};
 	return (
 		<Grid container className={classes.form}>
