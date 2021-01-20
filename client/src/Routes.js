@@ -6,7 +6,7 @@ import SignUp from './SignUp';
 import SignIn from './SignIn';
 import Upload from './UploadImagesToFirebase';
 import CreateNewTree from './CreateNewTree';
-import ShowTreesMap from './ShowTreesMap';
+import NotFound from './NotFound';
 import ExploreTrees from './ExploreTrees';
 import TreePage from './TreePage';
 import EditTree from './EditTree';
@@ -41,6 +41,9 @@ function Routes() {
 			</Route>
 			<Route exact path="/groups/new">
 				<CreateNewGroup />
+			</Route>
+			<Route>
+				<NotFound />
 			</Route>
 		</Switch>
 	);

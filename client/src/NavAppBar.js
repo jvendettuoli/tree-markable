@@ -29,7 +29,6 @@ import useStyles from './styles/navDrawer';
 import { signOutUser } from './actions/auth';
 
 function NavAppBar({ handleDrawerToggle, ...props }) {
-	const { window } = props;
 	const history = useHistory();
 	const theme = useTheme();
 	const classes = useStyles(theme);
