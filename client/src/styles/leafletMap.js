@@ -5,7 +5,10 @@ const useStyles = makeStyles((theme) => ({
 		width          : '100%',
 		height         : '70vh',
 		display        : 'flex',
-		justifyContent : 'center'
+		justifyContent : 'center',
+		'& .open'      : {
+			maxWidth : 330
+		}
 	},
 	treeMarkerPopup : {
 		'& .leaflet-popup-content' : {
