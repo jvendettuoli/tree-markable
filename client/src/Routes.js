@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import Home from './Home';
+import LandingPage from './LandingPage';
 import SignUp from './SignUp';
 import SignIn from './SignIn';
 import Upload from './UploadImagesToFirebase';
@@ -16,7 +16,7 @@ function Routes() {
 	return (
 		<Switch>
 			<Route exact path="/">
-				<Home />
+				<LandingPage />
 			</Route>
 			<Route exact path="/signup">
 				<SignUp />

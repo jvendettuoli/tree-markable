@@ -25,7 +25,7 @@ import { TransitEnterexitRounded } from '@material-ui/icons';
 function EditTree() {
 	const { id } = useParams();
 	const dispatch = useDispatch();
-	const tree = useSelector((st) => st.trees[id]);
+	const tree = useSelector((st) => st.trees.trees[id]);
 	const history = useHistory();
 	const INITIAL_TREE_FORM_DATA = {
 		name            : tree.name,
@@ -48,7 +48,6 @@ function EditTree() {
 	const [ imageFiles, setImageFiles ] = useState([]);
 
 	const handleTreeFormChange = (data) => {
-		console.log('handleTreeFormChange', data);
 		let { name, value } = data;
 		if (name === 'fruit_bearing') {
 			value = data.checked;
