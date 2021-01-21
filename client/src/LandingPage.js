@@ -28,8 +28,8 @@ const useStyles = makeStyles((theme) => {
 });
 
 function LandingPage() {
-	const classes = useStyles();
 	const theme = useTheme();
+	const classes = useStyles(theme);
 
 	const lightDivider = (
 		<Grid item xs={12}>
@@ -58,7 +58,7 @@ function LandingPage() {
 					paddingTop                   : theme.spacing(10),
 					paddingRight                 : theme.spacing(3),
 					paddingLeft                  : theme.spacing(3),
-					[theme.breakpoints.up('lg')]: {
+					[theme.breakpoints.up('md')]: {
 						paddingRight : theme.spacing(0),
 						paddingLeft  : theme.spacing(0)
 					}

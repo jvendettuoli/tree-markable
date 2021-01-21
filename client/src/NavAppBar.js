@@ -33,6 +33,7 @@ function NavAppBar({ handleDrawerToggle, ...props }) {
 	const theme = useTheme();
 	const classes = useStyles(theme);
 	const isLoggedIn = useSelector((st) => st.auth.authenticated);
+	const username = useSelector((st) => st.currUser.username);
 	const dispatch = useDispatch();
 	const [ anchorEl, setAnchorEl ] = useState(null);
 	const open = Boolean(anchorEl);
@@ -43,6 +44,10 @@ function NavAppBar({ handleDrawerToggle, ...props }) {
 
 	const handleClose = () => {
 		setAnchorEl(null);
+	};
+	const handleProfileClick = () => {
+		handleClose();
+		history.push(`/users/${username}`);
 	};
 
 	const handleSignOut = () => {
@@ -97,7 +102,7 @@ function NavAppBar({ handleDrawerToggle, ...props }) {
 							open={open}
 							onClose={handleClose}
 						>
-							<MenuItem onClick={handleClose}>
+							<MenuItem onClick={handleProfileClick}>
 								Profile
 							</MenuItem>
 							<MenuItem onClick={handleSignOut}>

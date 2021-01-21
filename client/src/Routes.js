@@ -4,13 +4,13 @@ import { Switch, Route } from 'react-router-dom';
 import LandingPage from './LandingPage';
 import SignUp from './SignUp';
 import SignIn from './SignIn';
-import Upload from './UploadImagesToFirebase';
 import CreateNewTree from './CreateNewTree';
 import NotFound from './NotFound';
 import ExploreTrees from './ExploreTrees';
 import TreePage from './TreePage';
 import EditTree from './EditTree';
 import CreateNewGroup from './CreateNewGroup';
+import UserProfilePage from './UserProfilePage';
 
 function Routes() {
 	return (
@@ -18,14 +18,14 @@ function Routes() {
 			<Route exact path="/">
 				<LandingPage />
 			</Route>
+			<Route exact path="/users/:id">
+				<UserProfilePage />
+			</Route>
 			<Route exact path="/signup">
 				<SignUp />
 			</Route>
 			<Route exact path="/signin">
 				<SignIn />
-			</Route>
-			<Route exact path="/upload">
-				<Upload />
 			</Route>
 			<Route exact path="/trees">
 				<ExploreTrees />
