@@ -38,8 +38,12 @@ function CreateNewTree() {
 	const [ coordinates, setCoordinates ] = useState({ lat: '', lng: '' });
 	const [ imageFiles, setImageFiles ] = useState([]);
 
+	console.log('CreateNewTree Load - coordinates', coordinates);
+	console.log('CreateNewTree Load - imageFiles', imageFiles);
+
+	useEffect(() => {});
+
 	const handleTreeFormChange = (data) => {
-		console.log('handleTreeFormChange', data);
 		let { name, value } = data;
 		if (name === 'fruit_bearing') {
 			value = data.checked;
@@ -52,7 +56,7 @@ function CreateNewTree() {
 	};
 
 	const handleCoordinatesChange = (data) => {
-		console.log('handleCoordinatesChange', data);
+		console.log('CreateNewTree - handleCoordinatesChange', data);
 		const { name, value } = data;
 
 		setCoordinates((fData) => ({
@@ -62,14 +66,12 @@ function CreateNewTree() {
 	};
 
 	const handleMapCoordinatesChange = (coords) => {
-		console.log('handleMapCoordinatesChange', coords);
+		console.log('CreateNewTree - handleMapCoordinatesChange', coords);
 
 		setCoordinates(coords);
 	};
 
 	const handleImageFilesChange = (files) => {
-		console.log('handleImageFilesChange', files);
-
 		setImageFiles(files);
 	};
 
@@ -99,7 +101,10 @@ function CreateNewTree() {
 		try {
 			const res = await TreeMarkableApi.createTree(newTree);
 			console.log('Trees Submit res', res);
-			console.log('ImageFiles', imageFiles);
+			console.log(
+				'CreateNewTree- handleSubmit -ImageFiles',
+				imageFiles
+			);
 			await uploadImagesToFirebase(treesRef, res.id, imageFiles);
 
 			history.push(`/trees/${res.id}`);
