@@ -121,10 +121,10 @@ function LandingPageElement({
 			</Hidden>
 			<Hidden only={[ 'md', 'lg' ]} implementation="js">
 				<Grid container item xs={12}>
-					<Grid container justify="center" item={12}>
+					<Grid container justify="center" item xs={12}>
 						{imgContainer}
 					</Grid>
-					<Grid container justify="center" item={12}>
+					<Grid container justify="center" item xs={12}>
 						{textContainer}
 					</Grid>
 				</Grid>

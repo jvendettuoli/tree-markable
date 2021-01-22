@@ -48,20 +48,16 @@ function LandingPage() {
 		<Grid
 			container
 			className={classes.backgroundImage}
-			alignItems="space-between"
+			alignItems="stretch"
 		>
 			<Grid
 				container
 				item
 				style={{
-					backgroundColor              : 'rgba(0,0,0,.5)',
-					paddingTop                   : theme.spacing(10),
-					paddingRight                 : theme.spacing(3),
-					paddingLeft                  : theme.spacing(3),
-					[theme.breakpoints.up('md')]: {
-						paddingRight : theme.spacing(0),
-						paddingLeft  : theme.spacing(0)
-					}
+					backgroundColor : 'rgba(0,0,0,.5)',
+					paddingTop      : theme.spacing(10),
+					paddingRight    : theme.spacing(3),
+					paddingLeft     : theme.spacing(3)
 				}}
 			>
 				<Grid
@@ -113,7 +109,7 @@ function LandingPage() {
 					/>
 				</Hidden>
 				<Hidden lgDown>
-					<Grid container xs={12}>
+					<Grid container>
 						<Grid item xs={4}>
 							<LandingPageElement
 								titleText="Explore"
