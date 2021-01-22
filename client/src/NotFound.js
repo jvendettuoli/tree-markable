@@ -34,11 +34,12 @@ function NotFound() {
 			className={classes.backgroundImage}
 			alignItems="center"
 		>
-			<Grid container item justify="center">
+			<Grid container item justify="center" direction="column">
 				<Typography
 					align="center"
 					variant="h1"
 					style={{ color: 'white', fontWeight: 'bold' }}
+					gutterBottom
 				>
 					Page Not Found
 				</Typography>
