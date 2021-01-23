@@ -120,6 +120,9 @@ function CommentsContainer({ type, id }) {
 								container
 								alignItems="center"
 								spacing={2}
+								item
+								xs={12}
+								wrap="nowrap"
 							>
 								<Grid item>
 									<Avatar className={classes.userAvatar}>
