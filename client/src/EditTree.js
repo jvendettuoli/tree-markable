@@ -16,7 +16,8 @@ import TreeFormBasicFields from './TreeFormBasicFields';
 import SelectCoordinates from './SelectCoordinates';
 import {
 	treesRef,
-	uploadImagesToFirebase
+	uploadImagesToFirebase,
+	deleteImagesFromFirebase
 } from './firebase/firebaseStorage';
 import ImagesInput from './ImagesInput';
 import { updateTreeInApi } from './actions/trees';
@@ -99,8 +100,13 @@ function EditTree() {
 		console.log('editTree', editTree);
 		dispatch(updateTreeInApi(id, editTree));
 
-		console.log('ImageFiles', imageFiles);
-		await uploadImagesToFirebase(treesRef, id, imageFiles);
+		console.log('EditTree handleSubmit - ImageFiles', imageFiles);
+		if (imageFiles.length > 0) {
+			console.log('EditTree handleSubmit - inDelete images');
+
+			await deleteImagesFromFirebase(treesRef, id);
+			await uploadImagesToFirebase(treesRef, id, imageFiles);
+		}
 
 		history.push(`/trees/${id}`);
 	};
@@ -126,7 +132,12 @@ function EditTree() {
 				<Divider variant="middle" />
 				<div>
 					<Typography variant="h5" gutterBottom>
-						Add Images
+						Edit Images
+					</Typography>
+					<Typography gutterBottom>
+						Ignore this section if you want to leave them the
+						same. Any images added will overwrite previously
+						uploaded images.
 					</Typography>
 					<ImagesInput
 						onImageFilesChange={handleImageFilesChange}

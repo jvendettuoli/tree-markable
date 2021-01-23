@@ -72,21 +72,12 @@ const listImagePathsFromFirebase = async (collectionRef, id) => {
 		const albumRef = collectionRef.child(`${id}/${IMAGES}/${ALBUM}`);
 		const primaryRes = await primaryRef.listAll();
 		const albumRes = await albumRef.listAll();
-		console.log('albumRef', albumRes);
-		console.log('albumRef.items', albumRes.items);
-		console.log('primaryRes', primaryRes);
-		console.log('primaryRes.items', primaryRes.items);
 
 		if (primaryRes.items.length === 0) return;
 
 		const albumImagePaths = !(albumRes.items.length === 0)
 			? albumRes.items.map((item) => item.fullPath)
 			: [];
-
-		console.log(
-			'listImagePathsFromFirebase - albumImagePaths',
-			albumImagePaths
-		);
 
 		const imagePaths = {
 			primary : primaryRes.items[0].fullPath,
@@ -147,6 +138,30 @@ const downloadImageUrlsFromFirebase = async (collectionRef, id) => {
 	}
 };
 
+const deleteImagesFromFirebase = async (collectionRef, id) => {
+	console.log('deleteImagesFromFirebase', collectionRef, id);
+	try {
+		const imagePaths = await listImagePathsFromFirebase(
+			collectionRef,
+			id
+		);
+		console.log('deleteImagesFromFirebase - imagePaths', imagePaths);
+		if (!imagePaths) return;
+
+		storageRef.child(`${imagePaths.primary}`).delete();
+
+		if (imagePaths.album.length > 0) {
+			for (const imagePath of imagePaths.album) {
+				console.log('imagePath', imagePath);
+
+				storageRef.child(`${imagePath}`).delete();
+			}
+		}
+	} catch (err) {
+		console.log('deleteImagesFromFirebase -err', err);
+	}
+};
+
 export {
 	storageRef,
 	treesRef,
@@ -154,5 +169,6 @@ export {
 	groupsRef,
 	uploadImagesToFirebase,
 	downloadImageUrlsFromFirebase,
-	listImagePathsFromFirebase
+	listImagePathsFromFirebase,
+	deleteImagesFromFirebase
 };
