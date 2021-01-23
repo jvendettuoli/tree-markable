@@ -40,16 +40,49 @@ class Group {
 		}
 	}
 
-	/** Find all groups. */
+	/** Find all groups based on queries supplied. With no passed queries
+	 * will return all groups. */
 
-	static async findAll() {
-		const result = await db.query(
-			`SELECT id, name, description, is_public, creator, created_at
-          FROM groups
-          ORDER BY name`
+	static async findAll(queries) {
+		console.log('findAll - queries', queries);
+
+		let queryIdx = 1;
+		let whereStatements = [];
+		let queryValues = [];
+		let baseQuery = `SELECT id, name, description, is_public, creator, created_at
+		FROM groups`;
+
+		// Helper function to clean up space. Pushes where statement and value, and incremends queryIdx by 1.
+		const addQueryParam = (statement, value) => {
+			whereStatements.push(statement);
+			queryIdx += 1;
+			queryValues.push(value);
+		};
+
+		// For each included query parameter, add appropriate language
+		// to whereStatements and increment queryIdx by one.
+		if (queries.search) {
+			addQueryParam(
+				`to_tsvector(name) @@ phraseto_tsquery($${queryIdx})`,
+				queries.search
+			);
+		}
+
+		let finalQuery = '';
+		if (whereStatements.length > 0) {
+			finalQuery = baseQuery.concat(
+				' WHERE ',
+				whereStatements.join(' AND ')
+			);
+		}
+
+		const results = await db.query(
+			finalQuery ? finalQuery : baseQuery,
+			queryValues
 		);
 
-		return result.rows;
+		console.log(finalQuery, queryValues);
+		return results.rows;
 	}
 
 	/** Given a group id, return data about group. */

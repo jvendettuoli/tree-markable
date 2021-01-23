@@ -18,7 +18,8 @@ const { groupNewSchema, groupUpdateSchema } = require('../schemas');
 
 router.get('/', authRequired, async function(req, res, next) {
 	try {
-		const groups = await Group.findAll();
+		delete req.query._token;
+		const groups = await Group.findAll(req.query);
 		return res.json({ groups });
 	} catch (err) {
 		return next(err);
