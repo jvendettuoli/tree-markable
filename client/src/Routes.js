@@ -7,10 +7,12 @@ import SignIn from './SignIn';
 import CreateNewTree from './CreateNewTree';
 import NotFound from './NotFound';
 import ExploreTrees from './ExploreTrees';
+import ExploreGroups from './ExploreGroups';
 import TreePage from './TreePage';
 import EditTree from './EditTree';
 import CreateNewGroup from './CreateNewGroup';
 import UserProfilePage from './UserProfilePage';
+import GroupPage from './GroupPage';
 
 function Routes() {
 	return (
@@ -38,6 +40,12 @@ function Routes() {
 			</Route>
 			<Route exact path="/trees/:id/edit">
 				<EditTree />
+			</Route>
+			<Route exact path="/groups">
+				<ExploreGroups />
+			</Route>
+			<Route exact path="/groups/:id">
+				<GroupPage />
 			</Route>
 			<Route exact path="/groups/new">
 				<CreateNewGroup />

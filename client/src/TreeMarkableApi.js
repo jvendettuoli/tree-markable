@@ -77,7 +77,11 @@ class TreeMarkableApi {
 	/**
      * Group Requests
      */
-
+	static async getGroups(searchParams) {
+		console.log('TreeMarkableApi Class getGroups - Start');
+		let res = await this.request(`groups`, searchParams);
+		return res.groups;
+	}
 	static async getGroup(groupId) {
 		console.log('TreeMarkableApi Class getGroup - Start');
 		let res = await this.request(`groups/${groupId}`);
