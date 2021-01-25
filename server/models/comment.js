@@ -27,7 +27,7 @@ class Comment {
 			if (data.type === TREES)
 				Comment.addCommentOnTree(data.id, result.rows[0].id);
 			if (data.type === GROUPS)
-				Comment.addCommentOnTree(data.id, result.rows[0].id);
+				Comment.addCommentOnGroup(data.id, result.rows[0].id);
 
 			return result.rows[0];
 		} catch (err) {
@@ -139,6 +139,36 @@ class Comment {
 				WHERE tree_id = $1
 				ORDER BY c.created_at`,
 			[ treeId ]
+		);
+
+		return result.rows;
+	}
+	/**
+	 * Comment on Groups relationships
+	 */
+	/** Add Comment to a Group */
+	static async addCommentOnGroup(groupId, commentId) {
+		await db.query(
+			`INSERT INTO groups_comments 
+			(group_id, comment_id)
+			VALUES ($1, $2)
+			`,
+			[ groupId, commentId ]
+		);
+	}
+	static async getCommentsOnGroup(groupId) {
+		console.log(
+			'Models - Comment.getCommentsOnGroup - Start',
+			groupId
+		);
+
+		const result = await db.query(
+			`SELECT c.id, c.text, c.author_name, c.created_at 
+				FROM groups_comments AS t_c
+				LEFT JOIN comments AS c ON t_c.comment_id= c.id
+				WHERE group_id = $1
+				ORDER BY c.created_at`,
+			[ groupId ]
 		);
 
 		return result.rows;

@@ -13,14 +13,14 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
 import useStyles from './styles/formStyle';
 
-import { getTreeFromApi, getTreesFromApi } from './actions/trees';
+import { getGroupFromApi, getGroupsFromApi } from './actions/groups';
 import SelectLocationMap from './SelectLocationMap';
 import ImagesInput from './ImagesInput';
 import Carousel from './Carousel';
 import ShowTreeMap from './ShowTreeMap';
 import CommentsContainer from './CommentsContainer';
 import {
-	treesRef,
+	groupsRef,
 	downloadImageUrlsFromFirebase
 } from './firebase/firebaseStorage';
 import FavoriteIconBtn from './FavoriteIconBtn';
@@ -29,9 +29,9 @@ import EditIconBtn from './EditIconBtn';
 function GroupPage() {
 	const classes = useStyles();
 	const { id } = useParams();
-	const tree = useSelector((st) => st.trees.trees[id]);
+	const group = useSelector((st) => st.groups.groups[id]);
 	const uid = useSelector((st) => st.currUser.uid);
-	console.log('GroupPage - tree', tree);
+	console.log('GroupPage - group', group);
 	const [ isLoading, setIsLoading ] = useState(true);
 	const [ imageUrls, setImageUrls ] = useState({
 		primary : '',
@@ -43,14 +43,14 @@ function GroupPage() {
 	// If Tree not already in store, request it from API
 	useEffect(
 		() => {
-			const getTree = async (treeId) => {
-				dispatch(getTreeFromApi(treeId));
+			const getTree = async (groupId) => {
+				dispatch(getGroupFromApi(groupId));
 			};
-			if (!tree) {
+			if (!group) {
 				getTree(id);
 			}
 		},
-		[ tree, id ]
+		[ group, id ]
 	);
 
 	// Get Tree Images from FirebaseStorage
@@ -69,7 +69,7 @@ function GroupPage() {
 			};
 
 			if (isLoading) {
-				getImageUrls(treesRef, id);
+				getImageUrls(groupsRef, id);
 			}
 		},
 		[ isLoading, id ]
@@ -90,31 +90,7 @@ function GroupPage() {
 		}
 	};
 
-	const treeFieldLabels = [
-		{
-			field : 'common_name',
-			label : 'Common Name',
-			value : tree.common_name
-		},
-		{
-			field : 'scientific_name',
-			label : 'Scientific Name',
-			value : tree.scientifc_name && <i>{tree.scientific_name}</i>
-		},
-		{ field: 'height', label: 'Height (ft.)', value: tree.height },
-		{ field: 'dsh', label: 'DSH (in.)', value: tree.dsh },
-		{ field: 'leaf_type', label: 'Leaf Type', value: tree.leaf_type },
-		{
-			field : 'fruit_bearing',
-			label : 'Fruit Bearing',
-			value : tree.fruit_bearing && 'Yes'
-		},
-		{
-			field : 'geolocation',
-			label : 'Coordinates',
-			value : `(${tree.geolocation.y}, ${tree.geolocation.x})`
-		}
-	];
+	const groupFieldLabels = [];
 
 	return (
 		<div className={classes.root}>
@@ -136,21 +112,24 @@ function GroupPage() {
 						alignItems="center"
 						wrap="nowrap"
 					>
-						<Typography variant="h3">{tree.name}</Typography>
+						<Typography variant="h3">{group.name}</Typography>
 						<Grid item>
-							<FavoriteIconBtn treeId={tree.id} />
-							{uid === tree.creator && (
-								<EditIconBtn type={'trees'} id={tree.id} />
+							<FavoriteIconBtn groupId={group.id} />
+							{uid === group.creator && (
+								<EditIconBtn
+									type={'groups'}
+									id={group.id}
+								/>
 							)}
 						</Grid>
 					</Grid>
-					{tree.description && (
+					{group.description && (
 						<Grid item xs={12}>
-							<Typography>{tree.description}</Typography>
+							<Typography>{group.description}</Typography>
 						</Grid>
 					)}
 
-					{treeFieldLabels.map((item, idx) => {
+					{groupFieldLabels.map((item, idx) => {
 						return (
 							item.value && (
 								<React.Fragment key={`label-${idx}`}>
@@ -178,11 +157,9 @@ function GroupPage() {
 						);
 					})}
 				</Grid>
-				<Grid item xs={12} md={6}>
-					<ShowTreeMap tree={tree} />
-				</Grid>
+
 				<Grid item xs={12}>
-					<CommentsContainer type="trees" id={tree.id} />
+					<CommentsContainer type="groups" id={group.id} />
 				</Grid>
 			</Grid>
 		</div>

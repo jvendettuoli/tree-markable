@@ -44,12 +44,13 @@ function Routes() {
 			<Route exact path="/groups">
 				<ExploreGroups />
 			</Route>
-			<Route exact path="/groups/:id">
-				<GroupPage />
-			</Route>
 			<Route exact path="/groups/new">
 				<CreateNewGroup />
 			</Route>
+			<Route exact path="/groups/:id">
+				<GroupPage />
+			</Route>
+
 			<Route>
 				<NotFound />
 			</Route>

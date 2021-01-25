@@ -40,6 +40,8 @@ router.get('/:type/:id', authRequired, async function(req, res, next) {
 		let comments;
 		if (req.params.type === TREES)
 			comments = await Comment.getCommentsOnTree(req.params.id);
+		if (req.params.type === GROUPS)
+			comments = await Comment.getCommentsOnGroup(req.params.id);
 		return res.json({ comments });
 	} catch (err) {
 		return next(err);
