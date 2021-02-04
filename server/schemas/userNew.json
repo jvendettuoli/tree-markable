@@ -17,8 +17,6 @@
       "type": "string",
       "title": "The firebase_id Schema",
       "default": "",
-      "minLength": 1,
-      "maxLength": 55,
       "examples": ["4ygMAIxZg1g45w5h6uMmjGqfUEC2"]
     },
     "is_admin": {

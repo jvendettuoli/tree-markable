@@ -9,7 +9,9 @@ import {
 	signUp,
 	signIn,
 	signOut,
-	anonymousAuth
+	anonymousAuth,
+	updateEmail,
+	updateProfile
 } from '../firebase/firebaseAuth';
 import TreeMarkableApi from '../TreeMarkableApi';
 import { auth } from '../firebase/firebaseIndex';
@@ -33,8 +35,10 @@ function signUpUser(credentials, userData) {
 			// create user in TreeMarkable Database
 			const apiRes = await TreeMarkableApi.registerUser({
 				...userData,
-				uid : firebaseRes.user.uid
+				firebase_id : firebaseRes.user.uid
 			});
+
+			await updateProfile({ displayName: apiRes.username });
 			const currUserData = {
 				...apiRes,
 				token : firebaseRes.user.refreshToken
@@ -74,9 +78,11 @@ function signInUser(credentials) {
 				})
 			);
 			dispatch(loadCurrUser(currUserData));
+			return 'test success';
 		} catch (err) {
 			console.log('signInUser error', err);
 			dispatch(authError(err));
+			return 'test error';
 		}
 	};
 }
@@ -112,15 +118,16 @@ function verifyAuth() {
 		try {
 			const unsubscribe = auth.onAuthStateChanged(async (user) => {
 				if (user) {
-					const apiRes = await TreeMarkableApi.getUser(
-						user.displayName
-					);
-					const currUserData = {
-						...apiRes,
-						token : user.refreshToken
-					};
-					dispatch(authUser({ token: user.refreshToken }));
-					dispatch(loadCurrUser(currUserData));
+					console.log('verifyAuth - user', user);
+					// const apiRes = await TreeMarkableApi.getUser(
+					// 	user.displayName
+					// );
+					// const currUserData = {
+					// 	...apiRes,
+					// 	token : user.refreshToken
+					// };
+					// dispatch(authUser({ token: user.refreshToken }));
+					// dispatch(loadCurrUser(currUserData));
 				}
 				else {
 					console.log('verifyAuth - no user');

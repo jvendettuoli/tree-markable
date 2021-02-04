@@ -12,7 +12,9 @@ class User {
 		console.log('Models - User.register - Start');
 
 		// Convert coordinates into Point format for Postgresql: 'x,y'
-		const home_geolocation = formatCoordinates(data.home_geolocation);
+		const home_geolocation = data.home_geolocation
+			? formatCoordinates(data.home_geolocation)
+			: null;
 
 		try {
 			const result = await db.query(
@@ -26,7 +28,7 @@ class User {
 					data.email,
 					data.img_url,
 					home_geolocation,
-					data.is_admin
+					data.is_admin || false
 				]
 			);
 
@@ -40,14 +42,11 @@ class User {
 					);
 				}
 				if (err.constraint === 'users_email_key') {
-					throw new ExpressError(
-						`Duplicate email found for: '${data.email}'.`,
-						400
-					);
+					throw new ExpressError(`Duplicate email found.`, 400);
 				}
 				if (err.constraint === 'users_username_key') {
 					throw new ExpressError(
-						`Duplicate username found for: '${data.username}'.`,
+						`Duplicate username found.`,
 						400
 					);
 				}
@@ -83,7 +82,6 @@ class User {
 		);
 
 		const user = userRes.rows[0];
-		if (user.saved_tree_ids[0] === null) user.saved_tree_ids = [];
 
 		if (!user) {
 			const error = new ExpressError(
@@ -92,6 +90,7 @@ class User {
 			);
 			throw error;
 		}
+		if (user.saved_tree_ids[0] === null) user.saved_tree_ids = [];
 
 		return user;
 	}
@@ -108,7 +107,6 @@ class User {
 		);
 
 		const user = userRes.rows[0];
-		if (user.saved_tree_ids[0] === null) user.saved_tree_ids = [];
 
 		if (!user) {
 			const error = new ExpressError(
@@ -117,6 +115,7 @@ class User {
 			);
 			throw error;
 		}
+		if (user.saved_tree_ids[0] === null) user.saved_tree_ids = [];
 
 		return user;
 	}
@@ -131,10 +130,17 @@ class User {
    */
 
 	static async update(username, data) {
+		console.log('Users Model - Update - Start', username, data);
 		if (data.hasOwnProperty('home_geolocation')) {
 			data.home_geolocation = formatCoordinates(
 				data.home_geolocation
 			);
+		}
+		if (data.hasOwnProperty('password')) {
+			delete data.password;
+		}
+		if (Object.keys(data).length === 0) {
+			return this.findByUsername(username);
 		}
 
 		let { query, values } = partialUpdate(
@@ -143,19 +149,35 @@ class User {
 			'username',
 			username
 		);
+		try {
+			const result = await db.query(query, values);
+			const user = result.rows[0];
 
-		const result = await db.query(query, values);
-		const user = result.rows[0];
+			if (!user) {
+				let notFound = new ExpressError(
+					`There exists no user: '${username}'`,
+					404
+				);
+				throw notFound;
+			}
 
-		if (!user) {
-			let notFound = new ExpressError(
-				`There exists no user: '${username}'`,
-				404
-			);
-			throw notFound;
+			return result.rows[0];
+		} catch (err) {
+			if (err.code === '23505') {
+				if (err.constraint === 'users_email_key') {
+					throw new ExpressError(`Duplicate email found.`, 400);
+				}
+				if (err.constraint === 'users_username_key') {
+					throw new ExpressError(
+						`Duplicate username found.`,
+						400
+					);
+				}
+			}
+			else {
+				throw new ExpressError(err.message, 400);
+			}
 		}
-
-		return result.rows[0];
 	}
 
 	/** Delete given user from database; returns undefined. */

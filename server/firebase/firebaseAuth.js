@@ -49,7 +49,10 @@ const updateUserInFirebase = async (uid, userData) => {
 	console.log('Firebase Auth - updateUserInFirebase - Start');
 	// Convert properties to Firebase recognized terms
 	try {
-		console.log('Userdata', userData);
+		console.log(
+			'Firebase Auth - updateUserInFirebase - userdata',
+			userData
+		);
 		if (userData.username) {
 			userData['displayName'] = userData.username;
 			delete userData.username;
@@ -57,6 +60,9 @@ const updateUserInFirebase = async (uid, userData) => {
 		if (userData.img_url) {
 			userData['photoURL'] = userData.img_url;
 			delete userData.img_url;
+		}
+		if (userData.new_password) {
+			userData['password'] = userData.new_password;
 		}
 
 		// Update user in Firebase Auth

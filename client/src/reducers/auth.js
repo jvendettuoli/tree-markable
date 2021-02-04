@@ -26,10 +26,24 @@ function auth(state = INITIAL_STATE, action) {
 			return { ...INITIAL_STATE };
 		case AUTH_ERROR:
 			console.log('Reducers AUTH_ERROR - action', action);
+			let errors;
+			if (action.payload.hasOwnProperty('code')) {
+				errors = [
+					{
+						status  : action.payload.code,
+						message : action.payload.message
+					}
+				];
+			}
+			else {
+				errors = Array.isArray(action.payload)
+					? action.payload
+					: [ action.payload ];
+			}
 
 			return {
 				...state,
-				error : action.payload.message
+				error : errors
 			};
 		default:
 			return state;

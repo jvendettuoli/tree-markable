@@ -52,8 +52,13 @@ router.post('/', authRequired, async function(req, res, next) {
 		}
 
 		const newUser = await User.register(req.body);
+
 		return res.status(201).json({ newUser });
 	} catch (err) {
+		//Firebase User can sometimes be created but then user creation
+		//in database fails (such as existing username with different email)
+		//deletes user in Firebase if creation fails
+		await deleteFirebaseUser(req.body.firebase_id);
 		return next(err);
 	}
 });
@@ -65,6 +70,7 @@ router.patch('/:username', ensureCorrectUser, async function(
 	res,
 	next
 ) {
+	console.log('Users - Patch - req.body', req.body);
 	try {
 		delete req.body._token;
 		if ('firebase_id' in req.body || 'is_admin' in req.body) {
@@ -82,29 +88,38 @@ router.patch('/:username', ensureCorrectUser, async function(
 			});
 		}
 
+		//Update database
+		const user = await User.update(req.params.username, req.body);
+
 		// Update Firebase Auth
 		const firebaseProperties = [
 			'email',
 			'phoneNumber',
 			'username',
-			'img_url'
+			'img_url',
+			'password'
 		];
 		if (
 			Object.keys(req.body).some((property) => {
 				return firebaseProperties.includes(property);
 			})
 		) {
-			const result = await updateUserInFirebase(
-				req.token.uid,
-				req.body
+			const result = await updateUserInFirebase(req.token.uid, {
+				...req.body
+			});
+			console.log(
+				'Users Routes - Patch - Post Firebase update - result',
+				result
 			);
 			if (result instanceof Error) {
+				console.log(
+					'Users Routes - Patch - Post Firebase update - error'
+				);
+
 				throw result;
 			}
 		}
 
-		//Update database
-		const user = await User.update(req.params.username, req.body);
 		return res.json({ user });
 	} catch (err) {
 		return next(err);

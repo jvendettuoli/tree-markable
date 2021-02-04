@@ -6,14 +6,12 @@ import {
 } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Paper from '@material-ui/core/Paper';
 
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -23,12 +21,8 @@ import Divider from '@material-ui/core/Divider';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 import profileHeaderImg from './images/profile-page-header.jpg';
-import CurrUserInfo from './CurrUserInfo';
 
 const useStyles = makeStyles((theme) => ({
-	accordianContainer  : {
-		width : '100%'
-	},
 	heading             : {
 		fontSize   : theme.typography.pxToRem(15),
 		fontWeight : theme.typography.fontWeightRegular
@@ -52,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
  * in the future, then change getting user info from store and make
  * a request to the API for it. 
  */
-function UserProfilePage() {
+function CurrUserInfo() {
 	const theme = useTheme();
 	const classes = useStyles(theme);
 
@@ -65,66 +59,31 @@ function UserProfilePage() {
 		img_url,
 		created_at,
 		is_admin,
-		savedTreeIds
+		savedTreeIds,
+		groupIds
 	} = useSelector((st) => st.currUser);
-	const trees = useSelector((st) => st.trees.trees);
-
-	const pushToEditForm = () => {
+	const handleEdit = (evt) => {
 		history.push(`/users/${username}/edit`);
 	};
 
 	return (
-		<Grid container direction="column">
-			<Grid
-				className={classes.headerImgBackground}
-				container
-				justify="center"
-				alignItems="flex-end"
-				item
-				xs={12}
-			>
-				<div style={{ height: 300 }} />
-			</Grid>
-			<Grid>
-				<CurrUserInfo />
-				<Button color="secondary" onClick={pushToEditForm}>
-					Edit User
-				</Button>
-			</Grid>
-			<Grid container item>
-				<Grid container alignItems="flex-end">
-					<Box mr={2}>
-						<Typography variant="h5">
-							Favorite Trees
-						</Typography>
-					</Box>
-					<Link component={RouterLink} to="/trees">
-						<Typography variant="subtitle1">
-							Find more trees!
-						</Typography>
-					</Link>
-				</Grid>
-				<List>
-					{savedTreeIds.length > 0 ? (
-						savedTreeIds.map((id) => (
-							<ListItem
-								button
-								component={RouterLink}
-								to={`/trees/${id}`}
-							>
-								<ListItemText>
-									{trees[id].name}
-								</ListItemText>
-							</ListItem>
-						))
-					) : (
-						<Grid>
-							<Typography>No Favorite Trees</Typography>
-						</Grid>
-					)}
-				</List>
+		<Grid container item xs={12}>
+			<Grid container direction="column">
+				<Typography variant="h5">User Info</Typography>
+				<Typography variant="subtitle1">
+					Username: {username}
+				</Typography>
+				<Typography variant="subtitle1">Email: {email}</Typography>
+				<Typography variant="subtitle1">
+					Joined:{' '}
+					{new Date(created_at).toLocaleDateString('en-gb', {
+						year  : 'numeric',
+						month : 'long',
+						day   : 'numeric'
+					})}
+				</Typography>
 			</Grid>
 		</Grid>
 	);
 }
-export default UserProfilePage;
+export default CurrUserInfo;

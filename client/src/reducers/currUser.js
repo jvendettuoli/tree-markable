@@ -44,10 +44,23 @@ function currUser(state = INITIAL_STATE, action) {
 			};
 		case LOAD_CURR_USER_ERROR:
 			console.log('Reducers LOAD_CURR_USER_ERROR - action', action);
-
+			let errors;
+			if (action.payload.hasOwnProperty('code')) {
+				errors = [
+					{
+						status  : action.payload.code,
+						message : action.payload.message
+					}
+				];
+			}
+			else {
+				errors = Array.isArray(action.payload)
+					? action.payload
+					: [ action.payload ];
+			}
 			return {
 				...state,
-				error : action.payload
+				error : errors
 			};
 		case RESET_CURR_USER:
 			console.log('Reducers RESET_CURR_USER - action', action);
