@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { signUpUser } from './actions/auth';
+import { errorDisplay } from './helpers/formErrorDisplay';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -11,6 +12,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
 import useStyles from './styles/formStyle';
+import SignUpForm from './SignUpForm';
 import SelectCoordinates from './SelectCoordinates';
 import { getUserFromApi } from './actions/currUser';
 // TODO change geolocation request to use my location
@@ -19,58 +21,32 @@ function SignUp() {
 	const classes = useStyles();
 	const history = useHistory();
 	const dispatch = useDispatch();
-	const INITIAL_FORM_DATA = {
-		username : '',
-		email    : '',
-		password : '',
-		img_url  : ''
-	};
-	const [ formData, setFormData ] = useState(INITIAL_FORM_DATA);
-	const [ coordinates, setCoordinates ] = useState({ lat: '', lng: '' });
+	const isAuthenticated = useSelector((st) => st.auth.authenticated);
+	const username = useSelector((st) => st.currUser.username);
 
-	const handleChange = (evt) => {
-		const { name, value } = evt.target;
+	// Avoid updating during an existing state transition by checking
+	// auth status in useEffect
+	useEffect(
+		() => {
+			// If user is authenticated, push to user page
+			if (isAuthenticated) {
+				history.push(`/users/${username}`);
+			}
+		},
+		[ isAuthenticated, username ]
+	);
 
-		setFormData((fData) => ({
-			...fData,
-			[name] : value
-		}));
-	};
-
-	const handleCoordinatesChange = (data) => {
-		console.log('handleCoordinatesChange', data);
-		const { name, value } = data;
-
-		setCoordinates((fData) => ({
-			...fData,
-			[name] : value
-		}));
-	};
-
-	const handleMapCoordinatesChange = (coords) => {
-		console.log('handleMapCoordinatesChange', coords);
-		setCoordinates(coords);
-	};
-
-	const handleSubmit = (evt) => {
-		evt.preventDefault();
+	const submitFormData = (formData) => {
 		// email and password required by Firebase Authentication
 		const credentials = {
 			email    : formData.email,
 			password : formData.password
 		};
-		// user data required by TreeMarkableApi to create user
-		delete formData.password;
-		const userData = {
-			...formData,
-			home_geolocation : {
-				latitude  : coordinates.lat,
-				longitude : coordinates.lng
-			},
-			is_admin         : false
-		};
+		// remove password for TreeMarkableApi user creation
+		const userData = { ...formData };
+		delete userData.password;
+
 		dispatch(signUpUser(credentials, userData));
-		history.push('/');
 	};
 
 	return (
@@ -79,56 +55,10 @@ function SignUp() {
 				Sign Up
 			</Typography>
 			<Grid item>
-				<form onSubmit={handleSubmit} className={classes.form}>
-					<TextField
-						id="username"
-						name="username"
-						label="Username"
-						onChange={handleChange}
-						value={formData.username}
-						autoComplete="username"
-					/>
-					<TextField
-						id="email"
-						name="email"
-						label="Email"
-						onChange={handleChange}
-						value={formData.email}
-						autoComplete="email"
-					/>
-					<TextField
-						id="password"
-						name="password"
-						label="Password"
-						type="password"
-						onChange={handleChange}
-						value={formData.password}
-						autoComplete="password"
-					/>
-					<TextField
-						id="img_url"
-						name="img_url"
-						label="Profile Image URL"
-						onChange={handleChange}
-						value={formData.img_url}
-						autoComplete="img_url"
-					/>
-					Select Home Location
-					<SelectCoordinates
-						formData={coordinates}
-						onCoordinatesChange={handleCoordinatesChange}
-						onMapCoordinatesChange={handleMapCoordinatesChange}
-					/>
-					<Button
-						variant="contained"
-						color="secondary"
-						type="submit"
-					>
-						Sign Up
-					</Button>
-				</form>
+				<SignUpForm submitFormData={submitFormData} />
 			</Grid>
 		</Grid>
 	);
 }
+
 export default SignUp;

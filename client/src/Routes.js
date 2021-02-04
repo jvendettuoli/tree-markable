@@ -1,9 +1,12 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
+import { Switch, Route, useHistory } from 'react-router-dom';
 
 import LandingPage from './LandingPage';
 import SignUp from './SignUp';
 import SignIn from './SignIn';
+import EditUser from './EditUser';
 import CreateNewTree from './CreateNewTree';
 import NotFound from './NotFound';
 import ExploreTrees from './ExploreTrees';
@@ -20,8 +23,11 @@ function Routes() {
 			<Route exact path="/">
 				<LandingPage />
 			</Route>
-			<Route exact path="/users/:id">
+			<Route exact path="/users/:username">
 				<UserProfilePage />
+			</Route>
+			<Route exact path="/users/:username/edit">
+				<EditUser />
 			</Route>
 			<Route exact path="/signup">
 				<SignUp />

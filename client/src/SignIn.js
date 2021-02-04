@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { signInUser } from './actions/auth';
-import { useDispatch } from 'react-redux';
+import { signInUser, signOutUser } from './actions/auth';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { errorDisplay } from './helpers/formErrorDisplay';
+import SignInForm from './SignInForm';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -11,61 +14,38 @@ import Button from '@material-ui/core/Button';
 import useStyles from './styles/formStyle';
 
 function SignIn() {
+	console.log('SignIn Component - Start');
 	const classes = useStyles();
-	const INITIAL_FORM_DATA = {
-		email    : '',
-		password : ''
-	};
-	const history = useHistory();
-	const [ formData, setFormData ] = useState(INITIAL_FORM_DATA);
 	const dispatch = useDispatch();
+	const history = useHistory();
+	const isAuthenticated = useSelector((st) => st.auth.authenticated);
+	const username = useSelector((st) => st.currUser.username);
 
-	const handleChange = (evt) => {
-		const { name, value } = evt.target;
+	// Avoid updating during an existing state transition by checking
+	// auth status in useEffect
+	useEffect(
+		() => {
+			// If user is authenticated, push to user page
+			if (isAuthenticated) {
+				history.push(`/users/${username}`);
+			}
+		},
+		[ isAuthenticated, username ]
+	);
 
-		setFormData((fData) => ({
-			...fData,
-			[name] : value
-		}));
-	};
-
-	const handleSubmit = (evt) => {
-		evt.preventDefault();
+	const submitFormData = (formData) => {
 		dispatch(signInUser(formData));
-		history.push('/');
 	};
+
 	return (
 		<Grid container className={classes.form}>
 			<Grid item>
 				<Typography variant="h3" gutterBottom>
 					Sign In
 				</Typography>
-				<form onSubmit={handleSubmit} className={classes.form}>
-					<TextField
-						id="email"
-						name="email"
-						label="Email"
-						onChange={handleChange}
-						value={formData.email}
-						autoComplete="email"
-					/>
-					<TextField
-						id="password"
-						name="password"
-						label="Password"
-						type="password"
-						onChange={handleChange}
-						value={formData.password}
-						autoComplete="password"
-					/>
-					<Button
-						color="secondary"
-						variant="contained"
-						type="submit"
-					>
-						Sign In
-					</Button>
-				</form>
+				{!isAuthenticated && (
+					<SignInForm submitFormData={submitFormData} />
+				)}
 			</Grid>
 		</Grid>
 	);

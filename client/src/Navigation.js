@@ -30,8 +30,7 @@ import NavDrawer from './NavDrawer';
 import NavAppBar from './NavAppBar';
 
 function Navigation(props) {
-	const { window } = props;
-	const children = props.children;
+	const { window, children } = props;
 	const theme = useTheme();
 	const classes = useStyles(theme);
 	const [ mobileOpen, setMobileOpen ] = useState(false);

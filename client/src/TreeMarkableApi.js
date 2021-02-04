@@ -19,7 +19,7 @@ class TreeMarkableApi {
 				[verb === 'get' ? 'params' : 'data']: paramsOrData
 			});
 
-			console.log('API res RETURN', res);
+			console.log('API res RETURN', res.data);
 			return res.data;
 			// axios sends query string data via the "params" key,
 			// and request body data via the "data" key,
@@ -27,8 +27,8 @@ class TreeMarkableApi {
 		} catch (err) {
 			if (err.response) {
 				console.error('API Error:', err.response);
-				let message = err.response.data.message;
-				throw Array.isArray(message) ? message : [ message ];
+				let error = err.response.data;
+				throw Array.isArray(error) ? error : [ error ];
 			}
 			else {
 				console.error('TreeMarkableAPI Error:', err);
