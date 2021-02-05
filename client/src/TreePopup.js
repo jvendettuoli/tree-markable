@@ -141,13 +141,8 @@ function TreePopup({ tree }) {
 				</Typography>
 			</CardContent>
 			<CardActions className={classes.actions}>
-				<Grid container>
-					<Grid item xs={4}>
-						<IconButton>
-							<MessageIcon />
-						</IconButton>
-					</Grid>
-					<Grid item xs={4}>
+				<Grid container justify="center">
+					<Grid container justify="center" item xs={6}>
 						<Tooltip title="Details">
 							<IconButton
 								component={Link}
@@ -157,7 +152,7 @@ function TreePopup({ tree }) {
 							</IconButton>
 						</Tooltip>
 					</Grid>
-					<Grid container item xs={4}>
+					<Grid container justify="center" item xs={6}>
 						<FavoriteIconBtn treeId={tree.id} />
 					</Grid>
 				</Grid>
