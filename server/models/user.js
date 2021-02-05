@@ -73,9 +73,10 @@ class User {
 
 	static async findByUsername(username) {
 		const userRes = await db.query(
-			`SELECT firebase_id, username, email, img_url, home_geolocation, is_admin, created_at, json_agg(u_t.tree_id) AS saved_tree_ids
+			`SELECT firebase_id, username, email, img_url, home_geolocation, is_admin, created_at, json_agg(u_t.tree_id) AS saved_tree_ids, json_agg(u_g.group_id) AS followed_group_ids
 			FROM users as u
 			LEFT JOIN users_trees AS u_t ON u.firebase_id = u_t.user_id
+			LEFT JOIN users_groups AS u_g ON u.firebase_id = u_g.user_id
 			WHERE username = $1
 			GROUP BY u.firebase_id`,
 			[ username ]
@@ -91,6 +92,8 @@ class User {
 			throw error;
 		}
 		if (user.saved_tree_ids[0] === null) user.saved_tree_ids = [];
+		if (user.followed_group_ids[0] === null)
+			user.followed_group_ids = [];
 
 		return user;
 	}
@@ -98,10 +101,11 @@ class User {
 
 	static async findByUid(uid) {
 		const userRes = await db.query(
-			`SELECT firebase_id, username, email, img_url, home_geolocation, is_admin, created_at, json_agg(u_t.tree_id) AS saved_tree_ids
+			`SELECT firebase_id, username, email, img_url, home_geolocation, is_admin, created_at, json_agg(u_t.tree_id) AS saved_tree_ids, json_agg(u_g.group_id) AS followed_group_ids
 			FROM users as u
 			LEFT JOIN users_trees AS u_t ON u.firebase_id = u_t.user_id
-			WHERE firebase_id = $1
+			LEFT JOIN users_groups AS u_g ON u.firebase_id = u_g.user_id
+			WHERE username = $1
 			GROUP BY u.firebase_id`,
 			[ uid ]
 		);
@@ -116,6 +120,8 @@ class User {
 			throw error;
 		}
 		if (user.saved_tree_ids[0] === null) user.saved_tree_ids = [];
+		if (user.followed_group_ids[0] === null)
+			user.followed_group_ids = [];
 
 		return user;
 	}
@@ -228,6 +234,37 @@ class User {
 			WHERE user_id = $1
 			AND tree_id = $2`,
 			[ uid, treeId ]
+		);
+	}
+	/**
+	 * User to Group relationships
+	 */
+
+	/**Get all user-group relations by uid. */
+	static async getGroups(uid) {
+		const result = await db.query(
+			`SELECT FROM users_groups 
+			WHERE user_id = $1 
+			GROUP BY user_id`,
+			[ uid ]
+		);
+		return result;
+	}
+	/**Create a user to group relationship, given uid and group id. */
+	static async addGroup(uid, groupId) {
+		await db.query(
+			`INSERT INTO users_groups (user_id, group_id) 
+			VALUES ($1, $2)`,
+			[ uid, groupId ]
+		);
+	}
+	/**Remove a user to group relationship, given uid and group id. */
+	static async removeGroup(uid, groupId) {
+		await db.query(
+			`DELETE FROM users_groups 
+			WHERE user_id = $1
+			AND group_id = $2`,
+			[ uid, groupId ]
 		);
 	}
 }

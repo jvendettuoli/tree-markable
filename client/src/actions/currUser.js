@@ -8,11 +8,13 @@ import {
 	reauthenticate
 } from '../firebase/firebaseAuth';
 import {
-	LOAD_SAVED_TREE,
 	LOAD_CURR_USER,
 	LOAD_USERS_ERROR,
 	LOAD_CURR_USER_ERROR,
-	REMOVE_SAVED_TREE
+	LOAD_SAVED_TREE,
+	REMOVE_SAVED_TREE,
+	LOAD_FOLLOWED_GROUP,
+	REMOVE_FOLLOWED_GROUP
 } from './types';
 
 /**
@@ -29,8 +31,8 @@ function editCurrUser(credentials, username, data) {
 			const user = await TreeMarkableApi.updateUser(username, data);
 			if (data.email) {
 				await reauthenticate({
-					email: data.email,
-					password: credentials.password
+					email    : data.email,
+					password : credentials.password
 				});
 			}
 
@@ -57,7 +59,6 @@ function editCurrUser(credentials, username, data) {
 
 /**
  * Action creators for updating the current User's saved Trees and 
- * followed Groups
  */
 
 function addToSavedTrees(username, treeId) {
@@ -84,6 +85,38 @@ function removeFromSavedTrees(username, treeId) {
 		}
 	};
 }
+/**
+ * Action creators for updating the current User's followed Groups
+ */
+
+function addToFollowedGroups(username, groupId) {
+	console.log('currUser - addToFollowedGroups - ', username, groupId);
+	return async function(dispatch) {
+		try {
+			await TreeMarkableApi.userAddGroup(username, groupId);
+			dispatch(groupFollowed(groupId));
+		} catch (err) {
+			console.log('addToFollowedGroups error', err);
+			dispatch(currUserError(err));
+		}
+	};
+}
+function removeFromFollowedGroups(username, groupId) {
+	console.log(
+		'currUser - removeFromFollowedGroups - ',
+		username,
+		groupId
+	);
+	return async function(dispatch) {
+		try {
+			await TreeMarkableApi.userRemoveGroup(username, groupId);
+			dispatch(groupUnfollowed(groupId));
+		} catch (err) {
+			console.log('removeFromFollowedGroups error', err);
+			dispatch(currUserError(err));
+		}
+	};
+}
 
 function loadCurrUser(user) {
 	return { type: LOAD_CURR_USER, payload: user };
@@ -97,5 +130,17 @@ function treeSaved(treeId) {
 function treeRemoved(treeId) {
 	return { type: REMOVE_SAVED_TREE, payload: treeId };
 }
+function groupFollowed(groupId) {
+	return { type: LOAD_FOLLOWED_GROUP, payload: groupId };
+}
+function groupUnfollowed(groupId) {
+	return { type: REMOVE_FOLLOWED_GROUP, payload: groupId };
+}
 
-export { addToSavedTrees, removeFromSavedTrees, editCurrUser };
+export {
+	addToSavedTrees,
+	removeFromSavedTrees,
+	editCurrUser,
+	addToFollowedGroups,
+	removeFromFollowedGroups
+};

@@ -11,7 +11,6 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
-import useStyles from './styles/formStyle';
 
 import { getGroupFromApi, getGroupsFromApi } from './actions/groups';
 import SelectLocationMap from './SelectLocationMap';
@@ -23,8 +22,14 @@ import {
 	groupsRef,
 	downloadImageUrlsFromFirebase
 } from './firebase/firebaseStorage';
-import FavoriteIconBtn from './FavoriteIconBtn';
+import FollowGroupIconBtn from './FollowGroupIconBtn';
 import EditIconBtn from './EditIconBtn';
+
+const useStyles = makeStyles((theme) => ({
+	headerImg : {
+		height : 200
+	}
+}));
 
 function GroupPage() {
 	const classes = useStyles();
@@ -40,20 +45,20 @@ function GroupPage() {
 
 	const dispatch = useDispatch();
 
-	// If Tree not already in store, request it from API
+	// If Group not already in store, request it from API
 	useEffect(
 		() => {
-			const getTree = async (groupId) => {
+			const getGroup = async (groupId) => {
 				dispatch(getGroupFromApi(groupId));
 			};
 			if (!group) {
-				getTree(id);
+				getGroup(id);
 			}
 		},
 		[ group, id ]
 	);
 
-	// Get Tree Images from FirebaseStorage
+	// Get Group Images from FirebaseStorage
 	useEffect(
 		() => {
 			const getImageUrls = async (collectionRef, id) => {
@@ -90,79 +95,41 @@ function GroupPage() {
 		}
 	};
 
-	const groupFieldLabels = [];
-
 	return (
-		<div className={classes.root}>
-			<Grid container>
-				<Grid item xs={12}>
-					{displayImages(imageUrls)}
-				</Grid>
+		<Grid container>
+			<Grid item xs={12}>
+				{displayImages(imageUrls)}
+			</Grid>
+			<Grid container item xs={12} md={6} alignItems="flex-start">
 				<Grid
 					container
 					item
 					xs={12}
-					md={6}
-					alignItems="flex-start"
+					alignItems="center"
+					wrap="nowrap"
 				>
-					<Grid
-						container
-						item
-						xs={12}
-						alignItems="center"
-						wrap="nowrap"
-					>
-						<Typography variant="h3">{group.name}</Typography>
-						<Grid item>
-							<FavoriteIconBtn groupId={group.id} />
-							{uid === group.creator && (
-								<EditIconBtn
-									type={'groups'}
-									id={group.id}
-								/>
-							)}
-						</Grid>
+					<Typography variant="h3">{group.name}</Typography>
+					<Grid item>
+						<FollowGroupIconBtn groupId={group.id} />
+						{uid === group.creator && (
+							<EditIconBtn type={'groups'} id={group.id} />
+						)}
 					</Grid>
-					{group.description && (
-						<Grid item xs={12}>
-							<Typography>{group.description}</Typography>
-						</Grid>
-					)}
-
-					{groupFieldLabels.map((item, idx) => {
-						return (
-							item.value && (
-								<React.Fragment key={`label-${idx}`}>
-									<Grid item xs={6}>
-										<Typography
-											variant={
-												item.labelVariant || 'h6'
-											}
-										>
-											{item.label}:
-										</Typography>
-									</Grid>
-									<Grid item xs={6}>
-										<Typography
-											variant={
-												item.valueVariant ||
-												'body1'
-											}
-										>
-											{item.value}
-										</Typography>
-									</Grid>
-								</React.Fragment>
-							)
-						);
-					})}
 				</Grid>
-
-				<Grid item xs={12}>
-					<CommentsContainer type="groups" id={group.id} />
+				{group.description && (
+					<Grid item xs={12}>
+						<Typography>{group.description}</Typography>
+					</Grid>
+				)}
+				<Grid item>
+					<Typography variant="h4">Trees</Typography>
 				</Grid>
 			</Grid>
-		</div>
+
+			<Grid item xs={12}>
+				<CommentsContainer type="groups" id={group.id} />
+			</Grid>
+		</Grid>
 	);
 }
 export default GroupPage;

@@ -7,7 +7,9 @@ import {
 	LOAD_CURR_USER_ERROR,
 	RESET_CURR_USER,
 	LOAD_SAVED_TREE,
-	REMOVE_SAVED_TREE
+	REMOVE_SAVED_TREE,
+	LOAD_FOLLOWED_GROUP,
+	REMOVE_FOLLOWED_GROUP
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -18,7 +20,7 @@ const INITIAL_STATE = {
 	created_at       : null,
 	home_geolocation : [],
 	savedTreeIds     : [],
-	groupIds         : [],
+	followedGroupIds : [],
 	commentIds       : [],
 	error            : null
 };
@@ -82,6 +84,26 @@ function currUser(state = INITIAL_STATE, action) {
 				...state,
 				savedTreeIds : state.savedTreeIds.filter(
 					(treeId) => treeId !== action.payload
+				)
+			};
+		case LOAD_FOLLOWED_GROUP:
+			console.log('Reducers LOAD_FOLLOWED_GROUP - action', action);
+
+			return {
+				...state,
+				followedGroupIds : [
+					...state.followedGroupIds,
+					action.payload
+				]
+			};
+
+		case REMOVE_FOLLOWED_GROUP:
+			console.log('Reducers REMOVE_FOLLOWED_GROUP - action', action);
+
+			return {
+				...state,
+				followedGroupIds : state.followedGroupIds.filter(
+					(groupId) => groupId !== action.payload
 				)
 			};
 

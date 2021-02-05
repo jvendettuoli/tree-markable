@@ -174,8 +174,8 @@ router.post('/:username/trees/:id', authRequired, async function(
 	try {
 		await User.addTree(req.token.uid, req.params.id);
 		return res.json({
-			message : `Tree '${req.params.username}' added to User '${req
-				.params.username}'`
+			message : `Tree '${req.params.id}' added to User '${req.params
+				.username}'`
 		});
 	} catch (err) {
 		return next(err);
@@ -193,8 +193,65 @@ router.delete('/:username/trees/:id', authRequired, async function(
 	try {
 		await User.removeTree(req.token.uid, req.params.id);
 		return res.json({
-			message : `Tree '${req.params
-				.username}' removed from User '${req.params.username}'`
+			message : `Tree '${req.params.id}' removed from User '${req
+				.params.username}'`
+		});
+	} catch (err) {
+		return next(err);
+	}
+});
+
+/**
+ * User to Group routes
+ */
+
+/** GET user's saved groups /[username]/groups => {savedGroups}*/
+
+router.get('/:username/groups', ensureCorrectUser, async function(
+	req,
+	res,
+	next
+) {
+	try {
+		const savedGroups = await User.getGroups(req.token.uid);
+		return res.json(savedGroups);
+	} catch (err) {
+		return next(err);
+	}
+});
+
+/** ADD GROUP TO USER /[username]/groups/[id] => 
+ * {message: 'Group [id] added to User [username]'}*/
+
+router.post('/:username/groups/:id', authRequired, async function(
+	req,
+	res,
+	next
+) {
+	try {
+		await User.addGroup(req.token.uid, req.params.id);
+		return res.json({
+			message : `Group '${req.params.id}' added to User '${req.params
+				.username}'`
+		});
+	} catch (err) {
+		return next(err);
+	}
+});
+
+/** REMOVE GROUP FROM USER /[username]/groups/[id] => 
+ * {message: 'Group [id] removed from User [username]'}*/
+
+router.delete('/:username/groups/:id', authRequired, async function(
+	req,
+	res,
+	next
+) {
+	try {
+		await User.removeGroup(req.token.uid, req.params.id);
+		return res.json({
+			message : `Group '${req.params.id}' removed from User '${req
+				.params.username}'`
 		});
 	} catch (err) {
 		return next(err);

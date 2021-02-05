@@ -191,6 +191,27 @@ class TreeMarkableApi {
 		);
 		return res.message;
 	}
+	/**
+	 * User - Group Relationship Requests
+	 */
+	static async userAddGroup(username, groupId) {
+		console.log('TreeMarkableApi Class userAddGroup - Start');
+		let res = await this.request(
+			`users/${username}/groups/${groupId}`,
+			{},
+			'post'
+		);
+		return res.message;
+	}
+	static async userRemoveGroup(username, groupId) {
+		console.log('TreeMarkableApi Class userRemoveGroup - Start');
+		let res = await this.request(
+			`users/${username}/groups/${groupId}`,
+			{},
+			'delete'
+		);
+		return res.message;
+	}
 }
 
 export default TreeMarkableApi;
