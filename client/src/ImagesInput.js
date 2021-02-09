@@ -124,10 +124,12 @@ function ImagesInput({ allowMultiple = true, onImageFilesChange }) {
 				>
 					{allowMultiple ? 'Choose Images' : 'Choose Image'}
 				</Button>
-				<Typography>
-					If selecting multiple images, click the one you want to
-					be the primary image.
-				</Typography>
+				{allowMultiple && (
+					<Typography>
+						If selecting multiple images, click the one you
+						want to be the primary image.
+					</Typography>
+				)}
 			</Grid>
 			<Grid
 				container
