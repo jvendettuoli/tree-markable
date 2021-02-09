@@ -5,19 +5,18 @@ import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Button from '@material-ui/core/Button';
-import useStyles from './styles/formStyle';
+import Divider from '@material-ui/core/Divider';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
+import useStyles from './styles/formStyle';
 import { getTreeFromApi, getTreesFromApi } from './actions/trees';
-import SelectLocationMap from './SelectLocationMap';
-import ImagesInput from './ImagesInput';
 import Carousel from './Carousel';
-import ShowTreeMap from './ShowTreeMap';
+import ShowTreesMap from './ShowTreesMap';
 import CommentsContainer from './CommentsContainer';
 import {
 	treesRef,
@@ -117,25 +116,13 @@ function TreePage() {
 	];
 
 	return (
-		<div className={classes.root}>
-			<Grid container>
-				<Grid item xs={12}>
-					{displayImages(imageUrls)}
-				</Grid>
-				<Grid
-					container
-					item
-					xs={12}
-					md={6}
-					alignItems="flex-start"
-				>
-					<Grid
-						container
-						item
-						xs={12}
-						alignItems="center"
-						wrap="nowrap"
-					>
+		<Grid container direction="column">
+			<Grid item xs={12}>
+				{displayImages(imageUrls)}
+			</Grid>
+			<Grid container item xs={12} alignItems="flex-start">
+				<Grid container item xs={12} md={6}>
+					<Grid container item xs={12} wrap="nowrap">
 						<Typography variant="h3">{tree.name}</Typography>
 						<Grid item>
 							<FavoriteIconBtn treeId={tree.id} />
@@ -149,43 +136,40 @@ function TreePage() {
 							<Typography>{tree.description}</Typography>
 						</Grid>
 					)}
-
-					{treeFieldLabels.map((item, idx) => {
-						return (
-							item.value && (
-								<React.Fragment key={`label-${idx}`}>
-									<Grid item xs={6}>
-										<Typography
-											variant={
-												item.labelVariant || 'h6'
-											}
-										>
-											{item.label}:
-										</Typography>
-									</Grid>
-									<Grid item xs={6}>
-										<Typography
-											variant={
-												item.valueVariant ||
-												'body1'
-											}
-										>
-											{item.value}
-										</Typography>
-									</Grid>
-								</React.Fragment>
-							)
-						);
-					})}
+					<Grid item>
+						<TableContainer>
+							<Table>
+								{treeFieldLabels.map((item, idx) => {
+									return (
+										item.value && (
+											<TableRow>
+												<TableCell>
+													<Table>
+														<b>{item.label}</b>
+													</Table>
+												</TableCell>
+												<TableCell>
+													<Table>
+														{item.value}
+													</Table>
+												</TableCell>
+											</TableRow>
+										)
+									);
+								})}
+							</Table>
+						</TableContainer>
+					</Grid>
 				</Grid>
 				<Grid item xs={12} md={6}>
-					<ShowTreeMap tree={tree} />
-				</Grid>
-				<Grid item xs={12}>
-					<CommentsContainer type="trees" id={tree.id} />
+					<ShowTreesMap trees={[ tree ]} />
 				</Grid>
 			</Grid>
-		</div>
+
+			<Grid item xs={12}>
+				<CommentsContainer type="trees" id={tree.id} />
+			</Grid>
+		</Grid>
 	);
 }
 export default TreePage;

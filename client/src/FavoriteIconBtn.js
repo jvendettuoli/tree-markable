@@ -48,6 +48,10 @@ function FavoriteIconBtn({ treeId }) {
 		setIsFav(!isFav);
 	};
 
+	if (!username) {
+		return null;
+	}
+
 	return (
 		<Tooltip title={isFav ? 'Unfavorite' : 'Favorite'}>
 			<IconButton onClick={handleClick}>
