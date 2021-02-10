@@ -40,6 +40,9 @@ const useStyles = makeStyles((theme) => ({
 		backgroundPosition : 'center',
 		backgroundSize     : 'cover',
 		backgroundColor    : theme.palette.secondary.dark
+	},
+	innerContent        : {
+		padding : 15
 	}
 }));
 
@@ -85,44 +88,46 @@ function UserProfilePage() {
 			>
 				<div style={{ height: 300 }} />
 			</Grid>
-			<Grid>
-				<CurrUserInfo />
-				<Button color="secondary" onClick={pushToEditForm}>
-					Edit User
-				</Button>
-			</Grid>
-			<Grid container item>
-				<Grid container alignItems="flex-end">
-					<Box mr={2}>
-						<Typography variant="h5">
-							Favorite Trees
-						</Typography>
-					</Box>
-					<Link component={RouterLink} to="/trees">
-						<Typography variant="subtitle1">
-							Find more trees!
-						</Typography>
-					</Link>
+			<Grid container item className={classes.innerContent}>
+				<Grid>
+					<CurrUserInfo />
+					<Button color="secondary" onClick={pushToEditForm}>
+						Edit User
+					</Button>
 				</Grid>
-				<List>
-					{savedTreeIds.length > 0 ? (
-						savedTreeIds.map((id) => (
-							<ListItem
-								button
-								component={RouterLink}
-								to={`/trees/${id}`}
-							>
-								<ListItemText>
-									{trees[id].name}
-								</ListItemText>
-							</ListItem>
-						))
-					) : (
-						<Grid>
-							<Typography>No Favorite Trees</Typography>
-						</Grid>
-					)}
-				</List>
+				<Grid container item>
+					<Grid container alignItems="flex-end">
+						<Box mr={2}>
+							<Typography variant="h5">
+								Favorite Trees
+							</Typography>
+						</Box>
+						<Link component={RouterLink} to="/trees">
+							<Typography variant="subtitle1">
+								Find more trees!
+							</Typography>
+						</Link>
+					</Grid>
+					<List>
+						{savedTreeIds.length > 0 ? (
+							savedTreeIds.map((id) => (
+								<ListItem
+									button
+									component={RouterLink}
+									to={`/trees/${id}`}
+								>
+									<ListItemText>
+										{trees[id].name}
+									</ListItemText>
+								</ListItem>
+							))
+						) : (
+							<Grid>
+								<Typography>No Favorite Trees</Typography>
+							</Grid>
+						)}
+					</List>
+				</Grid>
 			</Grid>
 		</Grid>
 	);

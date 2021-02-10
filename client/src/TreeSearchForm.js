@@ -193,7 +193,7 @@ function TreeSearchForm({ mapCenter, setGetLocation }) {
 						<TextField
 							id="distance"
 							name="distance"
-							label="Miles from Map Center"
+							label="Miles from Map Center to Show Trees"
 							type="number"
 							fullWidth
 							inputProps={{ min: 0, step: 1 }}

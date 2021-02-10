@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import SwipeableViews from 'react-swipeable-views';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -20,7 +19,7 @@ import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 
 import { getTreesFromApi } from './actions/trees';
-import ShowTreesMap from './ShowTreesMap';
+import SearchTreesMap from './SearchTreesMap';
 import TreeSearchForm from './TreeSearchForm';
 import TreeList from './TreeList';
 
@@ -48,12 +47,12 @@ function a11yProps(index) {
 }
 
 const useStyles = makeStyles((theme) => ({
-	root      : {
-		backgroundColor : theme.palette.background.paper,
-		width           : '100%'
-	},
-	indicator : {
+	indicator    : {
 		backgroundColor : theme.palette.secondary.main
+	},
+	innerContent : {
+		backgroundColor : theme.palette.background.paper,
+		padding         : 20
 	}
 }));
 
@@ -98,7 +97,7 @@ function ExploreTrees() {
 	}
 
 	return (
-		<div className={classes.root}>
+		<div className={classes.innerContent}>
 			<TreeSearchForm
 				mapCenter={mapCenter}
 				setGetLocation={setGetLocation}
@@ -118,7 +117,7 @@ function ExploreTrees() {
 			</AppBar>
 			<Paper elevation={4}>
 				<TabPanel value={value} index={0}>
-					<ShowTreesMap
+					<SearchTreesMap
 						mapCenter={mapCenter}
 						setMapCenter={setMapCenter}
 						zoomLevel={zoomLevel}

@@ -57,7 +57,9 @@ function GroupSearchForm() {
 	return (
 		<form onSubmit={handleSubmit} className={classes.form}>
 			<Grid container>
-				<Typography variant="h3">Explore Groups</Typography>
+				<Typography variant="h3" gutterBottom>
+					Explore Groups
+				</Typography>
 				<Grid container item xs={12}>
 					<Grid item xs>
 						<TextField

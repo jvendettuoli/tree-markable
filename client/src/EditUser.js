@@ -7,14 +7,24 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { Alert } from '@material-ui/lab';
+import Divider from '@material-ui/core/Divider';
 
-import useStyles from './styles/formStyle';
 import CurrUserInfo from './CurrUserInfo';
-import { signInUser } from './actions/auth';
 import { errorDisplay } from './helpers/formErrorDisplay';
-import { getUserFromApi, editCurrUser } from './actions/currUser';
-// TODO change geolocation request to use my location
+import { editCurrUser } from './actions/currUser';
+
+const useStyles = makeStyles({
+	innerContent : {
+		padding : 20
+	},
+	form         : {
+		display       : 'flex',
+		flexDirection : 'column',
+		'& div'       : {
+			marginBottom : 10
+		}
+	}
+});
 
 function EditUser() {
 	const classes = useStyles();
@@ -88,15 +98,20 @@ function EditUser() {
 	};
 
 	return (
-		<Grid container className="EditUser" direction="column">
+		<Grid
+			container
+			className={classes.innerContent}
+			direction="column"
+		>
 			<Grid item>
 				<Typography variant="h3" gutterBottom>
 					Edit User
 				</Typography>
 			</Grid>
+			<Divider variant="middle" style={{ marginBottom: 15 }} />
 			<Grid container item xs={12}>
 				<Grid container direction="column" item xs={6}>
-					<form onSubmit={handleSubmit}>
+					<form onSubmit={handleSubmit} className={classes.form}>
 						<Grid item>
 							<Typography>
 								Any fields left blank will be ignored.
@@ -163,20 +178,32 @@ function EditUser() {
 								autoComplete="img_url"
 							/>
 						</Grid> */}
-						<Typography>Verify Account</Typography>
+						<Grid item xs={10}>
+							<Typography variant="subtitle2">
+								Verify Account
+							</Typography>
 
-						<TextField
-							id="current_password"
-							name="current_password"
-							label="Current Password"
-							type="password"
-							onChange={handleChange}
-							value={formData.current_password}
-							inputProps={{ minLength: 6 }}
-							error={Boolean(handleErrorDisplay('password'))}
-							helperText={handleErrorDisplay('password')}
-						/>
-						<Grid item>
+							<TextField
+								fullWidth
+								id="current_password"
+								name="current_password"
+								label="Current Password"
+								type="password"
+								onChange={handleChange}
+								value={formData.current_password}
+								inputProps={{ minLength: 6 }}
+								error={Boolean(
+									handleErrorDisplay('password')
+								)}
+								helperText={handleErrorDisplay('password')}
+							/>
+						</Grid>
+						<Grid
+							container
+							item
+							xs={10}
+							justify="space-between"
+						>
 							<Button
 								onClick={handleCancel}
 								variant="contained"

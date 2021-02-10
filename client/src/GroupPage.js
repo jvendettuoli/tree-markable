@@ -2,11 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import List from '@material-ui/core/List';
+import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -16,7 +16,7 @@ import { getGroupFromApi, getGroupsFromApi } from './actions/groups';
 import SelectLocationMap from './SelectLocationMap';
 import ImagesInput from './ImagesInput';
 import Carousel from './Carousel';
-import ShowTreeMap from './ShowTreeMap';
+import ShowTreeMap from './ShowTreesMap';
 import CommentsContainer from './CommentsContainer';
 import {
 	groupsRef,
@@ -24,16 +24,25 @@ import {
 } from './firebase/firebaseStorage';
 import FollowGroupIconBtn from './FollowGroupIconBtn';
 import EditIconBtn from './EditIconBtn';
+import ShowTreesMap from './ShowTreesMap';
+import GroupTabPanel from './GroupTabPanel';
 
-const useStyles = makeStyles((theme) => ({
-	headerImg : {
-		height : 200
-	}
-}));
+const useStyles = makeStyles((theme) => {
+	return {
+		innerContent   : {
+			padding : 15
+		},
+		tableContainer : {
+			marginRight : 10
+		}
+	};
+});
 
 function GroupPage() {
 	const classes = useStyles();
+	const theme = useTheme();
 	const { id } = useParams();
+	const isAuthenticated = useSelector((st) => st.auth.authenticated);
 	const group = useSelector((st) => st.groups.groups[id]);
 	const uid = useSelector((st) => st.currUser.uid);
 	console.log('GroupPage - group', group);
@@ -51,7 +60,7 @@ function GroupPage() {
 			const getGroup = async (groupId) => {
 				dispatch(getGroupFromApi(groupId));
 			};
-			if (!group) {
+			if (!group.trees) {
 				getGroup(id);
 			}
 		},
@@ -88,46 +97,73 @@ function GroupPage() {
 		if (imageUrls.primary === '') return null;
 		else {
 			return (
-				<Carousel
-					imageUrls={[ imageUrls.primary, ...imageUrls.album ]}
-				/>
+				<Grid
+					container
+					justify="center"
+					alignItems="flex-end"
+					item
+					xs={12}
+					style={{
+						height             : 300,
+						backgroundImage    : `url(${imageUrls.primary})`,
+						backgroundRepeat   : 'no-repeat',
+						backgroundPosition : 'center',
+						backgroundSize     : 'cover',
+						backgroundColor    : theme.palette.secondary.dark
+					}}
+				>
+					<div style={{ height: 300 }} />
+				</Grid>
 			);
 		}
 	};
 
 	return (
-		<Grid container>
+		<Grid className="GroupPage" container direction="column">
 			<Grid item xs={12}>
 				{displayImages(imageUrls)}
 			</Grid>
-			<Grid container item xs={12} md={6} alignItems="flex-start">
+
+			<Grid
+				className={classes.innerContent}
+				container
+				item
+				xs={12}
+				alignItems="flex-start"
+			>
 				<Grid
 					container
 					item
 					xs={12}
-					alignItems="center"
 					wrap="nowrap"
+					justify="space-between"
 				>
-					<Typography variant="h3">{group.name}</Typography>
+					<Typography variant="h3" gutterBottom>
+						{group.name}
+					</Typography>
 					<Grid item>
-						<FollowGroupIconBtn groupId={group.id} />
+						{isAuthenticated && (
+							<FollowGroupIconBtn groupId={group.id} />
+						)}
 						{uid === group.creator && (
 							<EditIconBtn type={'groups'} id={group.id} />
 						)}
 					</Grid>
 				</Grid>
 				{group.description && (
-					<Grid item xs={12}>
-						<Typography>{group.description}</Typography>
+					<Grid item xs={12} style={{ marginBottom: 15 }}>
+						<Typography gutterBottom>
+							{group.description}
+						</Typography>
 					</Grid>
 				)}
-				<Grid item>
-					<Typography variant="h4">Trees</Typography>
+				<Grid item xs={12}>
+					<GroupTabPanel group={group} imageUrls={imageUrls} />
 				</Grid>
-			</Grid>
 
-			<Grid item xs={12}>
-				<CommentsContainer type="groups" id={group.id} />
+				<Grid item xs={12} style={{ marginTop: 15 }}>
+					<CommentsContainer type="groups" id={group.id} />
+				</Grid>
 			</Grid>
 		</Grid>
 	);

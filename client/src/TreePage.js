@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -13,7 +14,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
-import useStyles from './styles/formStyle';
 import { getTreeFromApi, getTreesFromApi } from './actions/trees';
 import Carousel from './Carousel';
 import ShowTreesMap from './ShowTreesMap';
@@ -24,6 +24,15 @@ import {
 } from './firebase/firebaseStorage';
 import FavoriteIconBtn from './FavoriteIconBtn';
 import EditIconBtn from './EditIconBtn';
+
+const useStyles = makeStyles({
+	innerContent   : {
+		padding : 20
+	},
+	tableContainer : {
+		marginRight : 10
+	}
+});
 
 function TreePage() {
 	const classes = useStyles();
@@ -120,10 +129,18 @@ function TreePage() {
 			<Grid item xs={12}>
 				{displayImages(imageUrls)}
 			</Grid>
-			<Grid container item xs={12} alignItems="flex-start">
+			<Grid
+				className={classes.innerContent}
+				container
+				item
+				xs={12}
+				alignItems="flex-start"
+			>
 				<Grid container item xs={12} md={6}>
 					<Grid container item xs={12} wrap="nowrap">
-						<Typography variant="h3">{tree.name}</Typography>
+						<Typography variant="h3" gutterBottom>
+							{tree.name}
+						</Typography>
 						<Grid item>
 							<FavoriteIconBtn treeId={tree.id} />
 							{uid === tree.creator && (
@@ -133,41 +150,42 @@ function TreePage() {
 					</Grid>
 					{tree.description && (
 						<Grid item xs={12}>
-							<Typography>{tree.description}</Typography>
+							<Typography gutterBottom>
+								{tree.description}
+							</Typography>
 						</Grid>
 					)}
-					<Grid item>
-						<TableContainer>
-							<Table>
-								{treeFieldLabels.map((item, idx) => {
-									return (
-										item.value && (
-											<TableRow>
-												<TableCell>
-													<Table>
+					<Grid container item>
+						<TableContainer className={classes.tableContainer}>
+							<Table aria-label="tree details">
+								<TableBody>
+									{treeFieldLabels.map((item, idx) => {
+										return (
+											item.value && (
+												<TableRow key={item.label}>
+													<TableCell>
 														<b>{item.label}</b>
-													</Table>
-												</TableCell>
-												<TableCell>
-													<Table>
+													</TableCell>
+													<TableCell>
 														{item.value}
-													</Table>
-												</TableCell>
-											</TableRow>
-										)
-									);
-								})}
+													</TableCell>
+												</TableRow>
+											)
+										);
+									})}
+								</TableBody>
 							</Table>
 						</TableContainer>
 					</Grid>
 				</Grid>
 				<Grid item xs={12} md={6}>
-					<ShowTreesMap trees={[ tree ]} />
+					<Paper elevation={3}>
+						<ShowTreesMap trees={[ tree ]} />
+					</Paper>
 				</Grid>
-			</Grid>
-
-			<Grid item xs={12}>
-				<CommentsContainer type="trees" id={tree.id} />
+				<Grid item xs={12} style={{ marginTop: 15 }}>
+					<CommentsContainer type="trees" id={tree.id} />
+				</Grid>
 			</Grid>
 		</Grid>
 	);

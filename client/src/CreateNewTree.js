@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -9,7 +10,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 
-import useStyles from './styles/formStyle';
 import TreeMarkableApi from './TreeMarkableApi';
 import TreeFormBasicFields from './TreeFormBasicFields';
 import SelectCoordinates from './SelectCoordinates';
@@ -18,6 +18,19 @@ import {
 	uploadImagesToFirebase
 } from './firebase/firebaseStorage';
 import ImagesInput from './ImagesInput';
+
+const useStyles = makeStyles({
+	innerContent : {
+		padding : 20
+	},
+	form         : {
+		display       : 'flex',
+		flexDirection : 'column',
+		'& div'       : {
+			marginBottom : 10
+		}
+	}
+});
 
 function CreateNewTree() {
 	const history = useHistory();
@@ -114,7 +127,7 @@ function CreateNewTree() {
 	};
 
 	return (
-		<div>
+		<div className={classes.innerContent}>
 			<Typography variant="h4" gutterBottom>
 				Create New Tree
 			</Typography>
@@ -131,7 +144,10 @@ function CreateNewTree() {
 					onCoordinatesChange={handleCoordinatesChange}
 					onMapCoordinatesChange={handleMapCoordinatesChange}
 				/>
-				<Divider variant="middle" />
+				<Divider
+					variant="middle"
+					style={{ marginTop: 15, marginBottom: 15 }}
+				/>
 				<div>
 					<Typography variant="h5" gutterBottom>
 						Add Images
@@ -139,7 +155,10 @@ function CreateNewTree() {
 					<ImagesInput
 						onImageFilesChange={handleImageFilesChange}
 					/>
-					<Divider variant="middle" />
+					<Divider
+						variant="middle"
+						style={{ marginBottom: 15 }}
+					/>
 				</div>
 
 				<Button

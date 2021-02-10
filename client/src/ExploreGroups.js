@@ -24,12 +24,9 @@ import GroupSearchForm from './GroupSearchForm';
 import GroupList from './GroupList';
 
 const useStyles = makeStyles((theme) => ({
-	root      : {
+	innerContent : {
 		backgroundColor : theme.palette.background.paper,
-		width           : '100%'
-	},
-	indicator : {
-		backgroundColor : theme.palette.secondary.main
+		padding         : 20
 	}
 }));
 
@@ -61,7 +58,7 @@ function ExploreGroups() {
 	}
 
 	return (
-		<div className={classes.root}>
+		<div className={classes.innerContent}>
 			<GroupSearchForm />
 
 			<GroupList groups={groups} />
