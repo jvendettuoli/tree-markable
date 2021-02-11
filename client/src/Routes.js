@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import { Switch, Route, useHistory } from 'react-router-dom';
@@ -18,6 +18,35 @@ import UserProfilePage from './UserProfilePage';
 import GroupPage from './GroupPage';
 
 function Routes() {
+	const history = useHistory();
+	const authErrorStatus = useSelector((st) => st.auth.error);
+	const currUserErrorStatus = useSelector((st) => st.currUser.error);
+	const groupsErrorStatus = useSelector((st) => st.groups.error);
+	const treesErrorStatus = useSelector((st) => st.trees.error);
+	const errorStatuses = [
+		authErrorStatus,
+		currUserErrorStatus,
+		groupsErrorStatus,
+		treesErrorStatus
+	];
+
+	useEffect(
+		() => {
+			console.log('ROUTES 404', errorStatuses);
+			errorStatuses.forEach((error) => {
+				if (error !== null && error[0].status === 404) {
+					history.push('/404');
+				}
+			});
+		},
+		[
+			authErrorStatus,
+			currUserErrorStatus,
+			groupsErrorStatus,
+			treesErrorStatus
+		]
+	);
+
 	return (
 		<Switch>
 			<Route exact path="/">
@@ -56,7 +85,9 @@ function Routes() {
 			<Route exact path="/groups/:id">
 				<GroupPage />
 			</Route>
-
+			<Route exact path="/404">
+				<NotFound />
+			</Route>
 			<Route>
 				<NotFound />
 			</Route>
