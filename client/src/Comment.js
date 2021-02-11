@@ -27,7 +27,7 @@ import { getTreeFromApi, getTreesFromApi } from './actions/trees';
 import SelectLocationMap from './SelectLocationMap';
 import ImagesInput from './ImagesInput';
 import Carousel from './Carousel';
-import ShowTreeMap from './ShowTreeMap';
+import ShowTreeMap from './ShowTreesMap';
 import {
 	treesRef,
 	downloadImageUrlsFromFirebase

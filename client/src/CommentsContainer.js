@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { Link as RouterLink, useParams } from 'react-router-dom';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
+import Link from '@material-ui/core/Link';
+import Box from '@material-ui/core/Box';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
@@ -24,7 +24,7 @@ import SelectLocationMap from './SelectLocationMap';
 import ImagesInput from './ImagesInput';
 import Carousel from './Carousel';
 import Comment from './Comment';
-import ShowTreeMap from './ShowTreeMap';
+import ShowTreeMap from './ShowTreesMap';
 import {
 	treesRef,
 	downloadImageUrlsFromFirebase
@@ -95,67 +95,68 @@ function CommentsContainer({ type, id }) {
 
 	return (
 		<Grid container className="CommentsContainer">
-			<Typography variant="h4" gutterBottom>
-				Comments
-			</Typography>
-			<Grid container item>
-				{comments.length > 0 ? (
-					comments.map((comment) => (
-						<Comment
-							key={`comment-${comment.id}`}
-							onDelete={handleDeleteComment}
-							comment={comment}
-							username={username}
-						/>
-					))
-				) : (
-					<Typography>No Comments</Typography>
-				)}
+			<Typography variant="h4">Comments</Typography>
+			<Grid container item xs={12}>
+				<Box mt={2} mb={2} style={{ width: '100%' }}>
+					{comments.length > 0 ? (
+						comments.map((comment) => (
+							<Comment
+								key={`comment-${comment.id}`}
+								onDelete={handleDeleteComment}
+								comment={comment}
+								username={username}
+							/>
+						))
+					) : (
+						<Typography>No Comments</Typography>
+					)}
+				</Box>
 			</Grid>
-			{username && (
+			{username ? (
 				<Grid container item>
-					<Card>
-						<CardContent>
-							<Grid
-								container
-								alignItems="center"
-								spacing={2}
-								item
-								xs={12}
-								wrap="nowrap"
-							>
-								<Grid item>
-									<Avatar className={classes.userAvatar}>
-										{username[0]}
-									</Avatar>
-								</Grid>
-								<Grid item>
-									<form
-										id="comment"
-										onSubmit={handleSubmit}
-									>
-										<TextField
-											id="text"
-											name="text"
-											placeholder="Add comment..."
-											fullWidth
-											onChange={handleChange}
-											value={formData.text}
-										/>
-									</form>
-								</Grid>
-								<Grid item>
-									<IconButton
-										form="comment"
-										type="submit"
-									>
-										<SendIcon />
-									</IconButton>
-								</Grid>
-							</Grid>
-						</CardContent>
-					</Card>
+					<Grid
+						container
+						alignItems="center"
+						spacing={2}
+						item
+						xs={12}
+						wrap="nowrap"
+					>
+						<Grid item>
+							<Avatar className={classes.userAvatar}>
+								{username[0]}
+							</Avatar>
+						</Grid>
+						<Grid item>
+							<form id="comment" onSubmit={handleSubmit}>
+								<TextField
+									id="text"
+									name="text"
+									placeholder="Add comment..."
+									fullWidth
+									onChange={handleChange}
+									value={formData.text}
+								/>
+							</form>
+						</Grid>
+						<Grid item>
+							<IconButton form="comment" type="submit">
+								<SendIcon />
+							</IconButton>
+						</Grid>
+					</Grid>
 				</Grid>
+			) : (
+				<Typography>
+					<Link component={RouterLink} to="/signup">
+						Sign Up
+					</Link>{' '}
+					or{' '}
+					<Link component={RouterLink} to="/signin">
+						Sign In
+					</Link>{' '}
+					to add comments.
+				</Typography>
 			)}
 		</Grid>
 	);
