@@ -115,6 +115,7 @@ function UserProfilePage() {
 									button
 									component={RouterLink}
 									to={`/trees/${id}`}
+									key={`tree-${id}`}
 								>
 									<ListItemText>
 										{trees[id].name}
