@@ -49,8 +49,11 @@ class Group {
 		let queryIdx = 1;
 		let whereStatements = [];
 		let queryValues = [];
-		let baseQuery = `SELECT id, name, description, is_public, creator, created_at
-		FROM groups`;
+		let baseQuery = `SELECT id, name, description, is_public, creator, created_at, json_agg(g_t.tree_id) AS trees
+		FROM groups
+		LEFT JOIN groups_trees AS g_t ON id = g_t.group_id
+		GROUP BY id
+		`;
 
 		// Helper function to clean up space. Pushes where statement and value, and incremends queryIdx by 1.
 		const addQueryParam = (statement, value) => {
@@ -81,7 +84,9 @@ class Group {
 			queryValues
 		);
 
-		console.log(finalQuery, queryValues);
+		for (const group of results.rows) {
+			if (group.trees[0] === null) group.trees = [];
+		}
 		return results.rows;
 	}
 
@@ -89,13 +94,24 @@ class Group {
 
 	static async findOne(id) {
 		const groupRes = await db.query(
-			`SELECT id, name, description, is_public, creator, created_at
-            FROM groups 
-            WHERE id = $1`,
+			`SELECT id, name, description, is_public, creator, created_at,trees, members
+			FROM groups g
+			LEFT JOIN LATERAL ( 
+				SELECT json_agg(g_t.tree_id) AS trees
+				FROM groups_trees g_t 
+				WHERE g.id = g_t.group_id
+				) g_t ON true
+			INNER JOIN LATERAL (
+				SELECT json_agg(json_build_object('user_id',u_g.user_id, 'is_moderator',u_g.is_moderator)) AS members
+				FROM users_groups u_g 
+				WHERE g.id = u_g.group_id
+				) u_g on true
+			WHERE g.id = $1`,
 			[ id ]
 		);
 
 		const group = groupRes.rows[0];
+		console.log('GROUPS - FIND ONE - group', group);
 
 		if (!group) {
 			const error = new ExpressError(
@@ -104,6 +120,9 @@ class Group {
 			);
 			throw error;
 		}
+
+		if (group.trees === null) group.trees = [];
+		if (group.members[0].user_id === null) group.members = [];
 
 		return group;
 	}
@@ -151,6 +170,67 @@ class Group {
 			);
 			throw notFound;
 		}
+	}
+
+	/**
+	 * Group to Tree relationships
+	 */
+
+	/**Get all group-tree relations by group id. */
+	static async getTrees(groupId) {
+		const result = await db.query(
+			`SELECT FROM groups_trees 
+			WHERE group_id = $1 
+			GROUP BY group_id`,
+			[ groupId ]
+		);
+		return result;
+	}
+	/**Create a group to tree relationship, given group id and tree id. */
+	static async addTree(groupId, treeId) {
+		await db.query(
+			`INSERT INTO groups_trees (group_id, tree_id) 
+			VALUES ($1, $2)`,
+			[ groupId, treeId ]
+		);
+	}
+	/**Remove a group to tree relationship, given group id and tree id. */
+	static async removeTree(groupId, treeId) {
+		await db.query(
+			`DELETE FROM groups_trees 
+			WHERE group_id = $1
+			AND tree_id = $2`,
+			[ groupId, treeId ]
+		);
+	}
+
+	/**
+	 * Group to Members relationships
+	 */
+
+	/** Given a group id, return group moderators. */
+
+	static async getModerators(groupId) {
+		const groupRes = await db.query(
+			`SELECT group_id, user_id, is_moderator
+				FROM users_groups
+				WHERE group_id = $1 AND is_moderator = true
+				`,
+			[ groupId ]
+		);
+
+		console.log('Group Model - getModerators - groupRes', groupRes);
+		const groupModerators = groupRes.rows.map((item) => item.user_id);
+
+		if (!groupModerators) {
+			const error = new ExpressError(
+				`There exists no group with id '${groupId}', or it has no moderators.`,
+				404
+			);
+			throw error;
+		}
+
+		return groupModerators;
 	}
 }
 

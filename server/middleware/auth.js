@@ -106,7 +106,7 @@ async function ensureCorrectUser(req, res, next) {
 
 /** Middleware to use when user must provide a valid token & be creator
  * of item being affected.
- * Firbase token's uid compared to item's creator.
+ * Firebase token's uid compared to item's creator.
  * 
  * If valid, add token onto req and proceed to next.
  *
@@ -154,9 +154,52 @@ async function ensureIsCreator(req, res, next) {
 	}
 }
 
+/** Middleware to use when user must provide a valid token & be a
+ * moderator of the group.
+ * Firebase token's uid compared list of provided group's mods.
+ * 
+ * If token is valid add and user is mod of group, proceed to next.
+ *
+ * If not, raises error.
+ *
+ */
+
+async function ensureIsGroupMod(req, res, next) {
+	console.log('Middleware - ensureIsGroupMod - Start');
+	try {
+		const tokenStr = req.body._token || req.query._token;
+
+		let result = await verifyToken(tokenStr);
+
+		if (result instanceof Error) {
+			throw result;
+		}
+
+		const groupMods = await Group.getModerators(req.params.groupId);
+		console.log(
+			'Middleware - ensureIsGroupMod - groupMods',
+			groupMods
+		);
+
+		if (!groupMods.includes(result.uid)) {
+			throw new ExpressError(
+				`Must be moderator or owner of Group '${req.params
+					.groupId}' to access this endpoint.`,
+				401
+			);
+		}
+		req.token = result;
+		return next();
+	} catch (err) {
+		handleFirebaseErrors(err, next);
+		return next(err);
+	}
+}
+
 module.exports = {
 	authRequired,
 	adminRequired,
 	ensureCorrectUser,
-	ensureIsCreator
+	ensureIsCreator,
+	ensureIsGroupMod
 };

@@ -5,18 +5,20 @@ const router = express.Router();
 const { validate } = require('jsonschema');
 
 const Group = require('../models/group');
+const User = require('../models/user');
 
 const ExpressError = require('../helpers/expressError');
 const {
 	authRequired,
 	ensureCorrectUser,
-	ensureIsCreator
+	ensureIsCreator,
+	ensureIsGroupMod
 } = require('../middleware/auth');
 const { groupNewSchema, groupUpdateSchema } = require('../schemas');
 
 /** GET / => {groups: [group, ...]} */
 
-router.get('/', authRequired, async function(req, res, next) {
+router.get('/', async function(req, res, next) {
 	try {
 		delete req.query._token;
 		const groups = await Group.findAll(req.query);
@@ -28,10 +30,26 @@ router.get('/', authRequired, async function(req, res, next) {
 
 /** GET /[id] => {group: group} */
 
-router.get('/:id', authRequired, async function(req, res, next) {
+router.get('/:id', async function(req, res, next) {
 	try {
 		const group = await Group.findOne(req.params.id);
+		//TODO REMOVE
+		// const groupMembers = await Group.getModerators(req.params.id);
+		// console.log('Group Members', groupMembers);
 		return res.json({ group });
+	} catch (err) {
+		return next(err);
+	}
+});
+
+/** GET /[id]/members => {group: group} 
+ * Get group members.
+*/
+
+router.get('/:id/members', async function(req, res, next) {
+	try {
+		const groupMembers = await Group.getMembers(req.params.id);
+		return res.json({ groupMembers });
 	} catch (err) {
 		return next(err);
 	}
@@ -57,6 +75,7 @@ router.post('/', authRequired, async function(req, res, next) {
 		}
 
 		const newGroup = await Group.create(req.body);
+		await User.addGroup(req.token.uid, newGroup.id, true);
 		return res.status(201).json({ newGroup });
 	} catch (err) {
 		return next(err);
@@ -91,6 +110,59 @@ router.delete('/:id', ensureIsCreator, async function(req, res, next) {
 		await Group.remove(req.params.id);
 		return res.json({
 			message : `Group with ID '${req.params.id}' deleted`
+		});
+	} catch (err) {
+		return next(err);
+	}
+});
+
+/**
+ * Group to Tree routes
+ */
+
+/** GET GROUP'S TREES /[groupId]/trees => {savedTrees}*/
+
+router.get('/:groupId/trees', async function(req, res, next) {
+	try {
+		const savedTrees = await Group.getTrees(req.params.groupId);
+		return res.json(savedTrees);
+	} catch (err) {
+		return next(err);
+	}
+});
+
+/** ADD TREE TO GROUP /[groupId]/trees/[id] => 
+ * {message: 'Tree [id] added to Group [groupId]'}*/
+
+router.post('/:groupId/trees/:id', ensureIsGroupMod, async function(
+	req,
+	res,
+	next
+) {
+	try {
+		await Group.addTree(req.params.groupId, req.params.id);
+		return res.json({
+			message : `Tree '${req.params.id}' added to Group '${req.params
+				.groupId}'`
+		});
+	} catch (err) {
+		return next(err);
+	}
+});
+
+/** REMOVE TREE FROM GROUP /[groupId]/trees/[id] => 
+ * {message: 'Tree [id] removed from Group [groupId]'}*/
+
+router.delete('/:groupId/trees/:id', ensureIsGroupMod, async function(
+	req,
+	res,
+	next
+) {
+	try {
+		await Group.removeTree(req.params.groupId, req.params.id);
+		return res.json({
+			message : `Tree '${req.params.id}' removed from Group '${req
+				.params.groupId}'`
 		});
 	} catch (err) {
 		return next(err);
