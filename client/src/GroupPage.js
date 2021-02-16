@@ -45,6 +45,7 @@ function GroupPage() {
 	const isAuthenticated = useSelector((st) => st.auth.authenticated);
 	const group = useSelector((st) => st.groups.groups[id]);
 	const uid = useSelector((st) => st.currUser.uid);
+	const error = useSelector((st) => st.groups.error);
 	console.log('GroupPage - group', group);
 	const [ isLoading, setIsLoading ] = useState(true);
 	const [ imageUrls, setImageUrls ] = useState({
@@ -54,17 +55,15 @@ function GroupPage() {
 
 	const dispatch = useDispatch();
 
-	// If Group not already in store, request it from API
+	// Get specific group from API
 	useEffect(
 		() => {
 			const getGroup = async (groupId) => {
 				dispatch(getGroupFromApi(groupId));
 			};
-			if (!group.trees) {
-				getGroup(id);
-			}
+			getGroup(id);
 		},
-		[ group, id ]
+		[ id, error ]
 	);
 
 	// Get Group Images from FirebaseStorage

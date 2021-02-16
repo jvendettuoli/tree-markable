@@ -51,7 +51,8 @@ function GroupFormBasicFields({ errors, formData, onFormChange }) {
 				value={formData.description}
 			/>
 
-			<FormControlLabel
+			{/* TODO add in the future */}
+			{/* <FormControlLabel
 				control={
 					<Checkbox
 						id="is_public"
@@ -62,7 +63,7 @@ function GroupFormBasicFields({ errors, formData, onFormChange }) {
 					/>
 				}
 				label="Do you want this group to be visable for others to join?"
-			/>
+			/> */}
 		</Grid>
 	);
 }

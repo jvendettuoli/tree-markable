@@ -99,8 +99,13 @@ class TreeMarkableApi {
 	}
 	static async deleteGroup(groupId) {
 		console.log('TreeMarkableApi Class deleteGroup - Start');
-		let res = await this.request(`users/${groupId}`, 'delete');
+		let res = await this.request(`groups/${groupId}`, 'delete');
 		return res.message;
+	}
+	static async getGroupMembers(groupId) {
+		console.log('TreeMarkableApi Class getGroupMembers - Start');
+		let res = await this.request(`groups/${groupId}/members`);
+		return res.groupMembers;
 	}
 
 	/**
@@ -207,6 +212,27 @@ class TreeMarkableApi {
 		console.log('TreeMarkableApi Class userRemoveGroup - Start');
 		let res = await this.request(
 			`users/${username}/groups/${groupId}`,
+			{},
+			'delete'
+		);
+		return res.message;
+	}
+	/**
+	 * Group - Tree Relationship Requests
+	 */
+	static async groupAddTree(groupId, treeId) {
+		console.log('TreeMarkableApi Class groupAddTree - Start');
+		let res = await this.request(
+			`groups/${groupId}/trees/${treeId}`,
+			{},
+			'post'
+		);
+		return res.message;
+	}
+	static async groupRemoveTree(groupId, treeId) {
+		console.log('TreeMarkableApi Class groupRemoveTree - Start');
+		let res = await this.request(
+			`groups/${groupId}/trees/${treeId}`,
 			{},
 			'delete'
 		);
