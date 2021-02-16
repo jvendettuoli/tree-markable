@@ -14,18 +14,20 @@ import {
 } from '@material-ui/icons';
 
 import FavoriteIconBtn from './FavoriteIconBtn';
+import EditTreeInGroupIconBtn from './EditTreeInGroupIconBtn';
 
 import { addToSavedTrees, removeFromSavedTrees } from './actions/currUser';
 
 const useStyles = makeStyles((theme) => ({
-	root : {
-		width                     : '100%',
+	treeListContainer : {
 		backgroundColor           : theme.palette.background.paper,
 		'& .data-grid-fav-header' : {
 			'& .MuiDataGrid-colCellTitleContainer' : {
 				alignItems : 'center'
 			}
-		}
+		},
+		display                   : 'flex',
+		height                    : '100%'
 	}
 }));
 
@@ -37,34 +39,39 @@ function DetailsLinkBtn(props) {
 	);
 }
 
-const checkTreeIdInUserFavs = (userFavTreeIds, treeId) => {
-	return userFavTreeIds.includes(treeId);
+const checkTreeIdInCollection = (collection, treeId) => {
+	return collection.includes(treeId);
 };
 
-function TreeList({ trees }) {
+function TreeList({ trees, group = null }) {
 	const classes = useStyles();
 	const dispatch = useDispatch();
 	const { username, savedTreeIds } = useSelector((st) => st.currUser);
-	const treeRows = trees.map((tree) => ({
-		isFavTree : {
-			id    : tree.id,
-			isFav : checkTreeIdInUserFavs(savedTreeIds, tree.id)
-		},
-		...tree,
-		link      : `trees/${tree.id}`
-	}));
-
-	const handleUnfavoriteClick = (evt) => {
-		const treeId = parseInt(evt.currentTarget.dataset.treeId);
-		dispatch(removeFromSavedTrees(username, treeId));
-	};
-	const handleFavoriteClick = (evt) => {
-		const treeId = parseInt(evt.currentTarget.dataset.treeId);
-		dispatch(addToSavedTrees(username, treeId));
-	};
+	let treeRows;
+	console.log('TreeLIst - trees', trees);
+	if (!group) {
+		treeRows = trees.map((tree) => ({
+			isFavTree : {
+				id    : tree.id,
+				isFav : checkTreeIdInCollection(savedTreeIds, tree.id)
+			},
+			...tree,
+			link      : `trees/${tree.id}`
+		}));
+	}
+	else if (group) {
+		treeRows = trees.map((tree) => ({
+			treeInGroup : {
+				id          : tree.id,
+				treeInGroup : checkTreeIdInCollection(group.trees, tree.id)
+			},
+			...tree,
+			link        : `trees/${tree.id}`
+		}));
+	}
 
 	const columns = [
-		{
+		!group && {
 			field           : 'isFavTree',
 			renderHeader    : (params) => <FavoriteIcon />,
 			headerClassName : 'data-grid-fav-header',
@@ -74,19 +81,42 @@ function TreeList({ trees }) {
 					<FavoriteIconBtn treeId={parseInt(params.value.id)} />
 				);
 			},
-			sortComparator  : (v1, v2, param1, param2) => {
+			sortComparator  : (value1, value2, param1, param2) => {
 				//sort by favorited status of true or false
-				return v1.isFav === v2.isFav ? 0 : v1.isFav ? -1 : 1;
+				return value1.isFav === value2.isFav
+					? 0
+					: value1.isFav ? -1 : 1;
 			}
 		},
-		{ field: 'name', headerName: 'Name' },
+		group !== null && {
+			field           : 'treeInGroup',
+			headerName      : 'Add Tree',
+			headerClassName : 'data-grid-tree-in-group-header',
+			headerAlign     : 'center',
+			width           : 120,
+			renderCell      : (params) => {
+				return (
+					<EditTreeInGroupIconBtn
+						group={group}
+						treeId={parseInt(params.value.id)}
+					/>
+				);
+			},
+			sortComparator  : (value1, value2, param1, param2) => {
+				//sort by whether tree is in group trees of true or false
+				return value1.treeInGroup === value2.treeInGroup
+					? 0
+					: value1.treeInGroup ? -1 : 1;
+			}
+		},
+		{ field: 'name', headerName: 'Name', width: 150 },
 		{ field: 'common_name', headerName: 'Common Name' },
 		{
 			field      : 'scientific_name',
 			headerName : 'Scientific Name'
 		},
 		{ field: 'height', headerName: 'Ht. (ft.)', type: 'number' },
-		{ field: 'dsh', headerName: 'DSH (in.)', type: 'number' },
+		{ field: 'dsh', headerName: 'DBH (in.)', type: 'number' },
 		{
 			field          : 'fruit_bearing',
 			headerName     : 'Fruit Bearing',
@@ -105,14 +135,15 @@ function TreeList({ trees }) {
 	if (!username) columns.shift();
 
 	return (
-		<div style={{ width: '100%' }} className={classes.root}>
-			<DataGrid
-				rows={treeRows}
-				columns={columns}
-				pageSize={10}
-				autoHeight
-				// onSelectionChange={handleChange}
-			/>
+		<div className={classes.treeListContainer}>
+			<div style={{ flexGrow: 1 }}>
+				<DataGrid
+					rows={treeRows}
+					columns={columns}
+					pageSize={10}
+					autoHeight
+				/>
+			</div>
 		</div>
 	);
 }
