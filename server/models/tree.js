@@ -44,8 +44,8 @@ class Tree {
 	/** Find all trees based on queries supplied. With no passed queries
 	 * will return all trees. */
 
-	static async findAll(queries) {
-		console.log('findAll - queries', queries);
+	static async findAll(queries={}) {
+		console.log('Tree Model - findAll - queries', queries);
 
 		// Validate min and max dsh
 		if (queries.dsh_min >= queries.dsh_max) {
@@ -129,7 +129,7 @@ class Tree {
 			queryValues
 		);
 
-		console.log(finalQuery, queryValues);
+		console.log('Tree Model - findAll - finalQuery, queryValues', finalQuery, queryValues);
 		return results.rows;
 	}
 

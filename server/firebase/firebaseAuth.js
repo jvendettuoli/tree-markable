@@ -87,11 +87,28 @@ const deleteFirebaseUser = async (uid) => {
 	}
 };
 
+const listAllFirebaseUsers = async (nextPageToken) =>{
+	try{
+		const users = [];
+		results = await admin.auth().listUsers(1000, nextPageToken);
+		users.push(...results.users)
+		if(results.pageToken){
+			listAllFirebaseUsers(results.pageToken);
+		}
+		return users;
+
+	}catch (err){
+		console.log(err);
+		return err
+	}
+};
+
 module.exports = {
 	verifyToken,
 	getUserData,
 	createFirebaseUser,
 	createAdmin,
 	updateUserInFirebase,
-	deleteFirebaseUser
+	deleteFirebaseUser,
+	listAllFirebaseUsers
 };

@@ -43,7 +43,7 @@ class Group {
 	/** Find all groups based on queries supplied. With no passed queries
 	 * will return all groups. */
 
-	static async findAll(queries) {
+	static async findAll(queries={}) {
 		console.log('findAll - queries', queries);
 
 		let queryIdx = 1;

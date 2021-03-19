@@ -1,5 +1,5 @@
 node_modules/
 node_modules/
-server/tree-markable-firebase-adminsdk-sdmzs-7aaeaea861.json
+server/serviceAccountKey.json
 .env
 client/.eslintcache
