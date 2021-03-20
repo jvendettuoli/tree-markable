@@ -4,18 +4,18 @@ import { useSelector } from 'react-redux';
 import { Switch, Route, useHistory } from 'react-router-dom';
 
 import LandingPage from './LandingPage';
-import SignUp from './SignUp';
-import SignIn from './SignIn';
-import EditUser from './EditUser';
-import CreateNewTree from './CreateNewTree';
+import SignUp from './user/SignUp';
+import SignIn from './user/SignIn';
+import EditUser from './user/EditUser';
+import CreateNewTree from './tree/CreateNewTree';
 import NotFound from './NotFound';
-import ExploreTrees from './ExploreTrees';
-import ExploreGroups from './ExploreGroups';
-import TreePage from './TreePage';
-import EditTree from './EditTree';
-import CreateNewGroup from './CreateNewGroup';
-import UserProfilePage from './UserProfilePage';
-import GroupPage from './GroupPage';
+import ExploreTrees from './tree/ExploreTrees';
+import ExploreGroups from './group/ExploreGroups';
+import TreePage from './tree/TreePage';
+import EditTree from './tree/EditTree';
+import CreateNewGroup from './group/CreateNewGroup';
+import UserProfilePage from './user/UserProfilePage';
+import GroupPage from './group/GroupPage';
 
 function Routes() {
 	const history = useHistory();
