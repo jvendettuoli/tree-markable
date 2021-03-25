@@ -16,12 +16,9 @@ import TableRow from '@material-ui/core/TableRow';
 
 import { getTreeFromApi, getTreesFromApi } from '../actions/trees';
 import Carousel from '../imageHandling/Carousel';
-import ShowTreesMap from '../leafletMap/ShowTreesMap';
+import LeafletMap from '../leafletMap/LeafletMap';
 import CommentsContainer from '../comment/CommentsContainer';
-import {
-	treesRef,
-	downloadImageUrlsFromFirebase
-} from '../firebase/firebaseStorage';
+import { treesRef, downloadImageUrlsFromFirebase } from '../firebase/firebaseStorage';
 import FavoriteIconBtn from '../iconBtns/FavoriteIconBtn';
 import EditIconBtn from '../iconBtns/EditIconBtn';
 
@@ -65,10 +62,7 @@ function TreePage() {
 	useEffect(
 		() => {
 			const getImageUrls = async (collectionRef, id) => {
-				const imgUrls = await downloadImageUrlsFromFirebase(
-					collectionRef,
-					id
-				);
+				const imgUrls = await downloadImageUrlsFromFirebase(collectionRef, id);
 				console.log('imgUrls', imgUrls);
 				if (imgUrls) {
 					setImageUrls(imgUrls);
@@ -90,11 +84,7 @@ function TreePage() {
 	const displayImages = (imageUrls) => {
 		if (imageUrls.primary === '') return null;
 		else {
-			return (
-				<Carousel
-					imageUrls={[ imageUrls.primary, ...imageUrls.album ]}
-				/>
-			);
+			return <Carousel imageUrls={[ imageUrls.primary, ...imageUrls.album ]} />;
 		}
 	};
 
@@ -129,13 +119,7 @@ function TreePage() {
 			<Grid item xs={12}>
 				{displayImages(imageUrls)}
 			</Grid>
-			<Grid
-				className={classes.innerContent}
-				container
-				item
-				xs={12}
-				alignItems="flex-start"
-			>
+			<Grid className={classes.innerContent} container item xs={12} alignItems="flex-start">
 				<Grid container item xs={12} md={6}>
 					<Grid container item xs={12} wrap="nowrap">
 						<Typography variant="h3" gutterBottom>
@@ -143,16 +127,12 @@ function TreePage() {
 						</Typography>
 						<Grid item>
 							<FavoriteIconBtn treeId={tree.id} />
-							{uid === tree.creator && (
-								<EditIconBtn type={'trees'} id={tree.id} />
-							)}
+							{uid === tree.creator && <EditIconBtn type={'trees'} id={tree.id} />}
 						</Grid>
 					</Grid>
 					{tree.description && (
 						<Grid item xs={12}>
-							<Typography gutterBottom>
-								{tree.description}
-							</Typography>
+							<Typography gutterBottom>{tree.description}</Typography>
 						</Grid>
 					)}
 					<Grid container item>
@@ -166,9 +146,7 @@ function TreePage() {
 													<TableCell>
 														<b>{item.label}</b>
 													</TableCell>
-													<TableCell>
-														{item.value}
-													</TableCell>
+													<TableCell>{item.value}</TableCell>
 												</TableRow>
 											)
 										);
@@ -180,7 +158,12 @@ function TreePage() {
 				</Grid>
 				<Grid item xs={12} md={6}>
 					<Paper elevation={3}>
-						<ShowTreesMap trees={[ tree ]} />
+						<LeafletMap
+							trees={[ tree ]}
+							mapCenter={[ tree.geolocation.y, tree.geolocation.x ]}
+							allowWheelZoom={false}
+							useSearchComponent={false}
+						/>
 					</Paper>
 				</Grid>
 				<Grid item xs={12} style={{ marginTop: 15 }}>

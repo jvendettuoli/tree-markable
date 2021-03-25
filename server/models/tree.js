@@ -86,11 +86,10 @@ class Tree {
 		if (queries.distance) {
 			const map_center = `point('${queries.map_center_x}', '${queries.map_center_y}')`;
 
-			baseQuery = `SELECT id, name, common_name, scientific_name, height, dsh, leaf_type, description, geolocation, fruit_bearing, favorites, creator, created_at, (geolocation <@> ${map_center}) as distance
+			baseQuery = `SELECT id, name, common_name, scientific_name, height, dsh, leaf_type, description, geolocation, fruit_bearing, favorites, creator, created_at, (geolocation<@>${map_center}) as distance
 			FROM trees`;
-			console.log('Tree Model - base query -', baseQuery, map_center)
 			whereStatements.push(
-				`(geolocation <@> ${map_center}) <  $${queryIdx}`
+				`(geolocation<@>${map_center}) <  $${queryIdx}`
 			);
 			queryIdx += 1;
 			queryValues.push(queries.distance);
@@ -130,7 +129,7 @@ class Tree {
 			queryValues
 		);
 
-		console.log('Tree Model - findAll - finalQuery, queryValues', finalQuery || baseQuery, queryValues);
+		console.log('Tree Model - findAll - finalQuery, queryValues', finalQuery, queryValues);
 		return results.rows;
 	}
 

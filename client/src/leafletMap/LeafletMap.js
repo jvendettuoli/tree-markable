@@ -43,7 +43,7 @@ const searchControl = new GeoSearchControl({
  * 
  */
 function LeafletMap({
-	useGetCoordinates = false,
+	useGetClickCoordinates = false,
 	useSearchComponent = true,
 	useCenterOnUser = false,
 	setCenterOnUser,
@@ -59,7 +59,7 @@ function LeafletMap({
 }) {
 	const classes = useStyles();
 	const [ clickCoords, setClickCoords ] = useState(null);
-
+	console.log('map trees', trees)
 	useEffect(()=>{
 		if(useCenterOnUser){
 			setCenterOnUser(false)
@@ -102,7 +102,7 @@ function LeafletMap({
 	};
 
 	// Update map center when dragging.
-	const UpdateCenterAndZoom = () => {
+	const UpdateCenterOnDrag = () => {
 		const map = useMapEvents({
 			dragend() {
 				console.log(map.getCenter())
@@ -129,10 +129,10 @@ function LeafletMap({
 				attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
 			/>
 
-			{useGetCoordinates && <GetClickCoordinates />}
+			{useGetClickCoordinates && <GetClickCoordinates />}
 			{useSearchComponent && <SearchComponent />}
 			{useCenterOnUser && <CenterOnUser />}
-			<UpdateCenterAndZoom/>
+			{setMapCenter && <UpdateCenterOnDrag/>}
 			{trees && trees.map((tree) => (
 					<Marker
 						key={`marker-${tree.id}`}

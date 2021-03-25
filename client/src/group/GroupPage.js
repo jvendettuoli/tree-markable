@@ -23,7 +23,7 @@ import {
 } from '../firebase/firebaseStorage';
 import FollowGroupIconBtn from '../iconBtns/FollowGroupIconBtn';
 import EditIconBtn from '../iconBtns/EditIconBtn';
-import ShowTreesMap from '../leafletMap/ShowTreesMap';
+import LeafletMap from '../leafletMap/LeafletMap';
 import GroupTabPanel from '../group/GroupTabPanel';
 
 const useStyles = makeStyles((theme) => {

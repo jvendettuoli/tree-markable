@@ -13,7 +13,7 @@ import Grid from '@material-ui/core/Grid';
 import Backdrop from '@material-ui/core/Backdrop';
 import Paper from '@material-ui/core/Paper';
 
-import ShowTreesMap from '../leafletMap/ShowTreesMap';
+import LeafletMap from '../leafletMap/LeafletMap';
 import TreeList from '../tree/TreeList';
 import GroupTreeEditTable from './GroupTreeEditTable';
 import { getTreeFromApi } from '../actions/trees';
@@ -162,7 +162,7 @@ function GroupTabPanel({ group, imageUrls }) {
 							<Grid container item xs={12}>
 								<Grid item xs={12} xl={6}>
 									<Paper elevation={3}>
-										<ShowTreesMap trees={groupTrees} />
+										<LeafletMap trees={groupTrees} />
 									</Paper>
 								</Grid>
 								<Grid container item xs={12} xl={6}>

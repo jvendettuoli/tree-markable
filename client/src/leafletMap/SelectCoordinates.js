@@ -34,12 +34,8 @@ function SelectCoordinates({
 	const classes = useStyles();
 	const didMountRef = useRef(false);
 	const [ showSelectMap, setShowSelectMap ] = useState(true);
-	const [ mapCenter, setMapCenter ] = useState([
-		48.09574762069073,
-		-123.42439143699785
-	]);
-	const [ zoomLevel, setZoomLevel ] = useState(13);
 
+	// Handles change to coordinates from text input
 	const handleChange = (evt) => {
 		onCoordinatesChange(evt.target);
 	};
@@ -65,6 +61,7 @@ function SelectCoordinates({
 		},
 		[ showSelectMap ]
 	);
+
 	const toggleSelectMap = () => {
 		setShowSelectMap(!showSelectMap);
 	};
@@ -126,12 +123,8 @@ function SelectCoordinates({
 				style={setDisplayMapStyle()}
 			>
 				<LeafletMap
-					mapCenter={mapCenter}
-					setMapCenter={setMapCenter}
-					zoomLevel={zoomLevel}
-					setZoomLevel={setZoomLevel}
 					onMapCoordinatesChange={onMapCoordinatesChange}
-					useGetCoordinates={true}
+					useGetClickCoordinates={true}
 				/>
 			</div>
 		</div>

@@ -30,22 +30,22 @@ function Routes() {
 		treesErrorStatus
 	];
 
-	useEffect(
-		() => {
-			console.log('ROUTES 404', errorStatuses);
-			errorStatuses.forEach((error) => {
-				if (error !== null && error[0].status === 404) {
-					history.push('/404');
-				}
-			});
-		},
-		[
-			authErrorStatus,
-			currUserErrorStatus,
-			groupsErrorStatus,
-			treesErrorStatus
-		]
-	);
+	// useEffect(
+	// 	() => {
+	// 		console.log('ROUTES 404', errorStatuses);
+	// 		errorStatuses.forEach((error) => {
+	// 			if (error !== null && error[0].status === 404) {
+	// 				history.push('/404');
+	// 			}
+	// 		});
+	// 	},
+	// 	[
+	// 		authErrorStatus,
+	// 		currUserErrorStatus,
+	// 		groupsErrorStatus,
+	// 		treesErrorStatus
+	// 	]
+	// );
 
 	return (
 		<Switch>

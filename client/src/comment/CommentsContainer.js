@@ -24,11 +24,6 @@ import LeafletMap from '../leafletMap/LeafletMap';
 import ImagesInput from '../imageHandling/ImagesInput';
 import Carousel from '../imageHandling/Carousel';
 import Comment from './Comment';
-import ShowTreeMap from '../leafletMap/ShowTreesMap';
-import {
-	treesRef,
-	downloadImageUrlsFromFirebase
-} from '../firebase/firebaseStorage';
 
 import TreeMarkableApi from '../TreeMarkableApi';
 
