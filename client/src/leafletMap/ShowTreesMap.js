@@ -14,7 +14,17 @@ import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import TreePopup from './TreePopup';
-import useStyles from '../styles/leafletMap';
+
+const useStyles = makeStyles({
+	mapContainer : {
+		width  : '100%',
+		height : '70vh',
+		'& .open':{
+			maxWidth: 280
+		}
+	}
+});
+
 
 function ShowTreesMap({ trees }) {
 	const classes = useStyles();

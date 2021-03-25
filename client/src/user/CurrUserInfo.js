@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 /**
- * Shows the current logged in user's profile. Allows use to edit
+ * Shows the current logged in user's profile. Allows user to edit
  * their information or delete their account.
  * 
  * 
@@ -62,6 +62,7 @@ function CurrUserInfo() {
 		savedTreeIds,
 		groupIds
 	} = useSelector((st) => st.currUser);
+	
 	const handleEdit = (evt) => {
 		history.push(`/users/${username}/edit`);
 	};

@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button';
 
 import useStyles from '../styles/formStyle';
 import TreeMarkableApi from '../TreeMarkableApi';
-import SelectLocationMap from '../leafletMap/SelectLocationMap';
+import SelectLocationMap from '../leafletMap/LeafletMap';
 import {
 	treesRef,
 	uploadImagesToFirebase

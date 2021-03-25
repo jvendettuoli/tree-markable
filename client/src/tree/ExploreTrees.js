@@ -19,9 +19,9 @@ import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 
 import { getTreesFromApi } from '../actions/trees';
-import SearchTreesMap from '../leafletMap/SearchTreesMap';
 import TreeSearchForm from './TreeSearchForm';
 import TreeList from './TreeList';
+import LeafletMap from '../leafletMap/LeafletMap';
 
 function TabPanel(props) {
 	const { children, value, index, ...other } = props;
@@ -63,13 +63,13 @@ function ExploreTrees() {
 
 	const [ isLoading, setIsLoading ] = useState(true);
 	const [ value, setValue ] = useState(0);
-	const [ getLocation, setGetLocation ] = useState(false);
+	const [ centerOnUser, setCenterOnUser ] = useState(false);
 	const [ mapCenter, setMapCenter ] = useState([
 		48.09933034129291,
 		-123.42563836030864
 	]);
-	const [ zoomLevel, setZoomLevel ] = useState(13);
 
+	// Changes visible panel between Map and List
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
 	};
@@ -78,6 +78,7 @@ function ExploreTrees() {
 		setMapCenter(coords);
 	};
 
+	// Get trees from API
 	useEffect(
 		() => {
 			if (isLoading) {
@@ -100,7 +101,7 @@ function ExploreTrees() {
 		<div className={classes.innerContent}>
 			<TreeSearchForm
 				mapCenter={mapCenter}
-				setGetLocation={setGetLocation}
+				setCenterOnUser={setCenterOnUser}
 			/>
 			<AppBar position="static" color="default">
 				<Tabs
@@ -117,14 +118,11 @@ function ExploreTrees() {
 			</AppBar>
 			<Paper elevation={4}>
 				<TabPanel value={value} index={0}>
-					<SearchTreesMap
+					<LeafletMap
 						mapCenter={mapCenter}
 						setMapCenter={setMapCenter}
-						zoomLevel={zoomLevel}
-						setZoomLevel={setZoomLevel}
-						getLocation={getLocation}
-						setGetLocation={setGetLocation}
-						onGetLocationChange={handleGetLocationChange}
+						useCenterOnUser={centerOnUser}
+						setCenterOnUser={setCenterOnUser}
 						trees={trees}
 					/>
 				</TabPanel>

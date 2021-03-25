@@ -1,14 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import Slider from '@material-ui/core/Slider';
-import MenuItem from '@material-ui/core/MenuItem';
-import Button from '@material-ui/core/Button';
-
-import SelectLocationMap from './SelectLocationMap';
-
 import {
 	MapContainer,
 	useMap,
@@ -17,15 +7,23 @@ import {
 	Popup,
 	TileLayer
 } from 'react-leaflet';
-
 import {
 	GeoSearchControl,
 	OpenStreetMapProvider
 } from 'leaflet-geosearch';
 import 'leaflet-geosearch/dist/geosearch.css';
 
+
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+import Slider from '@material-ui/core/Slider';
+import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
+
 import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import LeafletMap from './LeafletMap';
 import useStyles from '../styles/formStyle';
 
 function SelectCoordinates({
@@ -127,12 +125,13 @@ function SelectCoordinates({
 				className={classes.mapContainer}
 				style={setDisplayMapStyle()}
 			>
-				<SelectLocationMap
+				<LeafletMap
 					mapCenter={mapCenter}
 					setMapCenter={setMapCenter}
 					zoomLevel={zoomLevel}
 					setZoomLevel={setZoomLevel}
 					onMapCoordinatesChange={onMapCoordinatesChange}
+					useGetCoordinates={true}
 				/>
 			</div>
 		</div>

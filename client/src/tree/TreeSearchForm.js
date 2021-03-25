@@ -19,7 +19,7 @@ import { getTreesFromApi } from '../actions/trees';
 
 import useStyles from '../styles/formStyle';
 
-function TreeSearchForm({ mapCenter, setGetLocation }) {
+function TreeSearchForm({ mapCenter, setCenterOnUser }) {
 	const classes = useStyles();
 	const dispatch = useDispatch();
 
@@ -76,9 +76,9 @@ function TreeSearchForm({ mapCenter, setGetLocation }) {
 		dispatch(getTreesFromApi(searchParams));
 	};
 
-	const handleGetLocationClick = () => {
-		console.log('handleGetLocationClick - click');
-		setGetLocation(true);
+	const handleCenterMapOnUser = () => {
+		console.log('handleCenterMapOnUser - click');
+		setCenterOnUser(true);
 	};
 
 	return (
@@ -207,7 +207,7 @@ function TreeSearchForm({ mapCenter, setGetLocation }) {
 								size="small"
 								color="primary"
 								variant="contained"
-								onClick={handleGetLocationClick}
+								onClick={handleCenterMapOnUser}
 							>
 								Center on Me
 							</Button>

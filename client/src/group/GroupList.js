@@ -20,7 +20,7 @@ import {
 } from '@material-ui/icons';
 
 import { getTreesFromApi } from '../actions/trees';
-import SelectLocationMap from '../leafletMap/SelectLocationMap';
+import SelectLocationMap from '../leafletMap/LeafletMap';
 import {
 	treesRef,
 	uploadImagesToFirebase

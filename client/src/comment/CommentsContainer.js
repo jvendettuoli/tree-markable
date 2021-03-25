@@ -20,7 +20,7 @@ import IconButton from '@material-ui/core/IconButton';
 import SendIcon from '@material-ui/icons/Send';
 
 import { getTreeFromApi, getTreesFromApi } from '../actions/trees';
-import SelectLocationMap from '../leafletMap/SelectLocationMap';
+import LeafletMap from '../leafletMap/LeafletMap';
 import ImagesInput from '../imageHandling/ImagesInput';
 import Carousel from '../imageHandling/Carousel';
 import Comment from './Comment';

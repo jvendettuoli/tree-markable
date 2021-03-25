@@ -41,7 +41,7 @@ function ImagesInput({ allowMultiple = true, onImageFilesChange }) {
 			console.log('useEffect fileList', fileList);
 			onImageFilesChange(fileList);
 		},
-		[ fileList ]
+		[ fileList, onImageFilesChange ]
 	);
 
 	const readUploadedFileAsDataUrl = (inputFile) => {

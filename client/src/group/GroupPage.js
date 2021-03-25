@@ -13,7 +13,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
 
 import { getGroupFromApi, getGroupsFromApi } from '../actions/groups';
-import SelectLocationMap from '../leafletMap/SelectLocationMap';
+import SelectLocationMap from '../leafletMap/LeafletMap';
 import ImagesInput from '../imageHandling/ImagesInput';
 import Carousel from '../imageHandling/Carousel';
 import CommentsContainer from '../comment/CommentsContainer';

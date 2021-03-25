@@ -17,11 +17,16 @@ import 'leaflet-geosearch/dist/geosearch.css';
 
 import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import TreePopup from './TreePopup';
+
 
 const useStyles = makeStyles({
 	mapContainer : {
 		width  : '100%',
-		height : '70vh'
+		height : '70vh',
+		'& .open':{
+			maxWidth: 280
+		}
 	}
 });
 
@@ -32,12 +37,16 @@ const searchControl = new GeoSearchControl({
 	provider   : new OpenStreetMapProvider()
 });
 
-function SelectLocationMap({
+function LeafletMap({
+	useGetCoordinates = false,
+	useSearchComponent = true,
+
 	zoomLevel,
 	setZoomLevel,
 	mapCenter,
 	setMapCenter,
-	onMapCoordinatesChange
+	onMapCoordinatesChange,
+	trees
 }) {
 	const classes = useStyles();
 	const [ clickCoords, setClickCoords ] = useState(null);
@@ -105,11 +114,24 @@ function SelectLocationMap({
 				attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
 			/>
 
-			<GetClickCoordinates />
+			{useGetCoordinates && <GetClickCoordinates />}
+			{useSearchComponent && <SearchComponent />}
 			<UpdateCenterAndZoom />
-			<SearchComponent />
 			<CenterOnUser />
+			{trees && trees.map((tree) => (
+					<Marker
+						key={`marker-${tree.id}`}
+						position={[
+							tree.geolocation.y,
+							tree.geolocation.x
+						]}
+					>
+						<Popup className={classes.treeMarkerPopup}>
+							<TreePopup tree={tree} />
+						</Popup>
+					</Marker>
+				))}
 		</MapContainer>
 	);
 }
-export default React.memo(SelectLocationMap);
+export default React.memo(LeafletMap);

@@ -2,14 +2,20 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
 	mapContainer    : {
-		width          : '100%',
-		height         : '70vh',
+		width          : '10%',
+		height         : '20vh',
 		display        : 'flex',
 		justifyContent : 'center',
-		'& .open'      : {
-			maxWidth : 330
+		'& > div'      : {
+			maxWidth : 330,
+			backgroundColor: 'red',
+			color: 'red',
+			'& .open':{
+				backgroundColor: 'red'
+			}
 		}
 	},
+
 	treeMarkerPopup : {
 		'& .leaflet-popup-content' : {
 			// paddingLeft  : 0,
