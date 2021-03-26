@@ -6,6 +6,9 @@
 export const LOAD_TREE = 'LOAD_TREE';
 export const LOAD_TREES = 'LOAD_TREES';
 export const TREE_ERROR = 'TREE_ERROR';
+export const LOAD_TREE_REQUEST = 'LOAD_TREE_REQUEST';
+export const LOAD_TREE_SUCCESS = 'LOAD_TREE_SUCCESS';
+export const LOAD_TREE_FAILURE = 'LOAD_TREE_FAILURE';
 
 // Group Action Types
 export const LOAD_GROUP = 'LOAD_GROUP';
@@ -13,6 +16,9 @@ export const LOAD_GROUPS = 'LOAD_GROUPS';
 export const LOAD_TREE_TO_GROUP = 'LOAD_TREE_TO_GROUP';
 export const REMOVE_TREE_FROM_GROUP = 'REMOVE_TREE_FROM_GROUP';
 export const GROUP_ERROR = 'GROUP_ERROR';
+export const LOAD_GROUP_REQUEST = 'LOAD_GROUP_REQUEST';
+export const LOAD_GROUP_SUCCESS = 'LOAD_GROUP_SUCCESS';
+export const LOAD_GROUP_FAILURE = 'LOAD_GROUP_FAILURE';
 
 // Curr User Action Types
 export const LOAD_CURR_USER = 'LOAD_CURR_USER';

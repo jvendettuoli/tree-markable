@@ -40,7 +40,7 @@ function currUser(state = INITIAL_STATE, action) {
 				created_at       : action.payload.created_at,
 				home_geolocation : action.payload.home_geolocation,
 				savedTreeIds     : action.payload.saved_tree_ids || [],
-				groupIds         : action.payload.groupIds || [],
+				followedGroupIds : action.payload.followed_group_ids || [],
 				commentIds       : action.payload.commentIds || [],
 				error            : null
 			};
@@ -56,9 +56,7 @@ function currUser(state = INITIAL_STATE, action) {
 				];
 			}
 			else {
-				errors = Array.isArray(action.payload)
-					? action.payload
-					: [ action.payload ];
+				errors = Array.isArray(action.payload) ? action.payload : [ action.payload ];
 			}
 			return {
 				...state,
@@ -82,19 +80,14 @@ function currUser(state = INITIAL_STATE, action) {
 
 			return {
 				...state,
-				savedTreeIds : state.savedTreeIds.filter(
-					(treeId) => treeId !== action.payload
-				)
+				savedTreeIds : state.savedTreeIds.filter((treeId) => treeId !== action.payload)
 			};
 		case LOAD_FOLLOWED_GROUP:
 			console.log('Reducers LOAD_FOLLOWED_GROUP - action', action);
 
 			return {
 				...state,
-				followedGroupIds : [
-					...state.followedGroupIds,
-					action.payload
-				]
+				followedGroupIds : [ ...state.followedGroupIds, action.payload ]
 			};
 
 		case REMOVE_FOLLOWED_GROUP:
@@ -102,9 +95,7 @@ function currUser(state = INITIAL_STATE, action) {
 
 			return {
 				...state,
-				followedGroupIds : state.followedGroupIds.filter(
-					(groupId) => groupId !== action.payload
-				)
+				followedGroupIds : state.followedGroupIds.filter((groupId) => groupId !== action.payload)
 			};
 
 		default:
