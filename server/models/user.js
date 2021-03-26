@@ -12,9 +12,7 @@ class User {
 		console.log('Models - User.register - Start');
 
 		// Convert coordinates into Point format for Postgresql: 'x,y'
-		const home_geolocation = data.home_geolocation
-			? formatCoordinates(data.home_geolocation)
-			: null;
+		const home_geolocation = data.home_geolocation ? formatCoordinates(data.home_geolocation) : null;
 
 		try {
 			const result = await db.query(
@@ -22,33 +20,20 @@ class User {
               (firebase_id, username, email, img_url, home_geolocation, is_admin) 
             VALUES ($1, $2, $3, $4, $5, $6) 
             RETURNING firebase_id, username, email, img_url, home_geolocation, is_admin, created_at`,
-				[
-					data.firebase_id,
-					data.username,
-					data.email,
-					data.img_url,
-					home_geolocation,
-					data.is_admin || false
-				]
+				[ data.firebase_id, data.username, data.email, data.img_url, home_geolocation, data.is_admin || false ]
 			);
 
 			return result.rows[0];
 		} catch (err) {
 			if (err.code === '23505') {
 				if (err.constraint === 'users_pkey') {
-					throw new ExpressError(
-						`Duplicate firebase_id found for: '${data.firebase_id}'.`,
-						400
-					);
+					throw new ExpressError(`Duplicate firebase_id found for: '${data.firebase_id}'.`, 400);
 				}
 				if (err.constraint === 'users_email_key') {
 					throw new ExpressError(`Duplicate email found.`, 400);
 				}
 				if (err.constraint === 'users_username_key') {
-					throw new ExpressError(
-						`Duplicate username found.`,
-						400
-					);
+					throw new ExpressError(`Duplicate username found.`, 400);
 				}
 			}
 			else {
@@ -73,27 +58,30 @@ class User {
 
 	static async findByUsername(username) {
 		const userRes = await db.query(
-			`SELECT firebase_id, username, email, img_url, home_geolocation, is_admin, created_at, json_agg(u_t.tree_id) AS saved_tree_ids, json_agg(u_g.group_id) AS followed_group_ids
-			FROM users as u
-			LEFT JOIN users_trees AS u_t ON u.firebase_id = u_t.user_id
-			LEFT JOIN users_groups AS u_g ON u.firebase_id = u_g.user_id
-			WHERE username = $1
-			GROUP BY u.firebase_id`,
+			`SELECT u.firebase_id, u.username,u. email, u.img_url, u.home_geolocation, u.is_admin, u.created_at, u_t.saved_tree_ids, u_g.followed_group_ids
+			FROM users u
+			LEFT JOIN LATERAL (
+				SELECT json_agg(u_t.tree_id) as saved_tree_ids
+				FROM users_trees u_t
+				WHERE user_id = u.firebase_id
+			) u_t ON TRUE
+			LEFT JOIN LATERAL (
+				SELECT json_agg(u_g.group_id) as followed_group_ids
+				FROM users_groups u_g
+				WHERE user_id = u.firebase_id
+			) u_g ON TRUE
+			WHERE u.username = $1`,
 			[ username ]
 		);
 
 		const user = userRes.rows[0];
 
 		if (!user) {
-			const error = new ExpressError(
-				`There exists no user '${username}'`,
-				404
-			);
+			const error = new ExpressError(`There exists no user '${username}'`, 404);
 			throw error;
 		}
-		if (user.saved_tree_ids[0] === null) user.saved_tree_ids = [];
-		if (user.followed_group_ids[0] === null)
-			user.followed_group_ids = [];
+		// if (user.saved_tree_ids[0] === null) user.saved_tree_ids = [];
+		// if (user.followed_group_ids[0] === null) user.followed_group_ids = [];
 
 		return user;
 	}
@@ -113,15 +101,11 @@ class User {
 		const user = userRes.rows[0];
 
 		if (!user) {
-			const error = new ExpressError(
-				`There exists no firebase_id '${uid}'`,
-				404
-			);
+			const error = new ExpressError(`There exists no firebase_id '${uid}'`, 404);
 			throw error;
 		}
 		if (user.saved_tree_ids[0] === null) user.saved_tree_ids = [];
-		if (user.followed_group_ids[0] === null)
-			user.followed_group_ids = [];
+		if (user.followed_group_ids[0] === null) user.followed_group_ids = [];
 
 		return user;
 	}
@@ -138,9 +122,7 @@ class User {
 	static async update(username, data) {
 		console.log('Users Model - Update - Start', username, data);
 		if (data.hasOwnProperty('home_geolocation')) {
-			data.home_geolocation = formatCoordinates(
-				data.home_geolocation
-			);
+			data.home_geolocation = formatCoordinates(data.home_geolocation);
 		}
 		if (data.hasOwnProperty('password')) {
 			delete data.password;
@@ -149,21 +131,13 @@ class User {
 			return this.findByUsername(username);
 		}
 
-		let { query, values } = partialUpdate(
-			'users',
-			data,
-			'username',
-			username
-		);
+		let { query, values } = partialUpdate('users', data, 'username', username);
 		try {
 			const result = await db.query(query, values);
 			const user = result.rows[0];
 
 			if (!user) {
-				let notFound = new ExpressError(
-					`There exists no user: '${username}'`,
-					404
-				);
+				let notFound = new ExpressError(`There exists no user: '${username}'`, 404);
 				throw notFound;
 			}
 
@@ -174,10 +148,7 @@ class User {
 					throw new ExpressError(`Duplicate email found.`, 400);
 				}
 				if (err.constraint === 'users_username_key') {
-					throw new ExpressError(
-						`Duplicate username found.`,
-						400
-					);
+					throw new ExpressError(`Duplicate username found.`, 400);
 				}
 			}
 			else {
@@ -197,10 +168,7 @@ class User {
 		);
 
 		if (result.rows.length === 0) {
-			let notFound = new ExpressError(
-				`There exists no user '${username}'`,
-				404
-			);
+			let notFound = new ExpressError(`There exists no user '${username}'`, 404);
 			throw notFound;
 		}
 	}
