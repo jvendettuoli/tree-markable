@@ -20,17 +20,18 @@ function SignIn() {
 	const history = useHistory();
 	const isAuthenticated = useSelector((st) => st.auth.authenticated);
 	const username = useSelector((st) => st.currUser.username);
+	const status = useSelector((st) => st.currUser.status);
 
 	// Avoid updating during an existing state transition by checking
-	// auth status in useEffect
+	// auth status in useEffect. Also redirect already logged in users
 	useEffect(
 		() => {
 			// If user is authenticated, push to user page
-			if (isAuthenticated) {
+			if ((isAuthenticated && status === 'idle') || status === 'successful') {
 				history.push(`/users/${username}`);
 			}
 		},
-		[ isAuthenticated, username, history ]
+		[ isAuthenticated, username, history, status ]
 	);
 
 	const submitFormData = (formData) => {
@@ -43,7 +44,7 @@ function SignIn() {
 				<Typography variant="h3" gutterBottom>
 					Sign In
 				</Typography>
-				{!isAuthenticated && <SignInForm submitFormData={submitFormData} />}
+				<SignInForm submitFormData={submitFormData} />
 			</Grid>
 		</Grid>
 	);

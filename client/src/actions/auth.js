@@ -5,20 +5,16 @@
  * Also updates user store to keep current user synced with authentication.
  */
 
-import {
-	signUp,
-	signIn,
-	signOut,
-	anonymousAuth,
-	updateEmail,
-	updateProfile
-} from '../firebase/firebaseAuth';
+import { signUp, signIn, signOut, anonymousAuth, updateEmail, updateProfile } from '../firebase/firebaseAuth';
 import TreeMarkableApi from '../TreeMarkableApi';
 import { auth } from '../firebase/firebaseIndex';
 import {
 	AUTH_ERROR,
 	AUTH_USER,
 	SIGN_OUT_USER,
+	LOAD_CURR_USER_REQUEST,
+	LOAD_CURR_USER_SUCCESS,
+	LOAD_CURR_USER_FAILURE,
 	LOAD_CURR_USER,
 	RESET_CURR_USER
 } from './types';
@@ -26,12 +22,10 @@ import {
 function signUpUser(credentials, userData) {
 	console.log('Auth - signUpUser - ', credentials, userData);
 	return async function(dispatch) {
+		dispatch({ type: LOAD_CURR_USER_REQUEST });
 		try {
 			// create user in FirebaseAuth
-			const firebaseRes = await signUp(
-				credentials.email,
-				credentials.password
-			);
+			const firebaseRes = await signUp(credentials.email, credentials.password);
 			// create user in TreeMarkable Database
 			const apiRes = await TreeMarkableApi.registerUser({
 				...userData,
@@ -48,9 +42,11 @@ function signUpUser(credentials, userData) {
 					token : firebaseRes.user.refreshToken
 				})
 			);
+			dispatch({ type: LOAD_CURR_USER_SUCCESS });
 			dispatch(loadCurrUser(currUserData));
 		} catch (err) {
 			console.log('signUpUser error', err);
+			dispatch({ type: LOAD_CURR_USER_FAILURE });
 			dispatch(authError(err));
 		}
 	};
@@ -59,15 +55,12 @@ function signInUser(credentials) {
 	console.log('Auth - signInUser', credentials);
 
 	return async function(dispatch) {
-		try {
-			const firebaseRes = await signIn(
-				credentials.email,
-				credentials.password
-			);
+		dispatch({ type: LOAD_CURR_USER_REQUEST });
 
-			const apiRes = await TreeMarkableApi.getUser(
-				firebaseRes.user.displayName
-			);
+		try {
+			const firebaseRes = await signIn(credentials.email, credentials.password);
+
+			const apiRes = await TreeMarkableApi.getUser(firebaseRes.user.displayName);
 			const currUserData = {
 				...apiRes,
 				token : firebaseRes.user.refreshToken
@@ -77,12 +70,12 @@ function signInUser(credentials) {
 					token : firebaseRes.user.refreshToken
 				})
 			);
+			dispatch({ type: LOAD_CURR_USER_SUCCESS });
 			dispatch(loadCurrUser(currUserData));
-			return 'test success';
 		} catch (err) {
 			console.log('signInUser error', err);
+			dispatch({ type: LOAD_CURR_USER_FAILURE });
 			dispatch(authError(err));
-			return 'test error';
 		}
 	};
 }

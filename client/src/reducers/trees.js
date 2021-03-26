@@ -23,7 +23,7 @@ function trees(state = INITIAL_STATE, action) {
 			return { ...state, status: 'isLoading' };
 
 		case LOAD_TREE_SUCCESS:
-			return { ...state, status: 'success' };
+			return { ...state, status: 'idle' };
 
 		case LOAD_TREE_FAILURE:
 			return { ...state, status: 'failure' };
@@ -36,7 +36,7 @@ function trees(state = INITIAL_STATE, action) {
 					...state.entities,
 					[action.payload.id]: { ...action.payload }
 				},
-				status   : 'idle',
+				status   : 'success',
 				error    : null
 			};
 
@@ -47,7 +47,7 @@ function trees(state = INITIAL_STATE, action) {
 				return obj;
 			}, {});
 
-			return { entities: entitiesObj, status: 'idle', error: null };
+			return { entities: entitiesObj, status: 'success', error: null };
 
 		case TREE_ERROR:
 			console.log('REDUCERS TREE_ERROR - action', action);

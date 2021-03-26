@@ -25,7 +25,7 @@ function groups(state = INITIAL_STATE, action) {
 			return { ...state, status: 'isLoading' };
 
 		case LOAD_GROUP_SUCCESS:
-			return { ...state, status: 'success' };
+			return { ...state, status: 'idle' };
 
 		case LOAD_GROUP_FAILURE:
 			return { ...state, status: 'failure' };
@@ -38,7 +38,7 @@ function groups(state = INITIAL_STATE, action) {
 					...state.entities,
 					[action.payload.id]: { ...action.payload }
 				},
-				status   : 'idle',
+				status   : 'success',
 				error    : null
 			};
 		case LOAD_GROUPS:
@@ -47,13 +47,13 @@ function groups(state = INITIAL_STATE, action) {
 				obj[group.id] = group;
 				return obj;
 			}, {});
-			return { entities: groupsObj, status: 'idle', error: null };
+			return { entities: groupsObj, status: 'success', error: null };
 
 		case LOAD_TREE_TO_GROUP:
 			console.log('REDUCERS LOAD_TREE_TO_GROUP - action', action);
 			return {
 				...state,
-				status   : 'idle',
+				status   : 'success',
 				error    : null,
 				entities : {
 					...state.entities,
@@ -69,7 +69,7 @@ function groups(state = INITIAL_STATE, action) {
 
 			return {
 				...state,
-				status   : 'idle',
+				status   : 'success',
 				error    : null,
 				entities : {
 					...state.entities,

@@ -24,8 +24,8 @@ function getGroupFromApi(id) {
 			dispatch({ type: LOAD_GROUP_SUCCESS });
 		} catch (err) {
 			console.log('Actions - getGroupFromApi err', err);
-			dispatch({ type: LOAD_GROUP_FAILURE });
 			dispatch(groupError(err));
+			dispatch({ type: LOAD_GROUP_FAILURE });
 		}
 	};
 }
@@ -39,8 +39,8 @@ function getGroupsFromApi(searchParams) {
 			dispatch({ type: LOAD_GROUP_SUCCESS });
 		} catch (err) {
 			console.log('Actions - getGroupsFromApi err', err);
-			dispatch({ type: LOAD_GROUP_FAILURE });
 			dispatch(groupError(err));
+			dispatch({ type: LOAD_GROUP_FAILURE });
 		}
 	};
 }
@@ -54,8 +54,8 @@ function updateGroupInApi(groupId, data) {
 			dispatch({ type: LOAD_GROUP_SUCCESS });
 		} catch (err) {
 			console.log('Actions - updateGroupFromApi err', err);
-			dispatch({ type: LOAD_GROUP_FAILURE });
 			dispatch(groupError(err));
+			dispatch({ type: LOAD_GROUP_FAILURE });
 		}
 	};
 }
@@ -75,8 +75,8 @@ function addTreeToGroup(groupId, treeId) {
 			dispatch({ type: LOAD_GROUP_SUCCESS });
 		} catch (err) {
 			console.log('Actions - addTreeToGroup error', err);
-			dispatch({ type: LOAD_GROUP_FAILURE });
 			dispatch(groupError(err));
+			dispatch({ type: LOAD_GROUP_FAILURE });
 		}
 	};
 }
@@ -91,8 +91,8 @@ function removeTreeFromGroup(groupId, treeId) {
 			dispatch({ type: LOAD_GROUP_SUCCESS });
 		} catch (err) {
 			console.log('Actions - removeTreeFromGroup error', err);
-			dispatch({ type: LOAD_GROUP_FAILURE });
 			dispatch(groupError(err));
+			dispatch({ type: LOAD_GROUP_FAILURE });
 		}
 	};
 }

@@ -1,15 +1,10 @@
 import TreeMarkableApi from '../TreeMarkableApi';
-import {
-	signUp,
-	signIn,
-	signOut,
-	anonymousAuth,
-	updateEmail,
-	reauthenticate
-} from '../firebase/firebaseAuth';
+import { signUp, signIn, signOut, anonymousAuth, updateEmail, reauthenticate } from '../firebase/firebaseAuth';
 import {
 	LOAD_CURR_USER,
-	LOAD_USERS_ERROR,
+	LOAD_CURR_USER_REQUEST,
+	LOAD_CURR_USER_SUCCESS,
+	LOAD_CURR_USER_FAILURE,
 	LOAD_CURR_USER_ERROR,
 	LOAD_SAVED_TREE,
 	REMOVE_SAVED_TREE,
@@ -24,6 +19,7 @@ import {
 function editCurrUser(credentials, username, data) {
 	console.log('currUser - editCurrUser - ', credentials, username, data);
 	return async function(dispatch) {
+		dispatch({ type: LOAD_CURR_USER_REQUEST });
 		try {
 			await reauthenticate(credentials);
 			// await updateEmail(data.email);
@@ -35,11 +31,12 @@ function editCurrUser(credentials, username, data) {
 					password : credentials.password
 				});
 			}
-
 			dispatch(loadCurrUser(user));
+			dispatch({ type: LOAD_CURR_USER_SUCCESS });
 		} catch (err) {
 			console.log('editCurrUser error', err);
 			dispatch(currUserError(err));
+			dispatch({ type: LOAD_CURR_USER_FAILURE });
 		}
 	};
 }
@@ -64,24 +61,30 @@ function editCurrUser(credentials, username, data) {
 function addToSavedTrees(username, treeId) {
 	console.log('currUser - addToSavedTrees - ', username, treeId);
 	return async function(dispatch) {
+		dispatch({ type: LOAD_CURR_USER_REQUEST });
 		try {
 			await TreeMarkableApi.userAddTree(username, treeId);
 			dispatch(treeSaved(treeId));
+			dispatch({ type: LOAD_CURR_USER_SUCCESS });
 		} catch (err) {
 			console.log('addToSavedTrees error', err);
 			dispatch(currUserError(err));
+			dispatch({ type: LOAD_CURR_USER_FAILURE });
 		}
 	};
 }
 function removeFromSavedTrees(username, treeId) {
 	console.log('currUser - removeFromSavedTrees - ', username, treeId);
 	return async function(dispatch) {
+		dispatch({ type: LOAD_CURR_USER_REQUEST });
 		try {
 			await TreeMarkableApi.userRemoveTree(username, treeId);
 			dispatch(treeRemoved(treeId));
+			dispatch({ type: LOAD_CURR_USER_SUCCESS });
 		} catch (err) {
 			console.log('removeFromSavedTrees error', err);
 			dispatch(currUserError(err));
+			dispatch({ type: LOAD_CURR_USER_FAILURE });
 		}
 	};
 }
@@ -92,28 +95,30 @@ function removeFromSavedTrees(username, treeId) {
 function addToFollowedGroups(username, groupId) {
 	console.log('currUser - addToFollowedGroups - ', username, groupId);
 	return async function(dispatch) {
+		dispatch({ type: LOAD_CURR_USER_REQUEST });
 		try {
 			await TreeMarkableApi.userAddGroup(username, groupId);
 			dispatch(groupFollowed(groupId));
+			dispatch({ type: LOAD_CURR_USER_SUCCESS });
 		} catch (err) {
 			console.log('addToFollowedGroups error', err);
 			dispatch(currUserError(err));
+			dispatch({ type: LOAD_CURR_USER_FAILURE });
 		}
 	};
 }
 function removeFromFollowedGroups(username, groupId) {
-	console.log(
-		'currUser - removeFromFollowedGroups - ',
-		username,
-		groupId
-	);
+	console.log('currUser - removeFromFollowedGroups - ', username, groupId);
 	return async function(dispatch) {
+		dispatch({ type: LOAD_CURR_USER_REQUEST });
 		try {
 			await TreeMarkableApi.userRemoveGroup(username, groupId);
 			dispatch(groupUnfollowed(groupId));
+			dispatch({ type: LOAD_CURR_USER_SUCCESS });
 		} catch (err) {
 			console.log('removeFromFollowedGroups error', err);
 			dispatch(currUserError(err));
+			dispatch({ type: LOAD_CURR_USER_FAILURE });
 		}
 	};
 }
@@ -137,10 +142,4 @@ function groupUnfollowed(groupId) {
 	return { type: REMOVE_FOLLOWED_GROUP, payload: groupId };
 }
 
-export {
-	addToSavedTrees,
-	removeFromSavedTrees,
-	editCurrUser,
-	addToFollowedGroups,
-	removeFromFollowedGroups
-};
+export { addToSavedTrees, removeFromSavedTrees, editCurrUser, addToFollowedGroups, removeFromFollowedGroups };

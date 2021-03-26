@@ -32,6 +32,7 @@ function EditUser() {
 	const { username: paramsUsername } = useParams();
 	const dispatch = useDispatch();
 	const { username, error } = useSelector((st) => st.currUser);
+	const status = useSelector((st) => st.currUser.status);
 
 	const INITIAL_FORM_DATA = {
 		current_email    : '',
@@ -47,11 +48,11 @@ function EditUser() {
 	// to prevent issues on a potential refresh.
 	useEffect(
 		() => {
-			if (paramsUsername !== username) {
-				history.push(`/users/${username}/edit`);
+			if (status === 'success') {
+				history.push(`/users/${username}`);
 			}
 		},
-		[ username, paramsUsername ]
+		[ username, paramsUsername, history, status ]
 	);
 
 	const handleChange = (evt) => {
@@ -75,8 +76,8 @@ function EditUser() {
 			email    : formData.current_email,
 			password : formData.current_password
 		};
-		// user data required by TreeMarkableApi to edit user
 
+		// user data required by TreeMarkableApi to edit user
 		const userData = {
 			username : formData.username,
 			img_url  : formData.img_url,
@@ -98,11 +99,7 @@ function EditUser() {
 	};
 
 	return (
-		<Grid
-			container
-			className={classes.innerContent}
-			direction="column"
-		>
+		<Grid container className={classes.innerContent} direction="column">
 			<Grid item>
 				<Typography variant="h3" gutterBottom>
 					Edit User
@@ -110,14 +107,12 @@ function EditUser() {
 			</Grid>
 			<Divider variant="middle" style={{ marginBottom: 15 }} />
 			<Grid container item xs={12}>
-				<Grid container direction="column" item xs={6}>
+				<Grid container direction="column" item xs={12}>
 					<form onSubmit={handleSubmit} className={classes.form}>
 						<Grid item>
-							<Typography>
-								Any fields left blank will be ignored.
-							</Typography>
+							<Typography>Any fields left blank will be ignored.</Typography>
 						</Grid>
-						<Grid item xs={10}>
+						<Grid item>
 							<TextField
 								fullWidth
 								id="username"
@@ -126,13 +121,11 @@ function EditUser() {
 								onChange={handleChange}
 								value={formData.username}
 								inputProps={{ maxLength: 55 }}
-								error={Boolean(
-									handleErrorDisplay('username')
-								)}
+								error={Boolean(handleErrorDisplay('username'))}
 								helperText={handleErrorDisplay('username')}
 							/>
 						</Grid>
-						<Grid item xs={10}>
+						<Grid item>
 							<TextField
 								fullWidth
 								id="new_email"
@@ -142,13 +135,11 @@ function EditUser() {
 								onChange={handleChange}
 								value={formData.new_email}
 								autoComplete="email"
-								error={Boolean(
-									handleErrorDisplay('email')
-								)}
+								error={Boolean(handleErrorDisplay('email'))}
 								helperText={handleErrorDisplay('email')}
 							/>
 						</Grid>
-						<Grid item xs={10}>
+						<Grid item>
 							<TextField
 								fullWidth
 								id="new_password"
@@ -158,15 +149,11 @@ function EditUser() {
 								onChange={handleChange}
 								value={formData.new_password}
 								inputProps={{ minLength: 6 }}
-								error={Boolean(
-									handleErrorDisplay('new_password')
-								)}
-								helperText={handleErrorDisplay(
-									'new_password'
-								)}
+								error={Boolean(handleErrorDisplay('new_password'))}
+								helperText={handleErrorDisplay('new_password')}
 							/>
 						</Grid>
-						{/* <Grid item xs={10}>
+						{/* <Grid item >
 							<TextField
 								fullWidth
 								id="img_url"
@@ -178,10 +165,8 @@ function EditUser() {
 								autoComplete="img_url"
 							/>
 						</Grid> */}
-						<Grid item xs={10}>
-							<Typography variant="subtitle2">
-								Verify Account
-							</Typography>
+						<Grid item>
+							<Typography variant="subtitle2">Verify Account</Typography>
 
 							<TextField
 								fullWidth
@@ -192,38 +177,23 @@ function EditUser() {
 								onChange={handleChange}
 								value={formData.current_password}
 								inputProps={{ minLength: 6 }}
-								error={Boolean(
-									handleErrorDisplay('password')
-								)}
+								error={Boolean(handleErrorDisplay('password'))}
 								helperText={handleErrorDisplay('password')}
 							/>
 						</Grid>
-						<Grid
-							container
-							item
-							xs={10}
-							justify="space-between"
-						>
-							<Button
-								onClick={handleCancel}
-								variant="contained"
-								color="secondary"
-							>
+						<Grid container item justify="space-between" style={{ paddingLeft: 40, paddingRight: 40 }}>
+							<Button onClick={handleCancel} variant="contained" color="secondary">
 								Go Back
 							</Button>
-							<Button
-								variant="contained"
-								color="primary"
-								type="submit"
-							>
+							<Button variant="contained" color="primary" type="submit">
 								Save Edits
 							</Button>
 						</Grid>
 					</form>
 				</Grid>
-				<Grid container item xs={6}>
+				{/* <Grid container item xs={6}>
 					<CurrUserInfo />
-				</Grid>
+				</Grid> */}
 			</Grid>
 		</Grid>
 	);

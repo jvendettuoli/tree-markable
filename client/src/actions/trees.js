@@ -11,12 +11,12 @@ function getTreeFromApi(id) {
 		dispatch({ type: LOAD_TREE_REQUEST });
 		try {
 			const res = await TreeMarkableApi.getTree(id);
-			dispatch({ type: LOAD_TREE_SUCCESS });
 			dispatch(gotTree(res));
+			dispatch({ type: LOAD_TREE_SUCCESS });
 		} catch (err) {
 			console.log('getTreeFromApi err', err);
-			dispatch({ type: LOAD_TREE_FAILURE });
 			dispatch(treeError(err));
+			dispatch({ type: LOAD_TREE_FAILURE });
 		}
 	};
 }
@@ -26,12 +26,12 @@ function getTreesFromApi(searchParams) {
 		try {
 			const res = await TreeMarkableApi.getTrees(searchParams);
 			console.log('Actions - getTreesFromApi res', res);
-			dispatch({ type: LOAD_TREE_SUCCESS });
 			dispatch(gotTrees(res));
+			dispatch({ type: LOAD_TREE_SUCCESS });
 		} catch (err) {
 			console.log('getTreesFromApi err', err);
-			dispatch({ type: LOAD_TREE_FAILURE });
 			dispatch(treeError(err));
+			dispatch({ type: LOAD_TREE_FAILURE });
 		}
 	};
 }
@@ -41,12 +41,12 @@ function updateTreeInApi(treeId, data) {
 		try {
 			const res = await TreeMarkableApi.updateTree(treeId, data);
 			console.log('Actions - updateTreeInApi res', res);
-			dispatch({ type: LOAD_TREE_SUCCESS });
 			dispatch(gotTree(res));
+			dispatch({ type: LOAD_TREE_SUCCESS });
 		} catch (err) {
 			console.log('updateTreeFromApi err', err);
-			dispatch({ type: LOAD_TREE_FAILURE });
 			dispatch(treeError(err));
+			dispatch({ type: LOAD_TREE_FAILURE });
 		}
 	};
 }

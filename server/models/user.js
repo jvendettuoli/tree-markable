@@ -80,8 +80,6 @@ class User {
 			const error = new ExpressError(`There exists no user '${username}'`, 404);
 			throw error;
 		}
-		// if (user.saved_tree_ids[0] === null) user.saved_tree_ids = [];
-		// if (user.followed_group_ids[0] === null) user.followed_group_ids = [];
 
 		return user;
 	}
@@ -89,23 +87,28 @@ class User {
 
 	static async findByUid(uid) {
 		const userRes = await db.query(
-			`SELECT firebase_id, username, email, img_url, home_geolocation, is_admin, created_at, json_agg(u_t.tree_id) AS saved_tree_ids, json_agg(u_g.group_id) AS followed_group_ids
-			FROM users as u
-			LEFT JOIN users_trees AS u_t ON u.firebase_id = u_t.user_id
-			LEFT JOIN users_groups AS u_g ON u.firebase_id = u_g.user_id
-			WHERE username = $1
-			GROUP BY u.firebase_id`,
+			`SELECT u.firebase_id, u.username,u. email, u.img_url, u.home_geolocation, u.is_admin, u.created_at, u_t.saved_tree_ids, u_g.followed_group_ids
+			FROM users u
+			LEFT JOIN LATERAL (
+				SELECT json_agg(u_t.tree_id) as saved_tree_ids
+				FROM users_trees u_t
+				WHERE user_id = u.firebase_id
+			) u_t ON TRUE
+			LEFT JOIN LATERAL (
+				SELECT json_agg(u_g.group_id) as followed_group_ids
+				FROM users_groups u_g
+				WHERE user_id = u.firebase_id
+			) u_g ON TRUE
+			WHERE u.firebase_id = $1`,
 			[ uid ]
 		);
 
 		const user = userRes.rows[0];
 
 		if (!user) {
-			const error = new ExpressError(`There exists no firebase_id '${uid}'`, 404);
+			const error = new ExpressError(`There exists no user id '${uid}'`, 404);
 			throw error;
 		}
-		if (user.saved_tree_ids[0] === null) user.saved_tree_ids = [];
-		if (user.followed_group_ids[0] === null) user.followed_group_ids = [];
 
 		return user;
 	}
