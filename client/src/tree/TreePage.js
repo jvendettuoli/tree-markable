@@ -34,7 +34,7 @@ const useStyles = makeStyles({
 function TreePage() {
 	const classes = useStyles();
 	const { id } = useParams();
-	const tree = useSelector((st) => st.trees.trees[id]);
+	const tree = useSelector((st) => st.trees.entities[id]);
 	const uid = useSelector((st) => st.currUser.uid);
 	console.log('TreePage - tree', tree);
 	const [ isLoading, setIsLoading ] = useState(true);
@@ -132,7 +132,9 @@ function TreePage() {
 					</Grid>
 					{tree.description && (
 						<Grid item xs={12}>
-							<Typography gutterBottom>{tree.description}</Typography>
+							<Typography gutterBottom style={{ paddingRight: 10 }}>
+								{tree.description}
+							</Typography>
 						</Grid>
 					)}
 					<Grid container item>
@@ -163,6 +165,7 @@ function TreePage() {
 							mapCenter={[ tree.geolocation.y, tree.geolocation.x ]}
 							allowWheelZoom={false}
 							useSearchComponent={false}
+							small={true}
 						/>
 					</Paper>
 				</Grid>

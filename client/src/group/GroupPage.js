@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -17,10 +17,7 @@ import SelectLocationMap from '../leafletMap/LeafletMap';
 import ImagesInput from '../imageHandling/ImagesInput';
 import Carousel from '../imageHandling/Carousel';
 import CommentsContainer from '../comment/CommentsContainer';
-import {
-	groupsRef,
-	downloadImageUrlsFromFirebase
-} from '../firebase/firebaseStorage';
+import { groupsRef, downloadImageUrlsFromFirebase } from '../firebase/firebaseStorage';
 import FollowGroupIconBtn from '../iconBtns/FollowGroupIconBtn';
 import EditIconBtn from '../iconBtns/EditIconBtn';
 import LeafletMap from '../leafletMap/LeafletMap';
@@ -39,12 +36,14 @@ const useStyles = makeStyles((theme) => {
 
 function GroupPage() {
 	const classes = useStyles();
+	const history = useHistory();
 	const theme = useTheme();
 	const { id } = useParams();
 	const isAuthenticated = useSelector((st) => st.auth.authenticated);
-	const group = useSelector((st) => st.groups.groups[id]);
+	const group = useSelector((st) => st.groups.entities[id]);
 	const uid = useSelector((st) => st.currUser.uid);
 	const error = useSelector((st) => st.groups.error);
+
 	console.log('GroupPage - group', group);
 	const [ isLoading, setIsLoading ] = useState(true);
 	const [ imageUrls, setImageUrls ] = useState({
@@ -62,17 +61,14 @@ function GroupPage() {
 			};
 			getGroup(id);
 		},
-		[ id, error ]
+		[ id, error, dispatch, history ]
 	);
 
 	// Get Group Images from FirebaseStorage
 	useEffect(
 		() => {
 			const getImageUrls = async (collectionRef, id) => {
-				const imgUrls = await downloadImageUrlsFromFirebase(
-					collectionRef,
-					id
-				);
+				const imgUrls = await downloadImageUrlsFromFirebase(collectionRef, id);
 				console.log('imgUrls', imgUrls);
 				if (imgUrls) {
 					setImageUrls(imgUrls);
@@ -122,37 +118,19 @@ function GroupPage() {
 				{displayImages(imageUrls)}
 			</Grid>
 
-			<Grid
-				className={classes.innerContent}
-				container
-				item
-				xs={12}
-				alignItems="flex-start"
-			>
-				<Grid
-					container
-					item
-					xs={12}
-					wrap="nowrap"
-					justify="space-between"
-				>
+			<Grid className={classes.innerContent} container item xs={12} alignItems="flex-start">
+				<Grid container item xs={12} wrap="nowrap" justify="space-between">
 					<Typography variant="h3" gutterBottom>
 						{group.name}
 					</Typography>
 					<Grid item>
-						{isAuthenticated && (
-							<FollowGroupIconBtn groupId={group.id} />
-						)}
-						{uid === group.creator && (
-							<EditIconBtn type={'groups'} id={group.id} />
-						)}
+						{isAuthenticated && <FollowGroupIconBtn groupId={group.id} />}
+						{uid === group.creator && <EditIconBtn type={'groups'} id={group.id} />}
 					</Grid>
 				</Grid>
 				{group.description && (
 					<Grid item xs={12} style={{ marginBottom: 15 }}>
-						<Typography gutterBottom>
-							{group.description}
-						</Typography>
+						<Typography gutterBottom>{group.description}</Typography>
 					</Grid>
 				)}
 				<Grid item xs={12}>

@@ -66,26 +66,15 @@ function GroupTabPanel({ group, imageUrls }) {
 
 	// check if currUser is a moderator of this group
 	const isModerator = Boolean(
-		group.members.find(
-			(member) =>
-				member.user_id === currUserUid &&
-				member.is_moderator === true
-		)
+		group.members.find((member) => member.user_id === currUserUid && member.is_moderator === true)
 	);
 
 	// Get any group trees that are already in store
-	let groupTrees = useSelector((st) =>
-		[ ...group.trees ].map((id) => st.trees.trees[id])
-	);
+	let groupTrees = useSelector((st) => [ ...group.trees ].map((id) => st.trees.entities[id]));
 
 	// Get array of any group tree ids that were not already in store
-	const remainingSelectionTreeIds = group.trees.filter(
-		(id) => !groupTrees.map((tree) => tree.id).includes(id)
-	);
-	console.log(
-		'GroupTapPanal remainingSelectionTree',
-		remainingSelectionTreeIds
-	);
+	const remainingSelectionTreeIds = group.trees.filter((id) => !groupTrees.map((tree) => tree.id).includes(id));
+	console.log('GroupTapPanal remainingSelectionTree', remainingSelectionTreeIds);
 
 	console.log('GroupTapPanal groupTrees', groupTrees);
 	// Get any other group tree that is not in store from API
@@ -109,13 +98,7 @@ function GroupTabPanel({ group, imageUrls }) {
 	return (
 		<div className={classes.tabPanel}>
 			<AppBar position="static">
-				<Tabs
-					value={value}
-					onChange={handleChange}
-					variant="fullWidth"
-					aria-label="group tabs"
-					centered
-				>
+				<Tabs value={value} onChange={handleChange} variant="fullWidth" aria-label="group tabs" centered>
 					<Tab label="Trees" {...a11yProps(0)} />
 					<Tab label="Album" {...a11yProps(1)} />
 					<Tab label="Item Three" {...a11yProps(2)} />
@@ -125,18 +108,11 @@ function GroupTabPanel({ group, imageUrls }) {
 				<Grid container direction="column">
 					<Grid container item xs={12} justify="center">
 						{isModerator && (
-							<Button
-								color="primary"
-								onClick={displayTreeSelection}
-							>
+							<Button color="primary" onClick={displayTreeSelection}>
 								Edit Group Trees
 							</Button>
 						)}
-						<Backdrop
-							className={classes.backdrop}
-							open={open}
-							onClick={closeTreeSelection}
-						>
+						<Backdrop className={classes.backdrop} open={open} onClick={closeTreeSelection}>
 							<Box
 								style={{
 									backgroundColor : 'white',
@@ -150,10 +126,7 @@ function GroupTabPanel({ group, imageUrls }) {
 									evt.stopPropagation();
 								}}
 							>
-								<GroupTreeEditTable
-									group={group}
-									groupTrees={groupTrees}
-								/>
+								<GroupTreeEditTable group={group} groupTrees={groupTrees} />
 							</Box>
 						</Backdrop>
 					</Grid>
@@ -179,8 +152,7 @@ function GroupTabPanel({ group, imageUrls }) {
 							</Grid>
 						) : (
 							<Typography align="center">
-								No trees within this group yet. Only
-								moderators can edit trees of this group.
+								No trees within this group yet. Only moderators can edit trees of this group.
 							</Typography>
 						)}
 					</Grid>

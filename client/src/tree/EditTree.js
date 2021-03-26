@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -10,23 +11,33 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 
-import useStyles from '../styles/formStyle';
 import TreeMarkableApi from '../TreeMarkableApi';
 import TreeFormBasicFields from './TreeFormBasicFields';
 import SelectCoordinates from '../leafletMap/SelectCoordinates';
-import {
-	treesRef,
-	uploadImagesToFirebase,
-	deleteImagesFromFirebase
-} from '../firebase/firebaseStorage';
+import { treesRef, uploadImagesToFirebase, deleteImagesFromFirebase } from '../firebase/firebaseStorage';
 import ImagesInput from '../imageHandling/ImagesInput';
 import { updateTreeInApi } from '../actions/trees';
 import { TransitEnterexitRounded } from '@material-ui/icons';
 
+const useStyles = makeStyles({
+	innerContent : {
+		padding : 20
+	},
+	form         : {
+		display       : 'flex',
+		flexDirection : 'column',
+		'& div'       : {
+			marginBottom : 10
+		}
+	}
+});
+
 function EditTree() {
+	const classes = useStyles();
+
 	const { id } = useParams();
 	const dispatch = useDispatch();
-	const tree = useSelector((st) => st.trees.trees[id]);
+	const tree = useSelector((st) => st.trees.entities[id]);
 	const history = useHistory();
 	const INITIAL_TREE_FORM_DATA = {
 		name            : tree.name,
@@ -38,10 +49,7 @@ function EditTree() {
 		leaf_type       : tree.leaf_type || '',
 		fruit_bearing   : tree.fruit_bearing || false
 	};
-	const classes = useStyles();
-	const [ treeFormData, setTreeFormData ] = useState(
-		INITIAL_TREE_FORM_DATA
-	);
+	const [ treeFormData, setTreeFormData ] = useState(INITIAL_TREE_FORM_DATA);
 	const [ coordinates, setCoordinates ] = useState({
 		lat : tree.geolocation.y,
 		lng : tree.geolocation.x
@@ -112,15 +120,12 @@ function EditTree() {
 	};
 
 	return (
-		<div>
+		<div className={classes.innerContent}>
 			<Typography variant="h4" gutterBottom>
 				Edit Tree
 			</Typography>
 			<form onSubmit={handleSubmit} className={classes.form}>
-				<TreeFormBasicFields
-					formData={treeFormData}
-					onFormChange={handleTreeFormChange}
-				/>
+				<TreeFormBasicFields formData={treeFormData} onFormChange={handleTreeFormChange} />
 				<Typography variant="h5" gutterBottom>
 					Tree Location
 				</Typography>
@@ -135,21 +140,14 @@ function EditTree() {
 						Edit Images
 					</Typography>
 					<Typography gutterBottom>
-						Ignore this section if you want to leave them the
-						same. Any images added will overwrite previously
-						uploaded images.
+						Ignore this section if you want to leave them the same. Any images added will overwrite
+						previously uploaded images.
 					</Typography>
-					<ImagesInput
-						onImageFilesChange={handleImageFilesChange}
-					/>
+					<ImagesInput onImageFilesChange={handleImageFilesChange} />
 					<Divider variant="middle" />
 				</div>
 
-				<Button
-					color="secondary"
-					variant="contained"
-					type="submit"
-				>
+				<Button color="secondary" variant="contained" type="submit">
 					Edit Tree
 				</Button>
 			</form>

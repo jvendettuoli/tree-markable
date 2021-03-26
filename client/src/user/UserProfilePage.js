@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-	Link as RouterLink,
-	useParams,
-	useHistory
-} from 'react-router-dom';
+import { Link as RouterLink, useParams, useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import Box from '@material-ui/core/Box';
@@ -61,16 +57,8 @@ function UserProfilePage() {
 
 	const history = useHistory();
 
-	const {
-		uid,
-		username,
-		email,
-		img_url,
-		created_at,
-		is_admin,
-		savedTreeIds
-	} = useSelector((st) => st.currUser);
-	const trees = useSelector((st) => st.trees.trees);
+	const { uid, username, email, img_url, created_at, is_admin, savedTreeIds } = useSelector((st) => st.currUser);
+	const trees = useSelector((st) => st.trees.entities);
 
 	const pushToEditForm = () => {
 		history.push(`/users/${username}/edit`);
@@ -78,14 +66,7 @@ function UserProfilePage() {
 
 	return (
 		<Grid container direction="column">
-			<Grid
-				className={classes.headerImgBackground}
-				container
-				justify="center"
-				alignItems="flex-end"
-				item
-				xs={12}
-			>
+			<Grid className={classes.headerImgBackground} container justify="center" alignItems="flex-end" item xs={12}>
 				<div style={{ height: 300 }} />
 			</Grid>
 			<Grid container item className={classes.innerContent}>
@@ -98,28 +79,17 @@ function UserProfilePage() {
 				<Grid container item>
 					<Grid container alignItems="flex-end">
 						<Box mr={2}>
-							<Typography variant="h5">
-								Favorite Trees
-							</Typography>
+							<Typography variant="h5">Favorite Trees</Typography>
 						</Box>
 						<Link component={RouterLink} to="/trees">
-							<Typography variant="subtitle1">
-								Find more trees!
-							</Typography>
+							<Typography variant="subtitle1">Find more trees!</Typography>
 						</Link>
 					</Grid>
 					<List>
 						{savedTreeIds.length > 0 ? (
 							savedTreeIds.map((id) => (
-								<ListItem
-									button
-									component={RouterLink}
-									to={`/trees/${id}`}
-									key={`tree-${id}`}
-								>
-									<ListItemText>
-										{trees[id].name}
-									</ListItemText>
+								<ListItem button component={RouterLink} to={`/trees/${id}`} key={`tree-${id}`}>
+									<ListItemText>{trees[id].name}</ListItemText>
 								</ListItem>
 							))
 						) : (

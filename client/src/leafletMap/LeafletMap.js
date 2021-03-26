@@ -1,32 +1,29 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
-import {
-	MapContainer,
-	useMap,
-	useMapEvents,
-	Marker,
-	Popup,
-	TileLayer
-} from 'react-leaflet';
+import { MapContainer, useMap, useMapEvents, Marker, Popup, TileLayer } from 'react-leaflet';
 
-import {
-	GeoSearchControl,
-	OpenStreetMapProvider
-} from 'leaflet-geosearch';
+import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import 'leaflet-geosearch/dist/geosearch.css';
 
 import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TreePopup from './TreePopup';
 
-
 const useStyles = makeStyles({
-	mapContainer : {
-		width  : '100%',
-		height : '70vh',
+	mapContainer   : {
+		width     : '100%',
+		height    : 450,
 		// Style map search bar width to fit on mobile
-		'& .open':{
-			maxWidth: 280
+		'& .open' : {
+			maxWidth : 280
+		}
+	},
+	mapContainerSm : {
+		width     : '100%',
+		height    : 300,
+		// Style map search bar width to fit on mobile
+		'& .open' : {
+			maxWidth : 280
 		}
 	}
 });
@@ -47,24 +44,24 @@ function LeafletMap({
 	useSearchComponent = true,
 	useCenterOnUser = false,
 	setCenterOnUser,
-	zoomLevel=13,
-	mapCenter=[
-		48.09574762069073,
-		-123.42439143699785
-	],
+	zoomLevel = 13,
+	mapCenter = [ 48.09574762069073, -123.42439143699785 ],
 	setMapCenter,
 	onMapCoordinatesChange,
 	trees = false,
-	allowWheelZoom = true
+	allowWheelZoom = true,
+	small = false
 }) {
 	const classes = useStyles();
 	const [ clickCoords, setClickCoords ] = useState(null);
-	console.log('map trees', trees)
-	useEffect(()=>{
-		if(useCenterOnUser){
-			setCenterOnUser(false)
-		}
-	},[useCenterOnUser, setCenterOnUser])
+	useEffect(
+		() => {
+			if (useCenterOnUser) {
+				setCenterOnUser(false);
+			}
+		},
+		[ useCenterOnUser, setCenterOnUser ]
+	);
 
 	// On Map click, gets coordinates and provides a marker showing
 	// the coordinates.
@@ -105,10 +102,10 @@ function LeafletMap({
 	const UpdateCenterOnDrag = () => {
 		const map = useMapEvents({
 			dragend() {
-				console.log(map.getCenter())
-				const coords = map.getCenter()
-				setMapCenter([coords.lat, coords.lng]);
-			},
+				console.log(map.getCenter());
+				const coords = map.getCenter();
+				setMapCenter([ coords.lat, coords.lng ]);
+			}
 		});
 		return null;
 	};
@@ -117,12 +114,11 @@ function LeafletMap({
 
 	return (
 		<MapContainer
-			className={classes.mapContainer}
+			className={small ? classes.mapContainerSm : classes.mapContainer}
 			placeholder={loadingPlaceholder}
 			center={mapCenter}
 			zoom={zoomLevel}
 			scrollWheelZoom={allowWheelZoom}
-
 		>
 			<TileLayer
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -132,15 +128,10 @@ function LeafletMap({
 			{useGetClickCoordinates && <GetClickCoordinates />}
 			{useSearchComponent && <SearchComponent />}
 			{useCenterOnUser && <CenterOnUser />}
-			{setMapCenter && <UpdateCenterOnDrag/>}
-			{trees && trees.map((tree) => (
-					<Marker
-						key={`marker-${tree.id}`}
-						position={[
-							tree.geolocation.y,
-							tree.geolocation.x
-						]}
-					>
+			{setMapCenter && <UpdateCenterOnDrag />}
+			{trees &&
+				trees.map((tree) => (
+					<Marker key={`marker-${tree.id}`} position={[ tree.geolocation.y, tree.geolocation.x ]}>
 						<Popup className={classes.treeMarkerPopup}>
 							<TreePopup tree={tree} />
 						</Popup>

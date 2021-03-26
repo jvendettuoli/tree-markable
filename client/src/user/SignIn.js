@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-
-
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -32,7 +30,7 @@ function SignIn() {
 				history.push(`/users/${username}`);
 			}
 		},
-		[ isAuthenticated, username ]
+		[ isAuthenticated, username, history ]
 	);
 
 	const submitFormData = (formData) => {
@@ -45,9 +43,7 @@ function SignIn() {
 				<Typography variant="h3" gutterBottom>
 					Sign In
 				</Typography>
-				{!isAuthenticated && (
-					<SignInForm submitFormData={submitFormData} />
-				)}
+				{!isAuthenticated && <SignInForm submitFormData={submitFormData} />}
 			</Grid>
 		</Grid>
 	);

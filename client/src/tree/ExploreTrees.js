@@ -64,10 +64,7 @@ function ExploreTrees() {
 	const [ isLoading, setIsLoading ] = useState(true);
 	const [ value, setValue ] = useState(0);
 	const [ centerOnUser, setCenterOnUser ] = useState(false);
-	const [ mapCenter, setMapCenter ] = useState([
-		48.09933034129291,
-		-123.42563836030864
-	]);
+	const [ mapCenter, setMapCenter ] = useState([ 48.09933034129291, -123.42563836030864 ]);
 
 	// Changes visible panel between Map and List
 	const handleChange = (event, newValue) => {
@@ -89,9 +86,7 @@ function ExploreTrees() {
 		[ isLoading, dispatch ]
 	);
 
-	let trees = useSelector((st) =>
-		Object.values(st.trees.trees).map((tree) => tree)
-	);
+	let trees = useSelector((st) => Object.values(st.trees.entities).map((tree) => tree));
 
 	if (isLoading) {
 		return <div>Loading</div>;
@@ -99,10 +94,7 @@ function ExploreTrees() {
 
 	return (
 		<div className={classes.innerContent}>
-			<TreeSearchForm
-				mapCenter={mapCenter}
-				setCenterOnUser={setCenterOnUser}
-			/>
+			<TreeSearchForm mapCenter={mapCenter} setCenterOnUser={setCenterOnUser} />
 			<AppBar position="static" color="default">
 				<Tabs
 					value={value}

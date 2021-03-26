@@ -47,9 +47,7 @@ function ExploreGroups() {
 		[ isLoading, dispatch ]
 	);
 
-	let groups = useSelector((st) =>
-		Object.values(st.groups.groups).map((group) => group)
-	);
+	let groups = useSelector((st) => Object.values(st.groups.entities).map((group) => group));
 
 	console.log('ExploreGroups - groups', groups);
 
