@@ -8,12 +8,7 @@ const Group = require('../models/group');
 const User = require('../models/user');
 
 const ExpressError = require('../helpers/expressError');
-const {
-	authRequired,
-	ensureCorrectUser,
-	ensureIsCreator,
-	ensureIsGroupMod
-} = require('../middleware/auth');
+const { authRequired, ensureCorrectUser, ensureIsCreator, ensureIsGroupMod } = require('../middleware/auth');
 const { groupNewSchema, groupUpdateSchema } = require('../schemas');
 
 /** GET / => {groups: [group, ...]} */
@@ -66,16 +61,10 @@ router.post('/', authRequired, async function(req, res, next) {
 		req.body.creator = req.token.uid;
 
 		if (!validation.valid) {
-			return next(
-				new ExpressError(
-					validation.errors.map((err) => err.stack),
-					400
-				)
-			);
+			return next(new ExpressError(validation.errors.map((err) => err.stack), 400));
 		}
 
 		const newGroup = await Group.create(req.body);
-		await User.addGroup(req.token.uid, newGroup.id, true);
 		return res.status(201).json({ newGroup });
 	} catch (err) {
 		return next(err);
@@ -96,8 +85,8 @@ router.patch('/:id', ensureIsCreator, async function(req, res, next) {
 			});
 		}
 
-		const user = await Group.update(req.params.id, req.body);
-		return res.json({ user });
+		const editGroup = await Group.update(req.params.id, req.body);
+		return res.json({ editGroup });
 	} catch (err) {
 		return next(err);
 	}
@@ -120,50 +109,70 @@ router.delete('/:id', ensureIsCreator, async function(req, res, next) {
  * Group to Tree routes
  */
 
-/** GET GROUP'S TREES /[groupId]/trees => {savedTrees}*/
+/** GET GROUP'S TREES /[id]/trees => {savedTrees}*/
 
-router.get('/:groupId/trees', async function(req, res, next) {
+router.get('/:id/trees', async function(req, res, next) {
 	try {
-		const savedTrees = await Group.getTrees(req.params.groupId);
+		const savedTrees = await Group.getTrees(req.params.id);
 		return res.json(savedTrees);
 	} catch (err) {
 		return next(err);
 	}
 });
 
-/** ADD TREE TO GROUP /[groupId]/trees/[id] => 
- * {message: 'Tree [id] added to Group [groupId]'}*/
+/** ADD TREE TO GROUP /[id]/trees/[treeId] => 
+ * {message: 'Tree [treeId] added to Group [id]'}*/
 
-router.post('/:groupId/trees/:id', ensureIsGroupMod, async function(
-	req,
-	res,
-	next
-) {
+router.post('/:id/trees/:treeId', ensureIsGroupMod, async function(req, res, next) {
 	try {
-		await Group.addTree(req.params.groupId, req.params.id);
+		await Group.addTree(req.params.id, req.params.treeId);
 		return res.json({
-			message : `Tree '${req.params.id}' added to Group '${req.params
-				.groupId}'`
+			message : `Tree '${req.params.treeId}' added to Group '${req.params.id}'`
 		});
 	} catch (err) {
 		return next(err);
 	}
 });
 
-/** REMOVE TREE FROM GROUP /[groupId]/trees/[id] => 
- * {message: 'Tree [id] removed from Group [groupId]'}*/
+/** REMOVE TREE FROM GROUP /[id]/trees/[treeId] => 
+ * {message: 'Tree [treeId] removed from Group [id]'}*/
 
-router.delete('/:groupId/trees/:id', ensureIsGroupMod, async function(
-	req,
-	res,
-	next
-) {
+router.delete('/:id/trees/:treeId', ensureIsGroupMod, async function(req, res, next) {
 	try {
-		await Group.removeTree(req.params.groupId, req.params.id);
+		await Group.removeTree(req.params.id, req.params.treeId);
 		return res.json({
-			message : `Tree '${req.params.id}' removed from Group '${req
-				.params.groupId}'`
+			message : `Tree '${req.params.treeId}' removed from Group '${req.params.id}'`
 		});
+	} catch (err) {
+		return next(err);
+	}
+});
+
+/**
+ * Group to Member Relationships
+ */
+
+/** ADD A MODERATER TO A GROUP /[id]/users/[id]=>
+ * { message: `User [id] added as a mod to Group [id].` }
+ */
+router.patch('/:id/users/:userId/addmod', ensureIsCreator, async function(req, res, next) {
+	console.log('Group Routes - AddMod', req.params);
+	try {
+		await Group.addMod(req.params.id, req.params.userId);
+		return res.json({ message: `User ${userId} added as a mod to Group ${id}.` });
+	} catch (err) {
+		return next(err);
+	}
+});
+
+/** ADD A MODERATER TO A GROUP /[id]/users/[id]=>
+ * { message: `User [id] added as a mod to Group [id].` }
+ */
+router.patch('/:id/users/:userId/removemod', ensureIsCreator, async function(req, res, next) {
+	console.log('Group Routes - removeMod', req.params);
+	try {
+		await Group.removeMod(req.params.id, req.params.userId);
+		return res.json({ message: `User ${userId} removed as a mod from Group ${id}.` });
 	} catch (err) {
 		return next(err);
 	}

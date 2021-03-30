@@ -43,6 +43,7 @@ function GroupPage() {
 	const group = useSelector((st) => st.groups.entities[id]);
 	const uid = useSelector((st) => st.currUser.uid);
 	const error = useSelector((st) => st.groups.error);
+	const isCreator = uid === group.creator;
 
 	console.log('GroupPage - group', group);
 	const [ isLoading, setIsLoading ] = useState(true);
@@ -125,7 +126,7 @@ function GroupPage() {
 					</Typography>
 					<Grid item>
 						{isAuthenticated && <FollowGroupIconBtn groupId={group.id} />}
-						{uid === group.creator && <EditIconBtn type={'groups'} id={group.id} />}
+						{isCreator && <EditIconBtn type={'groups'} id={group.id} />}
 					</Grid>
 				</Grid>
 				{group.description && (
@@ -134,7 +135,7 @@ function GroupPage() {
 					</Grid>
 				)}
 				<Grid item xs={12}>
-					<GroupTabPanel group={group} imageUrls={imageUrls} />
+					<GroupTabPanel isCreator={isCreator} group={group} imageUrls={imageUrls} />
 				</Grid>
 
 				<Grid item xs={12} style={{ marginTop: 15 }}>

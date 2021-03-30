@@ -73,11 +73,7 @@ function GroupSearchForm() {
 						/>
 					</Grid>
 					<Grid item xs={2}>
-						<Button
-							variant="outlined"
-							color="secondary"
-							type="submit"
-						>
+						<Button variant="outlined" color="secondary" type="submit">
 							Search
 						</Button>
 					</Grid>

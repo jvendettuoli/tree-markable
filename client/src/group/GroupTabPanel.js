@@ -17,6 +17,7 @@ import LeafletMap from '../leafletMap/LeafletMap';
 import TreeList from '../tree/TreeList';
 import GroupTreeEditTable from './GroupTreeEditTable';
 import { getTreeFromApi } from '../actions/trees';
+import GroupMembersPanel from './GroupMembersPanel';
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -56,7 +57,7 @@ function a11yProps(index) {
 	};
 }
 
-function GroupTabPanel({ group, imageUrls }) {
+function GroupTabPanel({ group, isCreator, imageUrls }) {
 	const theme = useTheme();
 	const classes = useStyles(theme);
 	const dispatch = useDispatch();
@@ -78,12 +79,15 @@ function GroupTabPanel({ group, imageUrls }) {
 
 	console.log('GroupTapPanal groupTrees', groupTrees);
 	// Get any other group tree that is not in store from API
-	useEffect(() => {
-		remainingSelectionTreeIds.forEach((id) => {
-			const tree = dispatch(getTreeFromApi(id));
-			groupTrees.push(tree);
-		});
-	}, []);
+	useEffect(
+		() => {
+			remainingSelectionTreeIds.forEach((id) => {
+				const tree = dispatch(getTreeFromApi(id));
+				groupTrees.push(tree);
+			});
+		},
+		[ dispatch, groupTrees, remainingSelectionTreeIds ]
+	);
 
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
@@ -101,14 +105,14 @@ function GroupTabPanel({ group, imageUrls }) {
 				<Tabs value={value} onChange={handleChange} variant="fullWidth" aria-label="group tabs" centered>
 					<Tab label="Trees" {...a11yProps(0)} />
 					<Tab label="Album" {...a11yProps(1)} />
-					<Tab label="Item Three" {...a11yProps(2)} />
+					<Tab label="Members" {...a11yProps(2)} />
 				</Tabs>
 			</AppBar>
 			<TabPanel value={value} index={0}>
 				<Grid container direction="column">
 					<Grid container item xs={12} justify="center">
 						{isModerator && (
-							<Button color="primary" onClick={displayTreeSelection}>
+							<Button color="primary" onClick={displayTreeSelection} style={{ marginBottom: 20 }}>
 								Edit Group Trees
 							</Button>
 						)}
@@ -142,7 +146,7 @@ function GroupTabPanel({ group, imageUrls }) {
 									<Box
 										p={2}
 										style={{
-											height : 650,
+											height : `${120 + Math.min(groupTrees.length, 10) * 52}px`,
 											width  : '100%'
 										}}
 									>
@@ -162,7 +166,7 @@ function GroupTabPanel({ group, imageUrls }) {
 				Album
 			</TabPanel>
 			<TabPanel value={value} index={2}>
-				Item Three
+				<GroupMembersPanel isCreator={isCreator} isModerator={isModerator} group={group} />
 			</TabPanel>
 		</div>
 	);

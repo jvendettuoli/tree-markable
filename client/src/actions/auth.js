@@ -42,12 +42,12 @@ function signUpUser(credentials, userData) {
 					token : firebaseRes.user.refreshToken
 				})
 			);
-			dispatch({ type: LOAD_CURR_USER_SUCCESS });
 			dispatch(loadCurrUser(currUserData));
+			dispatch({ type: LOAD_CURR_USER_SUCCESS });
 		} catch (err) {
 			console.log('signUpUser error', err);
-			dispatch({ type: LOAD_CURR_USER_FAILURE });
 			dispatch(authError(err));
+			dispatch({ type: LOAD_CURR_USER_FAILURE });
 		}
 	};
 }
@@ -70,12 +70,12 @@ function signInUser(credentials) {
 					token : firebaseRes.user.refreshToken
 				})
 			);
-			dispatch({ type: LOAD_CURR_USER_SUCCESS });
 			dispatch(loadCurrUser(currUserData));
+			dispatch({ type: LOAD_CURR_USER_SUCCESS });
 		} catch (err) {
 			console.log('signInUser error', err);
-			dispatch({ type: LOAD_CURR_USER_FAILURE });
 			dispatch(authError(err));
+			dispatch({ type: LOAD_CURR_USER_FAILURE });
 		}
 	};
 }

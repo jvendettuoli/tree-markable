@@ -92,13 +92,14 @@ function removeFromSavedTrees(username, treeId) {
  * Action creators for updating the current User's followed Groups
  */
 
-function addToFollowedGroups(username, groupId) {
-	console.log('currUser - addToFollowedGroups - ', username, groupId);
+function addToFollowedGroups(userId, groupId, isModerator) {
+	console.log('currUser - addToFollowedGroups - ', userId, groupId, isModerator);
 	return async function(dispatch) {
 		dispatch({ type: LOAD_CURR_USER_REQUEST });
 		try {
-			await TreeMarkableApi.userAddGroup(username, groupId);
+			await TreeMarkableApi.userAddGroup(userId, groupId, isModerator);
 			dispatch(groupFollowed(groupId));
+			dispatch();
 			dispatch({ type: LOAD_CURR_USER_SUCCESS });
 		} catch (err) {
 			console.log('addToFollowedGroups error', err);
@@ -107,12 +108,12 @@ function addToFollowedGroups(username, groupId) {
 		}
 	};
 }
-function removeFromFollowedGroups(username, groupId) {
-	console.log('currUser - removeFromFollowedGroups - ', username, groupId);
+function removeFromFollowedGroups(userId, groupId) {
+	console.log('currUser - removeFromFollowedGroups - ', userId, groupId);
 	return async function(dispatch) {
 		dispatch({ type: LOAD_CURR_USER_REQUEST });
 		try {
-			await TreeMarkableApi.userRemoveGroup(username, groupId);
+			await TreeMarkableApi.userRemoveGroup(userId, groupId);
 			dispatch(groupUnfollowed(groupId));
 			dispatch({ type: LOAD_CURR_USER_SUCCESS });
 		} catch (err) {

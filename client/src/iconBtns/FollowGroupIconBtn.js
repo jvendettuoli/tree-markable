@@ -1,26 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import {
-	Group as GroupIcon,
-	PeopleOutline as PeopleOutlineIcon
-} from '@material-ui/icons';
+import { Group as GroupIcon, PeopleOutline as PeopleOutlineIcon } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import { useTheme } from '@material-ui/core/styles';
 
-import {
-	addToFollowedGroups,
-	removeFromFollowedGroups
-} from '../actions/currUser';
+import { addToFollowedGroups, removeFromFollowedGroups } from '../actions/currUser';
 
 function FollowGroupIconBtn({ groupId }) {
 	const theme = useTheme();
 	const [ isFollowed, setIsFollowed ] = useState(null);
-	const username = useSelector((st) => st.currUser.username);
-	const followedGroupIds = useSelector(
-		(st) => st.currUser.followedGroupIds
-	);
+	const userId = useSelector((st) => st.currUser.uid);
+	const followedGroupIds = useSelector((st) => st.currUser.followedGroupIds);
 	const dispatch = useDispatch();
 
 	useEffect(
@@ -35,10 +27,10 @@ function FollowGroupIconBtn({ groupId }) {
 
 	const handleClick = async () => {
 		if (isFollowed) {
-			dispatch(removeFromFollowedGroups(username, groupId));
+			dispatch(removeFromFollowedGroups(userId, groupId));
 		}
 		else {
-			dispatch(addToFollowedGroups(username, groupId));
+			dispatch(addToFollowedGroups(userId, groupId));
 		}
 		setIsFollowed(!isFollowed);
 	};
@@ -49,9 +41,7 @@ function FollowGroupIconBtn({ groupId }) {
 				{isFollowed ? (
 					<GroupIcon htmlColor={theme.palette.primary.light} />
 				) : (
-					<PeopleOutlineIcon
-						htmlColor={theme.palette.primary.light}
-					/>
+					<PeopleOutlineIcon htmlColor={theme.palette.primary.light} />
 				)}
 			</IconButton>
 		</Tooltip>

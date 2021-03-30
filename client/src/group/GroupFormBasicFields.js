@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -11,19 +12,18 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 
 import useStyles from '../styles/formStyle';
-import TreeMarkableApi from '../TreeMarkableApi';
-import SelectLocationMap from '../leafletMap/LeafletMap';
-import {
-	treesRef,
-	uploadImagesToFirebase
-} from '../firebase/firebaseStorage';
-import ImagesInput from '../imageHandling/ImagesInput';
+import { errorDisplay } from '../helpers/formErrorDisplay';
 
-function GroupFormBasicFields({ errors, formData, onFormChange }) {
+function GroupFormBasicFields({ errors, formData, onFormChange, edit = false }) {
 	const classes = useStyles();
-
+	const groupError = useSelector((st) => st.groups.error);
+	console.log(groupError);
 	const handleChange = (evt) => {
 		onFormChange(evt.target);
+	};
+
+	const handleErrorDisplay = (field) => {
+		return errorDisplay(field, groupError);
 	};
 
 	return (
@@ -35,17 +35,16 @@ function GroupFormBasicFields({ errors, formData, onFormChange }) {
 				placeholder="Clallam Tree Alliance"
 				onChange={handleChange}
 				value={formData.name}
-				required
-				error={errors.name}
-				helperText={
-					errors.name ? 'Group Name already exists.' : ''
-				}
+				required={!edit}
+				error={Boolean(handleErrorDisplay('group_name'))}
+				helperText={handleErrorDisplay('group_name')}
 			/>
 			<TextField
 				id="description"
 				name="description"
 				label="Description"
 				multiline
+				inputProps={{ maxLength: 2000 }}
 				placeholder="What is the main purpose of your group?"
 				onChange={handleChange}
 				value={formData.description}

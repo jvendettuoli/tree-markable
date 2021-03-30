@@ -10,6 +10,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:3001';
 class TreeMarkableApi {
 	static async request(endpoint, paramsOrData = {}, verb = 'get') {
 		try {
+			console.log('PRE API CALL', paramsOrData);
 			paramsOrData._token = await getToken();
 
 			console.debug('API Call:', endpoint, paramsOrData, verb);
@@ -95,7 +96,7 @@ class TreeMarkableApi {
 	static async updateGroup(groupId, data) {
 		console.log('TreeMarkableApi Class updateGroup - Start');
 		let res = await this.request(`groups/${groupId}`, data, 'patch');
-		return res.group;
+		return res.editGroup;
 	}
 	static async deleteGroup(groupId) {
 		console.log('TreeMarkableApi Class deleteGroup - Start');
@@ -158,20 +159,12 @@ class TreeMarkableApi {
 	}
 	static async updateComment(commentId, data) {
 		console.log('TreeMarkableApi Class updateComment - Start');
-		let res = await this.request(
-			`comments/${commentId}`,
-			data,
-			'patch'
-		);
+		let res = await this.request(`comments/${commentId}`, data, 'patch');
 		return res.updatedComment;
 	}
 	static async deleteComment(commentId) {
 		console.log('TreeMarkableApi Class deleteComment - Start');
-		let res = await this.request(
-			`comments/${commentId}`,
-			{},
-			'delete'
-		);
+		let res = await this.request(`comments/${commentId}`, {}, 'delete');
 		return res.message;
 	}
 
@@ -180,62 +173,53 @@ class TreeMarkableApi {
 	 */
 	static async userAddTree(username, treeId) {
 		console.log('TreeMarkableApi Class userAddTree - Start');
-		let res = await this.request(
-			`users/${username}/trees/${treeId}`,
-			{},
-			'post'
-		);
+		let res = await this.request(`users/${username}/trees/${treeId}`, {}, 'post');
 		return res.message;
 	}
 	static async userRemoveTree(username, treeId) {
 		console.log('TreeMarkableApi Class userRemoveTree - Start');
-		let res = await this.request(
-			`users/${username}/trees/${treeId}`,
-			{},
-			'delete'
-		);
+		let res = await this.request(`users/${username}/trees/${treeId}`, {}, 'delete');
 		return res.message;
 	}
 	/**
 	 * User - Group Relationship Requests
 	 */
-	static async userAddGroup(username, groupId) {
+	static async userAddGroup(userId, groupId, isModerator) {
 		console.log('TreeMarkableApi Class userAddGroup - Start');
-		let res = await this.request(
-			`users/${username}/groups/${groupId}`,
-			{},
-			'post'
-		);
+		let res = await this.request(`users/${userId}/groups/${groupId}`, { isModerator }, 'post');
 		return res.message;
 	}
-	static async userRemoveGroup(username, groupId) {
+	static async userRemoveGroup(userId, groupId) {
 		console.log('TreeMarkableApi Class userRemoveGroup - Start');
-		let res = await this.request(
-			`users/${username}/groups/${groupId}`,
-			{},
-			'delete'
-		);
+		let res = await this.request(`users/${userId}/groups/${groupId}`, {}, 'delete');
 		return res.message;
 	}
+
 	/**
 	 * Group - Tree Relationship Requests
 	 */
 	static async groupAddTree(groupId, treeId) {
 		console.log('TreeMarkableApi Class groupAddTree - Start');
-		let res = await this.request(
-			`groups/${groupId}/trees/${treeId}`,
-			{},
-			'post'
-		);
+		let res = await this.request(`groups/${groupId}/trees/${treeId}`, {}, 'post');
 		return res.message;
 	}
 	static async groupRemoveTree(groupId, treeId) {
 		console.log('TreeMarkableApi Class groupRemoveTree - Start');
-		let res = await this.request(
-			`groups/${groupId}/trees/${treeId}`,
-			{},
-			'delete'
-		);
+		let res = await this.request(`groups/${groupId}/trees/${treeId}`, {}, 'delete');
+		return res.message;
+	}
+
+	/**
+	 * Group - Member Relationship Requests
+	 */
+	static async groupAddMod(groupId, userId) {
+		console.log('TreeMarkableApi Class groupAddMod - Start');
+		let res = await this.request(`groups/${groupId}/users/${userId}/addmod`, {}, 'patch');
+		return res.message;
+	}
+	static async groupRemoveMod(groupId, userId) {
+		console.log('TreeMarkableApi Class groupRemoveMod - Start');
+		let res = await this.request(`groups/${groupId}/users/${userId}/removemod`, {}, 'patch');
 		return res.message;
 	}
 }

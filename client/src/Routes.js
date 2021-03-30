@@ -16,6 +16,7 @@ import EditTree from './tree/EditTree';
 import CreateNewGroup from './group/CreateNewGroup';
 import UserProfilePage from './user/UserProfilePage';
 import GroupPage from './group/GroupPage';
+import EditGroup from './group/EditGroup';
 
 function Routes() {
 	const history = useHistory();
@@ -23,12 +24,7 @@ function Routes() {
 	const currUserErrorStatus = useSelector((st) => st.currUser.error);
 	const groupsErrorStatus = useSelector((st) => st.groups.error);
 	const treesErrorStatus = useSelector((st) => st.trees.error);
-	const errorStatuses = [
-		authErrorStatus,
-		currUserErrorStatus,
-		groupsErrorStatus,
-		treesErrorStatus
-	];
+	const errorStatuses = [ authErrorStatus, currUserErrorStatus, groupsErrorStatus, treesErrorStatus ];
 
 	// useEffect(
 	// 	() => {
@@ -84,6 +80,9 @@ function Routes() {
 			</Route>
 			<Route exact path="/groups/:id">
 				<GroupPage />
+			</Route>
+			<Route exact path="/groups/:id/edit">
+				<EditGroup />
 			</Route>
 			<Route exact path="/404">
 				<NotFound />

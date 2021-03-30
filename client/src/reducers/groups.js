@@ -7,6 +7,8 @@ import {
 	LOAD_GROUPS,
 	LOAD_TREE_TO_GROUP,
 	REMOVE_TREE_FROM_GROUP,
+	LOAD_MEMBER_TO_GROUP,
+	REMOVE_MEMBER_FROM_GROUP,
 	GROUP_ERROR,
 	LOAD_GROUP_REQUEST,
 	LOAD_GROUP_SUCCESS,
@@ -41,6 +43,7 @@ function groups(state = INITIAL_STATE, action) {
 				status   : 'success',
 				error    : null
 			};
+
 		case LOAD_GROUPS:
 			console.log('REDUCERS LOAD_GROUPS - action', action);
 			const groupsObj = action.payload.reduce((obj, group) => {
@@ -83,6 +86,45 @@ function groups(state = INITIAL_STATE, action) {
 					}
 				}
 			};
+
+		/**
+		 * Currently no use case for this. 
+		 */
+		// case LOAD_MEMBER_TO_GROUP:
+		// 	console.log('REDUCERS LOAD_MEMBER_TO_GROUP - action', action);
+		// 	return {
+		// 		...state,
+		// 		status   : 'success',
+		// 		error    : null,
+		// 		entities : {
+		// 			...state.entities,
+		// 			[action.payload.groupId]: {
+		// 				...state.entities[action.payload.groupId],
+		// 				members : [ ...state.entities[action.payload.groupId].members, action.payload.member ]
+		// 			}
+		// 		}
+		// 	};
+
+		case REMOVE_MEMBER_FROM_GROUP:
+			console.log('REDUCERS REMOVE_MEMBER_FROM_GROUP - action', action);
+
+			return {
+				...state,
+				status   : 'success',
+				error    : null,
+				entities : {
+					...state.entities,
+					[action.payload.groupId]: {
+						...state.entities[action.payload.groupId],
+						members : [
+							...state.entities[action.payload.groupId].members.filter(
+								(member) => member.user_id !== action.payload.userId
+							)
+						]
+					}
+				}
+			};
+
 		case GROUP_ERROR:
 			console.log('REDUCERS GROUP_ERROR - action', action);
 

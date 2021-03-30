@@ -221,12 +221,13 @@ class User {
 		);
 		return result;
 	}
-	/**Create a user to group relationship, given uid and group id. */
-	static async addGroup(uid, groupId) {
+	/**Create a user to group relationship, given uid, group id, and
+	 * moderator status. */
+	static async addGroup(uid, groupId, isModerator = false) {
 		await db.query(
-			`INSERT INTO users_groups (user_id, group_id) 
-			VALUES ($1, $2)`,
-			[ uid, groupId ]
+			`INSERT INTO users_groups (user_id, group_id, is_moderator) 
+			VALUES ($1, $2, $3)`,
+			[ uid, groupId, isModerator ]
 		);
 	}
 	/**Remove a user to group relationship, given uid and group id. */

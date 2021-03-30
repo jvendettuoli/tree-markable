@@ -11,7 +11,19 @@ import Button from '@material-ui/core/Button';
 import { signInUser, signOutUser } from '../actions/auth';
 import { errorDisplay } from '../helpers/formErrorDisplay';
 import SignInForm from './SignInForm';
-import useStyles from '../styles/formStyle';
+
+const useStyles = makeStyles({
+	innerContent : {
+		padding : 20
+	},
+	form         : {
+		display       : 'flex',
+		flexDirection : 'column',
+		'& div'       : {
+			marginBottom : 10
+		}
+	}
+});
 
 function SignIn() {
 	console.log('SignIn Component - Start');
@@ -39,8 +51,8 @@ function SignIn() {
 	};
 
 	return (
-		<Grid container className={classes.form}>
-			<Grid item>
+		<Grid container className={classes.innerContent}>
+			<Grid item xs={12}>
 				<Typography variant="h3" gutterBottom>
 					Sign In
 				</Typography>

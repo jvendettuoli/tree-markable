@@ -5,10 +5,7 @@ const router = express.Router();
 const { validate } = require('jsonschema');
 
 const User = require('../models/user');
-const {
-	updateUserInFirebase,
-	deleteFirebaseUser
-} = require('../firebase/firebaseAuth');
+const { updateUserInFirebase, deleteFirebaseUser } = require('../firebase/firebaseAuth');
 const ExpressError = require('../helpers/expressError');
 const { authRequired, ensureCorrectUser } = require('../middleware/auth');
 const { userNewSchema, userUpdateSchema } = require('../schemas');
@@ -43,12 +40,7 @@ router.post('/', authRequired, async function(req, res, next) {
 		const validation = validate(req.body, userNewSchema);
 
 		if (!validation.valid) {
-			return next(
-				new ExpressError(
-					validation.errors.map((err) => err.stack),
-					400
-				)
-			);
+			return next(new ExpressError(validation.errors.map((err) => err.stack), 400));
 		}
 
 		const newUser = await User.register(req.body);
@@ -65,11 +57,7 @@ router.post('/', authRequired, async function(req, res, next) {
 
 /** PATCH /[username] {userData} => {user: updatedUser} */
 
-router.patch('/:username', ensureCorrectUser, async function(
-	req,
-	res,
-	next
-) {
+router.patch('/:username', ensureCorrectUser, async function(req, res, next) {
 	console.log('Users - Patch - req.body', req.body);
 	try {
 		delete req.body._token;
@@ -92,13 +80,7 @@ router.patch('/:username', ensureCorrectUser, async function(
 		const user = await User.update(req.params.username, req.body);
 
 		// Update Firebase Auth
-		const firebaseProperties = [
-			'email',
-			'phoneNumber',
-			'username',
-			'img_url',
-			'password'
-		];
+		const firebaseProperties = [ 'email', 'phoneNumber', 'username', 'img_url', 'password' ];
 		if (
 			Object.keys(req.body).some((property) => {
 				return firebaseProperties.includes(property);
@@ -107,14 +89,9 @@ router.patch('/:username', ensureCorrectUser, async function(
 			const result = await updateUserInFirebase(req.token.uid, {
 				...req.body
 			});
-			console.log(
-				'Users Routes - Patch - Post Firebase update - result',
-				result
-			);
+			console.log('Users Routes - Patch - Post Firebase update - result', result);
 			if (result instanceof Error) {
-				console.log(
-					'Users Routes - Patch - Post Firebase update - error'
-				);
+				console.log('Users Routes - Patch - Post Firebase update - error');
 
 				throw result;
 			}
@@ -128,11 +105,7 @@ router.patch('/:username', ensureCorrectUser, async function(
 
 /** DELETE /[username]  =>  {message: "User deleted"}  */
 
-router.delete('/:username', ensureCorrectUser, async function(
-	req,
-	res,
-	next
-) {
+router.delete('/:username', ensureCorrectUser, async function(req, res, next) {
 	try {
 		await deleteFirebaseUser(req.token.uid);
 		await User.remove(req.params.username);
@@ -150,11 +123,7 @@ router.delete('/:username', ensureCorrectUser, async function(
 
 /** GET user's saved trees /[username]/trees => {savedTrees}*/
 
-router.get('/:username/trees', ensureCorrectUser, async function(
-	req,
-	res,
-	next
-) {
+router.get('/:username/trees', ensureCorrectUser, async function(req, res, next) {
 	try {
 		const savedTrees = await User.getTrees(req.token.uid);
 		return res.json(savedTrees);
@@ -166,16 +135,11 @@ router.get('/:username/trees', ensureCorrectUser, async function(
 /** ADD TREE TO USER /[username]/trees/[id] => 
  * {message: 'Tree [id] added to User [username]'}*/
 
-router.post('/:username/trees/:id', authRequired, async function(
-	req,
-	res,
-	next
-) {
+router.post('/:username/trees/:id', authRequired, async function(req, res, next) {
 	try {
 		await User.addTree(req.token.uid, req.params.id);
 		return res.json({
-			message : `Tree '${req.params.id}' added to User '${req.params
-				.username}'`
+			message : `Tree '${req.params.id}' added to User '${req.params.username}'`
 		});
 	} catch (err) {
 		return next(err);
@@ -185,16 +149,11 @@ router.post('/:username/trees/:id', authRequired, async function(
 /** REMOVE TREE FROM USER /[username]/trees/[id] => 
  * {message: 'Tree [id] removed from User [username]'}*/
 
-router.delete('/:username/trees/:id', authRequired, async function(
-	req,
-	res,
-	next
-) {
+router.delete('/:username/trees/:id', authRequired, async function(req, res, next) {
 	try {
 		await User.removeTree(req.token.uid, req.params.id);
 		return res.json({
-			message : `Tree '${req.params.id}' removed from User '${req
-				.params.username}'`
+			message : `Tree '${req.params.id}' removed from User '${req.params.username}'`
 		});
 	} catch (err) {
 		return next(err);
@@ -207,11 +166,7 @@ router.delete('/:username/trees/:id', authRequired, async function(
 
 /** GET user's saved groups /[username]/groups => {savedGroups}*/
 
-router.get('/:username/groups', ensureCorrectUser, async function(
-	req,
-	res,
-	next
-) {
+router.get('/:username/groups', ensureCorrectUser, async function(req, res, next) {
 	try {
 		const savedGroups = await User.getGroups(req.token.uid);
 		return res.json(savedGroups);
@@ -220,38 +175,29 @@ router.get('/:username/groups', ensureCorrectUser, async function(
 	}
 });
 
-/** ADD GROUP TO USER /[username]/groups/[id] => 
- * {message: 'Group [id] added to User [username]'}*/
+/** ADD GROUP TO USER /[id]/groups/[groupId] => 
+ * {message: 'Group [groupId] added to User [id]'}*/
 
-router.post('/:username/groups/:id', authRequired, async function(
-	req,
-	res,
-	next
-) {
+router.post('/:id/groups/:groupId', authRequired, async function(req, res, next) {
 	try {
-		await User.addGroup(req.token.uid, req.params.id);
+		console.log('ADD GROUP TO USER', req.body, req.data);
+		await User.addGroup(req.params.id, req.params.groupId, req.body.isModerator);
 		return res.json({
-			message : `Group '${req.params.id}' added to User '${req.params
-				.username}'`
+			message : `Group '${req.params.groupId}' added to User '${req.params.id}'`
 		});
 	} catch (err) {
 		return next(err);
 	}
 });
 
-/** REMOVE GROUP FROM USER /[username]/groups/[id] => 
- * {message: 'Group [id] removed from User [username]'}*/
+/** REMOVE GROUP FROM USER /[id]/groups/[groupId] => 
+ * {message: 'Group [groupId] removed from User [id]'}*/
 
-router.delete('/:username/groups/:id', authRequired, async function(
-	req,
-	res,
-	next
-) {
+router.delete('/:id/groups/:groupId', authRequired, async function(req, res, next) {
 	try {
-		await User.removeGroup(req.token.uid, req.params.id);
+		await User.removeGroup(req.params.id, req.params.groupId);
 		return res.json({
-			message : `Group '${req.params.id}' removed from User '${req
-				.params.username}'`
+			message : `Group '${req.params.groupId}' removed from User '${req.params.id}'`
 		});
 	} catch (err) {
 		return next(err);

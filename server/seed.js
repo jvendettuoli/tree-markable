@@ -5,11 +5,13 @@ const {
 	deleteFirebaseUser,
 	listAllFirebaseUsers
 } = require('./firebase/firebaseAuth');
-const Tree = require('./models/tree')
-const Comment = require('./models/comment')
+const Tree = require('./models/tree');
+const Comment = require('./models/comment');
 const Group = require('./models/group');
 const User = require('./models/user');
 
+const defaultPhotoUrl = 'https://www.flaticon.com/svg/static/icons/svg/1946/1946429.svg';
+const defaultHomeGeo = '-123.48034399738893,48.0913799544858';
 
 const users = [
 	{
@@ -17,36 +19,46 @@ const users = [
 		emailVerified : false,
 		password      : 'testpw1',
 		displayName   : 'TU1',
-		photoURL      :
-			'https://www.flaticon.com/svg/static/icons/svg/21/21104.svg'
+		photoURL      : defaultPhotoUrl
 	},
 	{
 		email         : 'melly@gmail.com',
 		emailVerified : false,
 		password      : 'testpw2',
 		displayName   : 'TestU2',
-		photoURL      :
-			'https://www.flaticon.com/svg/static/icons/svg/21/21104.svg'
+		photoURL      : defaultPhotoUrl
 	},
 	{
 		email         : 'sanders@gmail.com',
 		emailVerified : false,
 		password      : 'testpw3',
 		displayName   : 'Test User Number Three',
-		photoURL      :
-			'https://www.flaticon.com/svg/static/icons/svg/21/21104.svg'
+		photoURL      : defaultPhotoUrl
+	},
+	{
+		email         : 'test1@gmail.com',
+		emailVerified : false,
+		password      : 'testpw4',
+		displayName   : 'Testie Testerson',
+		photoURL      : defaultPhotoUrl
+	},
+	{
+		email         : 'test2@gmail.com',
+		emailVerified : false,
+		password      : 'testpw5',
+		displayName   : 'Tess Ter',
+		photoURL      : defaultPhotoUrl
 	}
 ];
 
 let userRecords = [];
 
 async function firebaseSeed(users) {
-
 	try {
 		//Delete existing Firebase users
 		const firebaseUsers = await listAllFirebaseUsers();
-		for (const user of firebaseUsers){
-			await deleteFirebaseUser(user.uid)
+		for (const user of firebaseUsers) {
+			await deleteFirebaseUser(user.uid);
 		}
 		//Create Firebase user
 		for (const user of users) {
@@ -70,30 +82,21 @@ async function firebaseSeed(users) {
 async function seed() {
 	try {
 		//Create users in tree-markable database
-		await db.query(
-			`INSERT INTO users
-            (firebase_id,
-                username,
-                email,
-                img_url,
-                home_geolocation,
-                is_admin)
-            VALUES
-            ($1, $2, $3, 'https://www.flaticon.com/svg/static/icons/svg/21/21104.svg','-123.48034399738893,48.0913799544858', true),
-            ($4, $5, $6,'https://www.flaticon.com/svg/static/icons/svg/21/21104.svg','-122.480343997234,48.0913799544858', false),
-            ($7, $8, $9, 'https://www.flaticon.com/svg/static/icons/svg/21/21104.svg','-123.48034399738893,49.0913799544858', false);`,
-			[
-				userRecords[0].uid,
-				userRecords[0].displayName,
-				userRecords[0].email,
-				userRecords[1].uid,
-				userRecords[1].displayName,
-				userRecords[1].email,
-				userRecords[2].uid,
-				userRecords[2].displayName,
-				userRecords[2].email
-			]
-		);
+
+		for (let user of userRecords) {
+			await db.query(
+				`INSERT INTO users
+				(firebase_id,
+					username,
+					email,
+					img_url,
+					home_geolocation,
+					is_admin)
+				VALUES
+				($1, $2, $3, $4, $5, ${user.displayName === 'TU1'});`,
+				[ user.uid, user.displayName, user.email, defaultPhotoUrl, defaultHomeGeo ]
+			);
+		}
 
 		//Create new groups
 		await db.query(
@@ -106,16 +109,22 @@ async function seed() {
 			[ userRecords[0].uid, userRecords[2].uid, userRecords[1].uid ]
 		);
 		//Select groups
-		const groups = await Group.findAll()
-		console.log('>>>GROUPS:', groups)
+		const groups = await Group.findAll();
 
 		//Create users_groups
-		await User.addGroup(userRecords[0].uid, groups[0].id)
-		await User.addGroup(userRecords[0].uid, groups[1].id)
-		await User.addGroup(userRecords[0].uid, groups[2].id)
-		await User.addGroup(userRecords[1].uid, groups[1].id)
-		await User.addGroup(userRecords[2].uid, groups[2].id)
-		
+		await User.addGroup(userRecords[0].uid, groups[0].id, true);
+		await User.addGroup(userRecords[0].uid, groups[1].id);
+		await User.addGroup(userRecords[0].uid, groups[2].id);
+		await User.addGroup(userRecords[1].uid, groups[0].id, true);
+		await User.addGroup(userRecords[1].uid, groups[2].id, true);
+		await User.addGroup(userRecords[2].uid, groups[1].id, true);
+		await User.addGroup(userRecords[2].uid, groups[0].id);
+		await User.addGroup(userRecords[3].uid, groups[0].id);
+		await User.addGroup(userRecords[3].uid, groups[1].id);
+		await User.addGroup(userRecords[3].uid, groups[2].id);
+		await User.addGroup(userRecords[4].uid, groups[0].id);
+		await User.addGroup(userRecords[4].uid, groups[1].id);
+
 		//Create new trees
 		await db.query(
 			`INSERT INTO trees
@@ -136,21 +145,21 @@ async function seed() {
 		);
 
 		//Select trees
-		const trees = await Tree.findAll()
+		const trees = await Tree.findAll();
 
 		//Create users_trees
-		await User.addTree(userRecords[0].uid, trees[0].id)
-		await User.addTree(userRecords[0].uid, trees[1].id)
-		await User.addTree(userRecords[0].uid, trees[2].id)
-		await User.addTree(userRecords[1].uid, trees[1].id)
-		await User.addTree(userRecords[2].uid, trees[1].id)
-		
+		await User.addTree(userRecords[0].uid, trees[0].id);
+		await User.addTree(userRecords[0].uid, trees[1].id);
+		await User.addTree(userRecords[0].uid, trees[2].id);
+		await User.addTree(userRecords[1].uid, trees[1].id);
+		await User.addTree(userRecords[2].uid, trees[1].id);
+
 		//Create groups_trees
-		await Group.addTree(groups[0].id, trees[0].id)
-		await Group.addTree(groups[0].id, trees[1].id)
-		await Group.addTree(groups[0].id, trees[2].id)
-		await Group.addTree(groups[1].id, trees[0].id)
-		await Group.addTree(groups[1].id, trees[1].id)		
+		await Group.addTree(groups[0].id, trees[0].id);
+		await Group.addTree(groups[0].id, trees[1].id);
+		await Group.addTree(groups[0].id, trees[2].id);
+		await Group.addTree(groups[1].id, trees[0].id);
+		await Group.addTree(groups[1].id, trees[1].id);
 
 		//Create comments
 		await db.query(
@@ -176,7 +185,8 @@ async function seed() {
 			(tree_id, comment_id)
 			VALUES
 			($1,$3), ($1, $4), ($1, $5), ($1, $6), ($2, $5)`,
-			[trees[0].id,trees[1].id, comments[0].id, comments[1].id, comments[2].id, comments[3].id]);
+			[ trees[0].id, trees[1].id, comments[0].id, comments[1].id, comments[2].id, comments[3].id ]
+		);
 
 		//Create groups_comments
 		await db.query(
@@ -184,8 +194,8 @@ async function seed() {
 			(group_id, comment_id)
 			VALUES
 			($1,$3), ($1, $4), ($1, $5), ($1, $6), ($2, $5)`,
-			[groups[0].id,groups[1].id, comments[0].id, comments[1].id, comments[2].id, comments[3].id]);
-
+			[ groups[0].id, groups[1].id, comments[0].id, comments[1].id, comments[2].id, comments[3].id ]
+		);
 	} catch (err) {
 		console.log(`Database Seed Error: ${err}`);
 		process.exit(1);

@@ -16,22 +16,14 @@ class Group {
               (name, description, is_public, creator) 
             VALUES ($1, $2, $3, $4) 
             RETURNING id, name, description, is_public, creator, created_at`,
-				[
-					data.name,
-					data.description,
-					data.is_public,
-					data.creator
-				]
+				[ data.name, data.description, data.is_public, data.creator ]
 			);
 
 			return result.rows[0];
 		} catch (err) {
 			if (err.code === '23505') {
 				if (err.constraint === 'groups_name_key') {
-					throw new ExpressError(
-						`Duplicate group name found for: '${data.name}'.`,
-						400
-					);
+					throw new ExpressError(`Duplicate group name found.`, 400);
 				}
 			}
 			else {
@@ -43,7 +35,7 @@ class Group {
 	/** Find all groups based on queries supplied. With no passed queries
 	 * will return all groups. */
 
-	static async findAll(queries={}) {
+	static async findAll(queries = {}) {
 		console.log('findAll - queries', queries);
 
 		let queryIdx = 1;
@@ -65,24 +57,15 @@ class Group {
 		// For each included query parameter, add appropriate language
 		// to whereStatements and increment queryIdx by one.
 		if (queries.search) {
-			addQueryParam(
-				`to_tsvector(name) @@ phraseto_tsquery($${queryIdx})`,
-				queries.search
-			);
+			addQueryParam(`to_tsvector(name) @@ phraseto_tsquery($${queryIdx})`, queries.search);
 		}
 
 		let finalQuery = '';
 		if (whereStatements.length > 0) {
-			finalQuery = baseQuery.concat(
-				' WHERE ',
-				whereStatements.join(' AND ')
-			);
+			finalQuery = baseQuery.concat(' WHERE ', whereStatements.join(' AND '));
 		}
 
-		const results = await db.query(
-			finalQuery ? finalQuery : baseQuery,
-			queryValues
-		);
+		const results = await db.query(finalQuery ? finalQuery : baseQuery, queryValues);
 
 		for (const group of results.rows) {
 			if (group.trees[0] === null) group.trees = [];
@@ -102,7 +85,7 @@ class Group {
 				WHERE g.id = g_t.group_id
 				) g_t ON true
 			INNER JOIN LATERAL (
-				SELECT json_agg(json_build_object('user_id',u_g.user_id, 'is_moderator',u_g.is_moderator)) AS members
+				SELECT json_agg(json_build_object('user_id',u_g.user_id,'username',(SELECT username FROM users WHERE u_g.user_id = users.firebase_id), 'is_moderator',u_g.is_moderator)) AS members
 				FROM users_groups u_g 
 				WHERE g.id = u_g.group_id
 				) u_g on true
@@ -111,13 +94,9 @@ class Group {
 		);
 
 		const group = groupRes.rows[0];
-		console.log('GROUPS - FIND ONE - group', group);
 
 		if (!group) {
-			const error = new ExpressError(
-				`There exists no group with id '${id}'.`,
-				404
-			);
+			const error = new ExpressError(`There exists no group with id '${id}'.`, 404);
 			throw error;
 		}
 
@@ -139,18 +118,25 @@ class Group {
 	static async update(id, data) {
 		let { query, values } = partialUpdate('groups', data, 'id', id);
 
-		const result = await db.query(query, values);
-		const group = result.rows[0];
+		try {
+			const result = await db.query(query, values);
+			const group = result.rows[0];
 
-		if (!group) {
-			let notFound = new ExpressError(
-				`There exists no group with id: '${id}'`,
-				404
-			);
-			throw notFound;
+			if (!group) {
+				let notFound = new ExpressError(`There exists no group with id: '${id}'`, 404);
+				throw notFound;
+			}
+			return result.rows[0];
+		} catch (err) {
+			if (err.code === '23505') {
+				if (err.constraint === 'groups_name_key') {
+					throw new ExpressError(`Duplicate group name found.`, 400);
+				}
+			}
+			else {
+				throw new ExpressError(err.message, 400);
+			}
 		}
-
-		return result.rows[0];
 	}
 
 	/** Delete given group from database; returns undefined. */
@@ -164,10 +150,7 @@ class Group {
 		);
 
 		if (result.rows.length === 0) {
-			let notFound = new ExpressError(
-				`There exists no group with id: '${id}'`,
-				404
-			);
+			let notFound = new ExpressError(`There exists no group with id: '${id}'`, 404);
 			throw notFound;
 		}
 	}
@@ -208,6 +191,27 @@ class Group {
 	 * Group to Members relationships
 	 */
 
+	static async addMod(groupId, userId) {
+		console.log('Group Model - addMod - Start', groupId, userId);
+		await db.query(
+			`UPDATE users_groups
+			SET is_moderator = true
+			WHERE user_id = $1 
+			AND group_id = $2`,
+			[ userId, groupId ]
+		);
+	}
+	static async removeMod(groupId, userId) {
+		console.log('Group Model - removeMod - Start', groupId, userId);
+		await db.query(
+			`UPDATE users_groups
+			SET is_moderator = false
+			WHERE user_id = $1 
+			AND group_id = $2`,
+			[ userId, groupId ]
+		);
+	}
+
 	/** Given a group id, return group moderators. */
 
 	static async getModerators(groupId) {
@@ -223,10 +227,7 @@ class Group {
 		const groupModerators = groupRes.rows.map((item) => item.user_id);
 
 		if (!groupModerators) {
-			const error = new ExpressError(
-				`There exists no group with id '${groupId}', or it has no moderators.`,
-				404
-			);
+			const error = new ExpressError(`There exists no group with id '${groupId}', or it has no moderators.`, 404);
 			throw error;
 		}
 

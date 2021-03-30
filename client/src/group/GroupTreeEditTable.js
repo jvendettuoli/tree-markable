@@ -16,8 +16,8 @@ function GroupTreeEditTable({ group, groupTrees }) {
 	const remainingSelectionTreeIds = currUserFavTreeIds.filter(
 		(id) => !userFavTrees.map((tree) => tree.id).includes(id)
 	);
-	console.log('GroupTreeEditTable userFavTrees', userFavTrees);
-	console.log('GroupTreeEditTable remainingSelectionTrees', remainingSelectionTreeIds);
+	// console.log('GroupTreeEditTable userFavTrees', userFavTrees);
+	// console.log('GroupTreeEditTable remainingSelectionTrees', remainingSelectionTreeIds);
 
 	// Get any other user fav or group tree that is not in store from API
 	useEffect(() => {
@@ -27,7 +27,7 @@ function GroupTreeEditTable({ group, groupTrees }) {
 		});
 	}, []);
 	const treesSet = new Set([ ...groupTrees, ...userFavTrees ]);
-	console.log('GroupTreeEditTable treesSet', treesSet);
+	// console.log('GroupTreeEditTable treesSet', treesSet);
 
 	return <TreeList trees={[ ...treesSet ]} group={group} />;
 }
