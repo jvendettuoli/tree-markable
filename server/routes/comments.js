@@ -9,7 +9,8 @@ const ExpressError = require('../helpers/expressError');
 const {
 	authRequired,
 	ensureCorrectUser,
-	ensureIsCreator
+	ensureIsCreator,
+	ensureIsGroupModOrCommentCreator
 } = require('../middleware/auth');
 
 const TREES = 'trees';
@@ -30,18 +31,13 @@ router.get('/', authRequired, async function(req, res, next) {
  *  Gets comments for a specific tree or group
  */
 
-router.get('/:type/:id', authRequired, async function(req, res, next) {
+router.get('/:type/:id', async function(req, res, next) {
 	try {
 		delete req.query._token;
-		console.log(
-			'GET comments/:type/:id - params.type',
-			req.params.type
-		);
+		console.log('GET comments/:type/:id - params.type', req.params.type);
 		let comments;
-		if (req.params.type === TREES)
-			comments = await Comment.getCommentsOnTree(req.params.id);
-		if (req.params.type === GROUPS)
-			comments = await Comment.getCommentsOnGroup(req.params.id);
+		if (req.params.type === TREES) comments = await Comment.getCommentsOnTree(req.params.id);
+		if (req.params.type === GROUPS) comments = await Comment.getCommentsOnGroup(req.params.id);
 		return res.json({ comments });
 	} catch (err) {
 		return next(err);
@@ -50,7 +46,7 @@ router.get('/:type/:id', authRequired, async function(req, res, next) {
 
 /** GET /[id] => {comment: comment} */
 
-router.get('/:id', authRequired, async function(req, res, next) {
+router.get('/:id', async function(req, res, next) {
 	try {
 		const comment = await Comment.findOne(req.params.id);
 		return res.json({ comment });
@@ -82,10 +78,7 @@ router.patch('/:id', ensureIsCreator, async function(req, res, next) {
 	try {
 		delete req.body._token;
 
-		const updatedComment = await Comment.update(
-			req.params.id,
-			req.body
-		);
+		const updatedComment = await Comment.update(req.params.id, req.body);
 		return res.json({ updatedComment });
 	} catch (err) {
 		return next(err);
@@ -94,7 +87,7 @@ router.patch('/:id', ensureIsCreator, async function(req, res, next) {
 
 /** DELETE /[id]  =>  {message: "Comment with ID :id deleted"}  */
 
-router.delete('/:id', ensureIsCreator, async function(req, res, next) {
+router.delete('/:id', ensureIsGroupModOrCommentCreator, async function(req, res, next) {
 	try {
 		await Comment.remove(req.params.id);
 		return res.json({

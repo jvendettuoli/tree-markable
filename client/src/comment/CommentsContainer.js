@@ -33,7 +33,15 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
+/**
+ * Component accepts a string type ('groups' or 'trees') and an id
+ * and returns the comments associated with that item in the
+ * database. 
+ */
+
 function CommentsContainer({ type, id }) {
+	console.log('CommentsContainer', type, id);
+
 	const classes = useStyles();
 	const INITIAL_STATE = {
 		text : '',
@@ -46,15 +54,14 @@ function CommentsContainer({ type, id }) {
 	const [ comments, setComments ] = useState([]);
 	const username = useSelector((st) => st.currUser.username);
 
-	const dispatch = useDispatch();
+	const isModerator = useSelector((st) =>
+		st[type].entities[id].members.find((member) => member.is_moderator === true && member.username === username)
+	);
 
 	useEffect(
 		() => {
 			const getComments = async (type, id) => {
-				const comments = await TreeMarkableApi.getComments(
-					type,
-					id
-				);
+				const comments = await TreeMarkableApi.getComments(type, id);
 				console.log('getComments - comments', comments);
 				setComments(comments);
 				setIsLoading(false);
@@ -100,6 +107,7 @@ function CommentsContainer({ type, id }) {
 								onDelete={handleDeleteComment}
 								comment={comment}
 								username={username}
+								isModerator={isModerator}
 							/>
 						))
 					) : (
@@ -109,18 +117,9 @@ function CommentsContainer({ type, id }) {
 			</Grid>
 			{username ? (
 				<Grid container item>
-					<Grid
-						container
-						alignItems="center"
-						spacing={2}
-						item
-						xs={12}
-						wrap="nowrap"
-					>
+					<Grid container alignItems="center" spacing={2} item xs={12} wrap="nowrap">
 						<Grid item>
-							<Avatar className={classes.userAvatar}>
-								{username[0]}
-							</Avatar>
+							<Avatar className={classes.userAvatar}>{username[0]}</Avatar>
 						</Grid>
 						<Grid item>
 							<form id="comment" onSubmit={handleSubmit}>

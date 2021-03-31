@@ -233,6 +233,28 @@ class Group {
 
 		return groupModerators;
 	}
+
+	/**
+	 * Groups to Comments Relationships
+	 */
+	static async getGroupIdByCommentId(commentId) {
+		console.log('Models Group - getGroupIdByCommentId - Start', commentId);
+
+		const result = await db.query(
+			`SELECT group_id
+			FROM groups_comments
+			WHERE comment_id = $1`,
+			[ commentId ]
+		);
+
+		const groupId = result.rows[0].group_id;
+		console.log('Models Group - getGroupIdByCommentId - result.rows', result.rows);
+		if (!groupId) {
+			const error = new ExpressError(`There exists no group associated with comment id '${id}'.`, 404);
+			throw error;
+		}
+		return groupId;
+	}
 }
 
 module.exports = Group;

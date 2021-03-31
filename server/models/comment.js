@@ -24,10 +24,8 @@ class Comment {
 			);
 
 			// Add Comment to relationship table
-			if (data.type === TREES)
-				Comment.addCommentOnTree(data.id, result.rows[0].id);
-			if (data.type === GROUPS)
-				Comment.addCommentOnGroup(data.id, result.rows[0].id);
+			if (data.type === TREES) Comment.addCommentOnTree(data.id, result.rows[0].id);
+			if (data.type === GROUPS) Comment.addCommentOnGroup(data.id, result.rows[0].id);
 
 			return result.rows[0];
 		} catch (err) {
@@ -61,10 +59,7 @@ class Comment {
 		const comment = commentRes.rows[0];
 
 		if (!comment) {
-			const error = new ExpressError(
-				`There exists no comment with id '${id}'.`,
-				404
-			);
+			const error = new ExpressError(`There exists no comment with id '${id}'.`, 404);
 			throw error;
 		}
 
@@ -87,10 +82,7 @@ class Comment {
 		const comment = result.rows[0];
 
 		if (!comment) {
-			let notFound = new ExpressError(
-				`There exists no comment with id: '${id}'`,
-				404
-			);
+			let notFound = new ExpressError(`There exists no comment with id: '${id}'`, 404);
 			throw notFound;
 		}
 
@@ -108,10 +100,7 @@ class Comment {
 		);
 
 		if (result.rows.length === 0) {
-			let notFound = new ExpressError(
-				`There exists no comment with id: '${id}'`,
-				404
-			);
+			let notFound = new ExpressError(`There exists no comment with id: '${id}'`, 404);
 			throw notFound;
 		}
 	}
@@ -157,10 +146,7 @@ class Comment {
 		);
 	}
 	static async getCommentsOnGroup(groupId) {
-		console.log(
-			'Models - Comment.getCommentsOnGroup - Start',
-			groupId
-		);
+		console.log('Models - Comment.getCommentsOnGroup - Start', groupId);
 
 		const result = await db.query(
 			`SELECT c.id, c.text, c.author_name, c.created_at 

@@ -52,10 +52,7 @@ async function adminRequired(req, res, next) {
 		}
 
 		if (!token.claims.is_admin) {
-			throw new ExpressError(
-				`Must have admin privileges to access this endpoint.`,
-				401
-			);
+			throw new ExpressError(`Must have admin privileges to access this endpoint.`, 401);
 		}
 		req.token = result;
 		return next();
@@ -81,20 +78,13 @@ async function ensureCorrectUser(req, res, next) {
 		const tokenStr = req.body._token || req.query._token;
 
 		let result = await verifyToken(tokenStr);
-		console.log(
-			'Middleware - ensureCorrectUser - token result',
-			result
-		);
+		console.log('Middleware - ensureCorrectUser - token result', result);
 		if (result instanceof Error) {
 			throw result;
 		}
 
 		if (result.name !== req.params.username) {
-			throw new ExpressError(
-				`Must be user '${req.params
-					.username}' or admin to access this endpoint.`,
-				401
-			);
+			throw new ExpressError(`Must be user '${req.params.username}' or admin to access this endpoint.`, 401);
 		}
 		req.token = result;
 		return next();
@@ -141,10 +131,7 @@ async function ensureIsCreator(req, res, next) {
 		}
 
 		if (itemCreatorUid !== result.uid) {
-			throw new ExpressError(
-				`Must be creator of '${item.name}' or admin to access this endpoint.`,
-				401
-			);
+			throw new ExpressError(`Must be creator of '${item.name}' or admin to access this endpoint.`, 401);
 		}
 		req.token = result;
 		return next();
@@ -176,18 +163,59 @@ async function ensureIsGroupMod(req, res, next) {
 		}
 
 		const groupMods = await Group.getModerators(req.params.groupId);
-		console.log(
-			'Middleware - ensureIsGroupMod - groupMods',
-			groupMods
-		);
+		console.log('Middleware - ensureIsGroupMod - groupMods', groupMods);
 
 		if (!groupMods.includes(result.uid)) {
 			throw new ExpressError(
-				`Must be moderator or owner of Group '${req.params
-					.groupId}' to access this endpoint.`,
+				`Must be moderator or owner of Group '${req.params.groupId}' to access this endpoint.`,
 				401
 			);
 		}
+		req.token = result;
+		return next();
+	} catch (err) {
+		handleFirebaseErrors(err, next);
+		return next(err);
+	}
+}
+
+/** Middleware to use when user must provide a valid token & be a
+ * moderator of the group or creator of comment being affected.
+ * Firebase token's uid compared list of provided group's mods.
+ * Firebase token's uid compared to comment's creator.
+ * 
+ * If token is valid and user is mod of group or item's creator,
+ *  proceed to next.
+ *
+ * If not, raises error.
+ *
+ */
+
+async function ensureIsGroupModOrCommentCreator(req, res, next) {
+	console.log('Middleware - ensureIsGroupModorCreator - Start');
+	try {
+		const tokenStr = req.body._token || req.query._token;
+
+		let result = await verifyToken(tokenStr);
+
+		if (result instanceof Error) {
+			throw result;
+		}
+
+		const item = await Comment.findOne(req.params.id);
+		console.log('Middleware - ensureIsGroupModorCreator -item.author_id', item.author_id, result.uid);
+		const isItemAuthor = item.author_id === result.uid;
+		const groupId = await Group.getGroupIdByCommentId(req.params.id);
+		const groupMods = await Group.getModerators(groupId);
+		console.log('Middleware - ensureIsGroupModorCreator -group', groupId, groupMods);
+		if (!groupMods.includes(result.uid) && !isItemAuthor) {
+			throw new ExpressError(
+				`Must be moderator of group ${groupId} or author of comment '${req.params
+					.id}' to access this endpoint.`,
+				401
+			);
+		}
+
 		req.token = result;
 		return next();
 	} catch (err) {
@@ -201,5 +229,6 @@ module.exports = {
 	adminRequired,
 	ensureCorrectUser,
 	ensureIsCreator,
-	ensureIsGroupMod
+	ensureIsGroupMod,
+	ensureIsGroupModOrCommentCreator
 };

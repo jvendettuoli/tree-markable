@@ -18,11 +18,7 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import {
-	MoreVert as MoreVertIcon,
-	Send as SendIcon
-} from '@material-ui/icons';
-
+import { MoreVert as MoreVertIcon, Send as SendIcon } from '@material-ui/icons';
 
 import TreeMarkableApi from '../TreeMarkableApi';
 import EditIconBtn from '../iconBtns/EditIconBtn';
@@ -36,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-function Comment({ onDelete, username, comment }) {
+function Comment({ onDelete, username, comment, isModerator }) {
 	const classes = useStyles();
 	const [ editing, setEditing ] = useState(false);
 	const [ editText, setEditText ] = useState(comment.text);
@@ -81,31 +77,15 @@ function Comment({ onDelete, username, comment }) {
 	return (
 		<Grid container item wrap="nowrap" style={{ marginBottom: 15 }}>
 			<Grid item style={{ marginRight: 15 }}>
-				<Avatar
-					className={
-						isCommentAuthor ? (
-							classes.avatarOwn
-						) : (
-							classes.avatarOther
-						)
-					}
-				>
+				<Avatar className={isCommentAuthor ? classes.avatarOwn : classes.avatarOther}>
 					{comment.author_name[0]}
 				</Avatar>
 			</Grid>
 			<Grid container item alignItems="center">
 				{editing ? (
-					<Grid
-						container
-						wrap="nowrap"
-						item
-						justify="space-between"
-					>
+					<Grid container wrap="nowrap" item justify="space-between">
 						<Grid item style={{ width: '100%' }}>
-							<form
-								onSubmit={handleSubmit}
-								id="edit-comment"
-							>
+							<form onSubmit={handleSubmit} id="edit-comment">
 								<TextField
 									id="text"
 									onChange={handleChange}
@@ -123,16 +103,11 @@ function Comment({ onDelete, username, comment }) {
 						</Grid>
 					</Grid>
 				) : (
-					<Grid
-						container
-						wrap="nowrap"
-						item
-						justify="space-between"
-					>
+					<Grid container wrap="nowrap" item justify="space-between">
 						<Grid item>
 							<Typography>{comment.text}</Typography>
 						</Grid>
-						{isCommentAuthor && (
+						{(isCommentAuthor || isModerator) && (
 							<Grid item>
 								<IconButton
 									aria-label="more"
@@ -142,32 +117,18 @@ function Comment({ onDelete, username, comment }) {
 								>
 									<MoreVertIcon fontSize="small" />
 								</IconButton>
-								<Menu
-									id="long-menu"
-									anchorEl={anchorEl}
-									keepMounted
-									open={open}
-									onClose={handleClose}
-								>
-									<MenuItem onClick={handleEditClick}>
-										Edit
-									</MenuItem>
-									<MenuItem onClick={handleDeleteClick}>
-										Delete
-									</MenuItem>
+								<Menu id="long-menu" anchorEl={anchorEl} keepMounted open={open} onClose={handleClose}>
+									{isCommentAuthor && <MenuItem onClick={handleEditClick}>Edit</MenuItem>}
+									<MenuItem onClick={handleDeleteClick}>Delete</MenuItem>
 								</Menu>
 							</Grid>
 						)}
 					</Grid>
 				)}
 				<Grid container item justify="space-between">
+					<Typography variant="caption">Posted By: {comment.author_name}</Typography>
 					<Typography variant="caption">
-						Posted By: {comment.author_name}
-					</Typography>
-					<Typography variant="caption">
-						{new Date(
-							comment.created_at
-						).toLocaleDateString('en-gb', {
+						{new Date(comment.created_at).toLocaleDateString('en-gb', {
 							year  : 'numeric',
 							month : 'long',
 							day   : 'numeric'
