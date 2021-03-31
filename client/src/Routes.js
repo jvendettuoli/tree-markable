@@ -17,6 +17,7 @@ import CreateNewGroup from './group/CreateNewGroup';
 import UserProfilePage from './user/UserProfilePage';
 import GroupPage from './group/GroupPage';
 import EditGroup from './group/EditGroup';
+import About from './About';
 
 function Routes() {
 	const history = useHistory();
@@ -47,6 +48,9 @@ function Routes() {
 		<Switch>
 			<Route exact path="/">
 				<LandingPage />
+			</Route>
+			<Route exact path="/about">
+				<About />
 			</Route>
 			<Route exact path="/users/:username">
 				<UserProfilePage />
