@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
  * database. 
  */
 
-function CommentsContainer({ type, id }) {
+function CommentsContainer({ type, id, isCreatorOrModerator }) {
 	console.log('CommentsContainer', type, id);
 
 	const classes = useStyles();
@@ -53,10 +53,6 @@ function CommentsContainer({ type, id }) {
 	const [ commentDeleted, setCommentDeleted ] = useState(false);
 	const [ comments, setComments ] = useState([]);
 	const username = useSelector((st) => st.currUser.username);
-
-	const isModerator = useSelector((st) =>
-		st[type].entities[id].members.find((member) => member.is_moderator === true && member.username === username)
-	);
 
 	useEffect(
 		() => {
@@ -107,7 +103,7 @@ function CommentsContainer({ type, id }) {
 								onDelete={handleDeleteComment}
 								comment={comment}
 								username={username}
-								isModerator={isModerator}
+								isCreatorOrModerator={isCreatorOrModerator}
 							/>
 						))
 					) : (

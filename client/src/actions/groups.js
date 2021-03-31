@@ -20,7 +20,7 @@ import { groupsRef, uploadImagesToFirebase } from '../firebase/firebaseStorage';
 
 // Sends POST request for new group to TreeMarkableApi
 // Also adds user creating group as a follower and moderator for group
-function createGroup(group, imageFiles, username, history) {
+function createGroup(group, imageFiles, userId) {
 	console.log('Actions - createGroupInApi group', group);
 
 	return async function(dispatch) {
@@ -29,13 +29,14 @@ function createGroup(group, imageFiles, username, history) {
 			const res = await TreeMarkableApi.createGroup(group);
 			await uploadImagesToFirebase(groupsRef, res.id, imageFiles);
 			dispatch(gotGroup(res));
-			dispatch(addToFollowedGroups(username, res.id, true));
-			history.push(`/groups/${res.id}`);
+			dispatch(addToFollowedGroups(userId, res.id, true));
 			dispatch({ type: LOAD_GROUP_SUCCESS });
+			return res.id;
 		} catch (err) {
 			console.log('Actions - createGroupInApi err', err);
 			dispatch(groupError(err));
 			dispatch({ type: LOAD_GROUP_FAILURE });
+			return false;
 		}
 	};
 }

@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-function Comment({ onDelete, username, comment, isModerator }) {
+function Comment({ onDelete, username, comment, isCreatorOrModerator }) {
 	const classes = useStyles();
 	const [ editing, setEditing ] = useState(false);
 	const [ editText, setEditText ] = useState(comment.text);
@@ -105,9 +105,9 @@ function Comment({ onDelete, username, comment, isModerator }) {
 				) : (
 					<Grid container wrap="nowrap" item justify="space-between">
 						<Grid item>
-							<Typography>{comment.text}</Typography>
+							<Typography style={{ whiteSpace: 'pre-line' }}>{comment.text}</Typography>
 						</Grid>
-						{(isCommentAuthor || isModerator) && (
+						{(isCommentAuthor || isCreatorOrModerator) && (
 							<Grid item>
 								<IconButton
 									aria-label="more"

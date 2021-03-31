@@ -99,7 +99,6 @@ function addToFollowedGroups(userId, groupId, isModerator) {
 		try {
 			await TreeMarkableApi.userAddGroup(userId, groupId, isModerator);
 			dispatch(groupFollowed(groupId));
-			dispatch();
 			dispatch({ type: LOAD_CURR_USER_SUCCESS });
 		} catch (err) {
 			console.log('addToFollowedGroups error', err);

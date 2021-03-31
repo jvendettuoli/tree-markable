@@ -15,8 +15,7 @@ const useStyles = makeStyles((theme) => {
 			backgroundPosition           : 'center',
 			backgroundSize               : 'cover',
 			backgroundColor              : 'black',
-			height                       : `calc(100vh - ${theme.mixins
-				.toolbar.minHeight}px)`,
+			height                       : `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`,
 			[theme.breakpoints.up('md')]: {
 				height : 'calc(100vh - 64px)'
 			}
@@ -29,31 +28,20 @@ function NotFound() {
 	const classes = useStyles(theme);
 
 	return (
-		<Grid
-			container
-			className={classes.backgroundImage}
-			alignItems="center"
-		>
-			<Grid container item justify="center" direction="column">
-				<Typography
-					align="center"
-					variant="h1"
-					style={{ color: 'white', fontWeight: 'bold' }}
-					gutterBottom
-				>
+		<Grid container className={classes.backgroundImage} alignItems="center">
+			<Grid
+				container
+				item
+				justify="center"
+				direction="column"
+				style={{ backgroundColor: 'rgba(0,0,0,.5)', paddingBottom: 10 }}
+			>
+				<Typography align="center" variant="h1" style={{ color: 'white', fontWeight: 'bold' }} gutterBottom>
 					Page Not Found
 				</Typography>
-				<Typography
-					align="center"
-					variant="h5"
-					style={{ color: 'white' }}
-				>
+				<Typography align="center" variant="h5" style={{ color: 'white' }}>
 					Did you get lost in the woods? Head back{' '}
-					<Link
-						component={RouterLink}
-						to="/"
-						style={{ color: theme.palette.primary.accent }}
-					>
+					<Link component={RouterLink} to="/" style={{ color: theme.palette.primary.accent }}>
 						home
 					</Link>.
 				</Typography>

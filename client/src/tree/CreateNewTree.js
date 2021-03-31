@@ -13,10 +13,7 @@ import Button from '@material-ui/core/Button';
 import TreeMarkableApi from '../TreeMarkableApi';
 import TreeFormBasicFields from './TreeFormBasicFields';
 import SelectCoordinates from '../leafletMap/SelectCoordinates';
-import {
-	treesRef,
-	uploadImagesToFirebase
-} from '../firebase/firebaseStorage';
+import { treesRef, uploadImagesToFirebase } from '../firebase/firebaseStorage';
 import ImagesInput from '../imageHandling/ImagesInput';
 
 const useStyles = makeStyles({
@@ -45,16 +42,12 @@ function CreateNewTree() {
 		fruit_bearing   : false
 	};
 	const classes = useStyles();
-	const [ treeFormData, setTreeFormData ] = useState(
-		INITIAL_TREE_FORM_DATA
-	);
+	const [ treeFormData, setTreeFormData ] = useState(INITIAL_TREE_FORM_DATA);
 	const [ coordinates, setCoordinates ] = useState({ lat: '', lng: '' });
 	const [ imageFiles, setImageFiles ] = useState([]);
 
 	console.log('CreateNewTree Load - coordinates', coordinates);
 	console.log('CreateNewTree Load - imageFiles', imageFiles);
-
-	useEffect(() => {});
 
 	const handleTreeFormChange = (data) => {
 		let { name, value } = data;
@@ -114,10 +107,7 @@ function CreateNewTree() {
 		try {
 			const res = await TreeMarkableApi.createTree(newTree);
 			console.log('Trees Submit res', res);
-			console.log(
-				'CreateNewTree- handleSubmit -ImageFiles',
-				imageFiles
-			);
+			console.log('CreateNewTree- handleSubmit -ImageFiles', imageFiles);
 			await uploadImagesToFirebase(treesRef, res.id, imageFiles);
 
 			history.push(`/trees/${res.id}`);
@@ -132,10 +122,7 @@ function CreateNewTree() {
 				Create New Tree
 			</Typography>
 			<form onSubmit={handleSubmit} className={classes.form}>
-				<TreeFormBasicFields
-					formData={treeFormData}
-					onFormChange={handleTreeFormChange}
-				/>
+				<TreeFormBasicFields formData={treeFormData} onFormChange={handleTreeFormChange} />
 				<Typography variant="h5" gutterBottom>
 					Tree Location
 				</Typography>
@@ -144,28 +131,16 @@ function CreateNewTree() {
 					onCoordinatesChange={handleCoordinatesChange}
 					onMapCoordinatesChange={handleMapCoordinatesChange}
 				/>
-				<Divider
-					variant="middle"
-					style={{ marginTop: 15, marginBottom: 15 }}
-				/>
+				<Divider variant="middle" style={{ marginTop: 15, marginBottom: 15 }} />
 				<div>
 					<Typography variant="h5" gutterBottom>
 						Add Images
 					</Typography>
-					<ImagesInput
-						onImageFilesChange={handleImageFilesChange}
-					/>
-					<Divider
-						variant="middle"
-						style={{ marginBottom: 15 }}
-					/>
+					<ImagesInput onImageFilesChange={handleImageFilesChange} />
+					<Divider variant="middle" style={{ marginBottom: 15 }} />
 				</div>
 
-				<Button
-					color="secondary"
-					variant="contained"
-					type="submit"
-				>
+				<Button color="secondary" variant="contained" type="submit">
 					Create Tree
 				</Button>
 			</form>

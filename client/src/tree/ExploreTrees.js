@@ -71,10 +71,6 @@ function ExploreTrees() {
 		setValue(newValue);
 	};
 
-	const handleGetLocationChange = (coords) => {
-		setMapCenter(coords);
-	};
-
 	// Get trees from API
 	useEffect(
 		() => {

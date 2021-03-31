@@ -36,16 +36,18 @@ class Group {
 	 * will return all groups. */
 
 	static async findAll(queries = {}) {
-		console.log('findAll - queries', queries);
+		console.log('Group Model - findAll - queries', queries);
 
 		let queryIdx = 1;
 		let whereStatements = [];
 		let queryValues = [];
-		let baseQuery = `SELECT id, name, description, is_public, creator, created_at, json_agg(g_t.tree_id) AS trees
-		FROM groups
-		LEFT JOIN groups_trees AS g_t ON id = g_t.group_id
-		GROUP BY id
-		`;
+		let baseQuery = `SELECT id, name, description, is_public, creator, created_at,trees
+		FROM groups g
+		LEFT JOIN LATERAL ( 
+			SELECT json_agg(g_t.tree_id) AS trees
+			FROM groups_trees g_t 
+			WHERE g.id = g_t.group_id
+			) g_t ON true`;
 
 		// Helper function to clean up space. Pushes where statement and value, and incremends queryIdx by 1.
 		const addQueryParam = (statement, value) => {
@@ -68,8 +70,10 @@ class Group {
 		const results = await db.query(finalQuery ? finalQuery : baseQuery, queryValues);
 
 		for (const group of results.rows) {
-			if (group.trees[0] === null) group.trees = [];
+			group.members = [];
+			if (group.trees === null) group.trees = [];
 		}
+
 		return results.rows;
 	}
 
@@ -99,9 +103,10 @@ class Group {
 			const error = new ExpressError(`There exists no group with id '${id}'.`, 404);
 			throw error;
 		}
+		console.log('Group Model - findAll - group', group);
 
 		if (group.trees === null) group.trees = [];
-		if (group.members[0].user_id === null) group.members = [];
+		if (group.members === null) group.members = [];
 
 		return group;
 	}

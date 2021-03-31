@@ -35,6 +35,8 @@ const useStyles = makeStyles((theme) => {
 });
 
 function GroupPage() {
+	console.log('GroupPage - start');
+
 	const classes = useStyles();
 	const history = useHistory();
 	const theme = useTheme();
@@ -44,6 +46,7 @@ function GroupPage() {
 	const uid = useSelector((st) => st.currUser.uid);
 	const error = useSelector((st) => st.groups.error);
 	const isCreator = uid === group.creator;
+	const isModerator = group.members.find((member) => member.is_moderator === true && member.user_id === uid);
 
 	console.log('GroupPage - group', group);
 	const [ isLoading, setIsLoading ] = useState(true);
@@ -131,7 +134,9 @@ function GroupPage() {
 				</Grid>
 				{group.description && (
 					<Grid item xs={12} style={{ marginBottom: 15 }}>
-						<Typography gutterBottom>{group.description}</Typography>
+						<Typography gutterBottom style={{ whiteSpace: 'pre-line' }}>
+							{group.description}
+						</Typography>
 					</Grid>
 				)}
 				<Grid item xs={12}>
@@ -139,7 +144,7 @@ function GroupPage() {
 				</Grid>
 
 				<Grid item xs={12} style={{ marginTop: 15 }}>
-					<CommentsContainer type="groups" id={group.id} />
+					<CommentsContainer type="groups" id={group.id} isCreatorOrModerator={isCreator || isModerator} />
 				</Grid>
 			</Grid>
 		</Grid>

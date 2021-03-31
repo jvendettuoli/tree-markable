@@ -31,7 +31,7 @@ function CreateNewGroup() {
 	const classes = useStyles();
 	const dispatch = useDispatch();
 	const history = useHistory();
-	const username = useSelector((st) => st.currUser.username);
+	const userId = useSelector((st) => st.currUser.uid);
 	const INITIAL_GROUP_FORM_DATA = {
 		name        : '',
 		description : '',
@@ -71,7 +71,11 @@ function CreateNewGroup() {
 		}
 
 		console.log('new group', newGroup);
-		dispatch(createGroup(newGroup, imageFiles, username, history));
+		const groupId = await dispatch(createGroup(newGroup, imageFiles, userId, history));
+		if (groupId) {
+			console.log('CreateNewGroup - groupId', groupId);
+			history.push(`/groups/${groupId}`);
+		}
 	};
 
 	return (

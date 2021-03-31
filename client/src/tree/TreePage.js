@@ -32,11 +32,12 @@ const useStyles = makeStyles({
 });
 
 function TreePage() {
+	console.log('TreePage - start');
 	const classes = useStyles();
 	const { id } = useParams();
 	const tree = useSelector((st) => st.trees.entities[id]);
 	const uid = useSelector((st) => st.currUser.uid);
-	console.log('TreePage - tree', tree);
+	const isCreator = tree.creator === uid;
 	const [ isLoading, setIsLoading ] = useState(true);
 	const [ imageUrls, setImageUrls ] = useState({
 		primary : '',
@@ -55,7 +56,7 @@ function TreePage() {
 				getTree(id);
 			}
 		},
-		[ tree, id ]
+		[ tree, id, dispatch ]
 	);
 
 	// Get Tree Images from FirebaseStorage
@@ -132,7 +133,7 @@ function TreePage() {
 					</Grid>
 					{tree.description && (
 						<Grid item xs={12}>
-							<Typography gutterBottom style={{ paddingRight: 10 }}>
+							<Typography gutterBottom style={{ paddingRight: 10, whiteSpace: 'pre-line' }}>
 								{tree.description}
 							</Typography>
 						</Grid>
@@ -170,7 +171,7 @@ function TreePage() {
 					</Paper>
 				</Grid>
 				<Grid item xs={12} style={{ marginTop: 15 }}>
-					<CommentsContainer type="trees" id={tree.id} />
+					<CommentsContainer type="trees" id={tree.id} isCreatorOrModerator={isCreator} />
 				</Grid>
 			</Grid>
 		</Grid>

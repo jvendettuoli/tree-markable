@@ -51,7 +51,7 @@ function GroupMembersPanel({ isCreator, isModerator, group }) {
 
 	const members = group.members.filter((member) => member.is_moderator === false);
 
-	console.log('GroupMembersPanel', admin, moderators, members);
+	console.log('GroupMembersPanel', admin, Boolean(moderators), members);
 
 	//add remove moderator
 	return (
@@ -64,24 +64,32 @@ function GroupMembersPanel({ isCreator, isModerator, group }) {
 			<Typography gutterBottom variant="h6">
 				Moderators
 			</Typography>
-			<UserList
-				isCreator={isCreator}
-				isModerator={isModerator}
-				groupId={group.id}
-				users={moderators}
-				type={'mods'}
-			/>
+			{moderators.length ? (
+				<UserList
+					isCreator={isCreator}
+					isModerator={isModerator}
+					groupId={group.id}
+					users={moderators}
+					type={'mods'}
+				/>
+			) : (
+				<Typography gutterBottom>No moderators in this group.</Typography>
+			)}
 
 			<Typography gutterBottom variant="h6">
 				Members
 			</Typography>
-			<UserList
-				isCreator={isCreator}
-				isModerator={isModerator}
-				groupId={group.id}
-				users={members}
-				type={'members'}
-			/>
+			{members.length ? (
+				<UserList
+					isCreator={isCreator}
+					isModerator={isModerator}
+					groupId={group.id}
+					users={members}
+					type={'members'}
+				/>
+			) : (
+				<Typography gutterBottom>No members in this group.</Typography>
+			)}
 		</div>
 	);
 }
