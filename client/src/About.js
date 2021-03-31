@@ -10,19 +10,23 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) => {
 	return {
 		innerContent : {
-			padding : 20
+			padding  : 20,
+			'& > h5' : {
+				marginTop : 10
+			},
+			'& > p'  : {
+				marginLeft : 20
+			}
 		}
 	};
 });
-//https://www.facebook.com/clallamtreealliance
-//https://github.com/jvendettuoli
 
 function About() {
 	const theme = useTheme();
 	const classes = useStyles(theme);
 
 	return (
-		<Grid container className={classes.innerContent}>
+		<Grid container className={classes.innerContent} direction="column">
 			<Typography align="center" variant="h3" style={{ fontWeight: 'bold' }} gutterBottom>
 				About Tree-Markable
 			</Typography>
