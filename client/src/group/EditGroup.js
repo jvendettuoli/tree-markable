@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import Divider from '@material-ui/core/Divider';
@@ -13,7 +13,7 @@ import TreeMarkableApi from '../TreeMarkableApi';
 import GroupFormBasicFields from './GroupFormBasicFields';
 import { groupsRef, uploadImagesToFirebase } from '../firebase/firebaseStorage';
 import ImagesInput from '../imageHandling/ImagesInput';
-import { updateGroupInApi } from '../actions/groups';
+import { updateGroupInApi, deleteGroupInApi } from '../actions/groups';
 
 const useStyles = makeStyles({
 	innerContent : {
@@ -30,6 +30,7 @@ const useStyles = makeStyles({
 
 function EditGroup() {
 	const classes = useStyles();
+	const theme = useTheme();
 	const dispatch = useDispatch();
 	const { id } = useParams();
 	const history = useHistory();
@@ -41,16 +42,6 @@ function EditGroup() {
 		is_public   : true
 	};
 	const [ groupFormData, setGroupFormData ] = useState(INITIAL_GROUP_FORM_DATA);
-	const [ formErrors, setFormErrors ] = useState({ name: false });
-
-	useEffect(() => {
-		console.log('edit group', status);
-		if (status === 'success') {
-			history.push(`/groups/${id}`);
-		}
-		if (error) {
-		}
-	});
 
 	const handleGroupFormChange = (data) => {
 		let { name, value } = data;
@@ -77,8 +68,14 @@ function EditGroup() {
 			}
 		}
 
-		console.log('edit group', editGroup);
-		dispatch(updateGroupInApi(id, editGroup));
+		console.log('EditGroup - editGroup', editGroup);
+		const updated = await dispatch(updateGroupInApi(id, editGroup));
+		if (updated) history.push(`/groups/${id}`);
+	};
+
+	const handleDelete = async () => {
+		const deleted = await dispatch(deleteGroupInApi(id));
+		if (deleted) history.push('/groups');
 	};
 
 	const handleCancel = () => {
@@ -91,16 +88,18 @@ function EditGroup() {
 				Edit Group
 			</Typography>
 			<form onSubmit={handleSubmit} className={classes.form}>
-				<GroupFormBasicFields
-					formData={groupFormData}
-					errors={formErrors}
-					onFormChange={handleGroupFormChange}
-					edit={true}
-				/>
+				<GroupFormBasicFields formData={groupFormData} onFormChange={handleGroupFormChange} edit={true} />
 
 				<Grid container item justify="space-between" style={{ paddingLeft: 40, paddingRight: 40 }}>
 					<Button onClick={handleCancel} variant="contained" color="secondary">
 						Go Back
+					</Button>
+					<Button
+						onClick={handleDelete}
+						variant="contained"
+						style={{ backgroundColor: theme.palette.error.dark, color: theme.palette.error.contrastText }}
+					>
+						Delete Group
 					</Button>
 					<Button variant="contained" color="primary" type="submit">
 						Save Edits

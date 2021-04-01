@@ -18,8 +18,10 @@ class Group {
             RETURNING id, name, description, is_public, creator, created_at`,
 				[ data.name, data.description, data.is_public, data.creator ]
 			);
-
-			return result.rows[0];
+			const group = result.rows[0];
+			group['trees'] = [];
+			group['members'] = [];
+			return group;
 		} catch (err) {
 			if (err.code === '23505') {
 				if (err.constraint === 'groups_name_key') {
@@ -131,7 +133,10 @@ class Group {
 				let notFound = new ExpressError(`There exists no group with id: '${id}'`, 404);
 				throw notFound;
 			}
-			return result.rows[0];
+
+			group['trees'] = [];
+			group['members'] = [];
+			return group;
 		} catch (err) {
 			if (err.code === '23505') {
 				if (err.constraint === 'groups_name_key') {

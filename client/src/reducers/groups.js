@@ -5,14 +5,15 @@
 import {
 	LOAD_GROUP,
 	LOAD_GROUPS,
+	REMOVE_GROUP,
 	LOAD_TREE_TO_GROUP,
 	REMOVE_TREE_FROM_GROUP,
-	LOAD_MEMBER_TO_GROUP,
+	// LOAD_MEMBER_TO_GROUP,
 	REMOVE_MEMBER_FROM_GROUP,
 	GROUP_ERROR,
-	LOAD_GROUP_REQUEST,
-	LOAD_GROUP_SUCCESS,
-	LOAD_GROUP_FAILURE,
+	GROUP_REQUEST_START,
+	GROUP_REQUEST_SUCCESS,
+	GROUP_REQUEST_FAILURE,
 	RESET_ALL
 } from '../actions/types';
 
@@ -21,15 +22,23 @@ const INITIAL_STATE = { entities: {}, status: 'idle', error: null };
 function groups(state = INITIAL_STATE, action) {
 	switch (action.type) {
 		case RESET_ALL:
+			console.log('REDUCERS RESET_ALL');
+
 			return { ...INITIAL_STATE };
 
-		case LOAD_GROUP_REQUEST:
-			return { ...state, status: 'isLoading' };
+		case GROUP_REQUEST_START:
+			console.log('REDUCERS GROUP_REQUEST_START');
 
-		case LOAD_GROUP_SUCCESS:
+			return { ...state, status: 'loading' };
+
+		case GROUP_REQUEST_SUCCESS:
+			console.log('REDUCERS GROUP_REQUEST_SUCCESS');
+
 			return { ...state, status: 'idle' };
 
-		case LOAD_GROUP_FAILURE:
+		case GROUP_REQUEST_FAILURE:
+			console.log('REDUCERS GROUP_REQUEST_FAILURE');
+
 			return { ...state, status: 'failure' };
 
 		case LOAD_GROUP:
@@ -51,6 +60,14 @@ function groups(state = INITIAL_STATE, action) {
 				return obj;
 			}, {});
 			return { entities: groupsObj, status: 'success', error: null };
+
+		case REMOVE_GROUP:
+			console.log('REDUCERS REMOVE_GROUP - action', action);
+			const { [action.payload]: omit, ...groups } = state.entities;
+			console.log('REDUCERS REMOVE_GROUP - state.entities', state.entities);
+			console.log('REDUCERS REMOVE_GROUP - groups', groups);
+
+			return { ...state, entities: groups, status: 'success', error: null };
 
 		case LOAD_TREE_TO_GROUP:
 			console.log('REDUCERS LOAD_TREE_TO_GROUP - action', action);

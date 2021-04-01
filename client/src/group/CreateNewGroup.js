@@ -59,6 +59,7 @@ function CreateNewGroup() {
 
 	// On form submit, convert data to type expected by server
 	// and make POST request to create new group
+	// Add group to creator's followed groups
 	const handleSubmit = async (evt) => {
 		evt.preventDefault();
 
@@ -72,6 +73,8 @@ function CreateNewGroup() {
 
 		console.log('new group', newGroup);
 		const groupId = await dispatch(createGroup(newGroup, imageFiles, userId, history));
+		dispatch(addToFollowedGroups(userId, groupId, true));
+
 		if (groupId) {
 			console.log('CreateNewGroup - groupId', groupId);
 			history.push(`/groups/${groupId}`);

@@ -14,7 +14,7 @@ import Button from '@material-ui/core/Button';
 import useStyles from '../styles/formStyle';
 import { errorDisplay } from '../helpers/formErrorDisplay';
 
-function GroupFormBasicFields({ errors, formData, onFormChange, edit = false }) {
+function GroupFormBasicFields({ formData, onFormChange, edit = false }) {
 	const classes = useStyles();
 	const groupError = useSelector((st) => st.groups.error);
 	console.log(groupError);

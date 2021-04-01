@@ -7,35 +7,33 @@ import TreeMarkableApi from '../TreeMarkableApi';
 import {
 	LOAD_GROUP,
 	LOAD_GROUPS,
+	REMOVE_GROUP,
 	LOAD_TREE_TO_GROUP,
 	REMOVE_TREE_FROM_GROUP,
 	GROUP_ERROR,
-	LOAD_GROUP_REQUEST,
-	LOAD_GROUP_SUCCESS,
-	LOAD_GROUP_FAILURE,
+	GROUP_REQUEST_START,
+	GROUP_REQUEST_SUCCESS,
+	GROUP_REQUEST_FAILURE,
 	REMOVE_MEMBER_FROM_GROUP
 } from './types';
-import { addToFollowedGroups } from './currUser';
 import { groupsRef, uploadImagesToFirebase } from '../firebase/firebaseStorage';
 
 // Sends POST request for new group to TreeMarkableApi
-// Also adds user creating group as a follower and moderator for group
 function createGroup(group, imageFiles, userId) {
 	console.log('Actions - createGroupInApi group', group);
 
 	return async function(dispatch) {
-		dispatch({ type: LOAD_GROUP_REQUEST });
+		dispatch({ type: GROUP_REQUEST_START });
 		try {
 			const res = await TreeMarkableApi.createGroup(group);
 			await uploadImagesToFirebase(groupsRef, res.id, imageFiles);
 			dispatch(gotGroup(res));
-			dispatch(addToFollowedGroups(userId, res.id, true));
-			dispatch({ type: LOAD_GROUP_SUCCESS });
+			dispatch({ type: GROUP_REQUEST_SUCCESS });
 			return res.id;
 		} catch (err) {
 			console.log('Actions - createGroupInApi err', err);
 			dispatch(groupError(err));
-			dispatch({ type: LOAD_GROUP_FAILURE });
+			dispatch({ type: GROUP_REQUEST_FAILURE });
 			return false;
 		}
 	};
@@ -44,46 +42,68 @@ function createGroup(group, imageFiles, userId) {
 function getGroupFromApi(id) {
 	console.log('Actions - getGroupFromApi group', id);
 	return async function(dispatch) {
-		dispatch({ type: LOAD_GROUP_REQUEST });
+		dispatch({ type: GROUP_REQUEST_START });
 		try {
 			const res = await TreeMarkableApi.getGroup(id);
 			dispatch(gotGroup(res));
-			dispatch({ type: LOAD_GROUP_SUCCESS });
+			dispatch({ type: GROUP_REQUEST_SUCCESS });
 		} catch (err) {
 			console.log('Actions - getGroupFromApi err', err);
 			dispatch(groupError(err));
-			dispatch({ type: LOAD_GROUP_FAILURE });
+			dispatch({ type: GROUP_REQUEST_FAILURE });
 		}
 	};
 }
 function getGroupsFromApi(searchParams) {
 	return async function(dispatch) {
-		dispatch({ type: LOAD_GROUP_REQUEST });
+		dispatch({ type: GROUP_REQUEST_START });
 		try {
 			const res = await TreeMarkableApi.getGroups(searchParams);
 			console.log('Actions - getGroupsFromApi res', res);
 
 			dispatch(gotGroups(res));
-			dispatch({ type: LOAD_GROUP_SUCCESS });
+			dispatch({ type: GROUP_REQUEST_SUCCESS });
 		} catch (err) {
 			console.log('Actions - getGroupsFromApi err', err);
 			dispatch(groupError(err));
-			dispatch({ type: LOAD_GROUP_FAILURE });
+			dispatch({ type: GROUP_REQUEST_FAILURE });
 		}
 	};
 }
+
 function updateGroupInApi(groupId, data) {
 	return async function(dispatch) {
-		dispatch({ type: LOAD_GROUP_REQUEST });
+		dispatch({ type: GROUP_REQUEST_START });
 		try {
 			const res = await TreeMarkableApi.updateGroup(groupId, data);
 			console.log('Actions - updateGroupInApi res', res);
 			dispatch(gotGroup(res));
-			dispatch({ type: LOAD_GROUP_SUCCESS });
+			dispatch({ type: GROUP_REQUEST_SUCCESS });
+			return true;
 		} catch (err) {
-			console.log('Actions - updateGroupFromApi err', err);
+			console.log('Actions - updateGroupInApi err', err);
 			dispatch(groupError(err));
-			dispatch({ type: LOAD_GROUP_FAILURE });
+			dispatch({ type: GROUP_REQUEST_FAILURE });
+			return false;
+		}
+	};
+}
+
+function deleteGroupInApi(groupId) {
+	console.log('Actions - deleteGroupInApi - start', groupId);
+	return async function(dispatch) {
+		dispatch({ type: GROUP_REQUEST_START });
+		try {
+			const res = await TreeMarkableApi.deleteGroup(groupId);
+			console.log('Actions - deleteGroupInApi res', res);
+			dispatch(deletedGroup(groupId));
+			dispatch({ type: GROUP_REQUEST_SUCCESS });
+			return true;
+		} catch (err) {
+			console.log('Actions - deleteGroupInApi err', err);
+			dispatch(groupError(err));
+			dispatch({ type: GROUP_REQUEST_FAILURE });
+			return false;
 		}
 	};
 }
@@ -95,32 +115,32 @@ function updateGroupInApi(groupId, data) {
 function addTreeToGroup(groupId, treeId) {
 	console.log('Actions - addTreeToGroup - ', groupId, treeId);
 	return async function(dispatch) {
-		dispatch({ type: LOAD_GROUP_REQUEST });
+		dispatch({ type: GROUP_REQUEST_START });
 
 		try {
 			await TreeMarkableApi.groupAddTree(groupId, treeId);
 			dispatch(treeAddedToGroup({ groupId, treeId }));
-			dispatch({ type: LOAD_GROUP_SUCCESS });
+			dispatch({ type: GROUP_REQUEST_SUCCESS });
 		} catch (err) {
 			console.log('Actions - addTreeToGroup error', err);
 			dispatch(groupError(err));
-			dispatch({ type: LOAD_GROUP_FAILURE });
+			dispatch({ type: GROUP_REQUEST_FAILURE });
 		}
 	};
 }
 function removeTreeFromGroup(groupId, treeId) {
 	console.log('Actions  - removeTreeFromGroup - ', groupId, treeId);
 	return async function(dispatch) {
-		dispatch({ type: LOAD_GROUP_REQUEST });
+		dispatch({ type: GROUP_REQUEST_START });
 
 		try {
 			await TreeMarkableApi.groupRemoveTree(groupId, treeId);
 			dispatch(treeRemovedFromGroup({ groupId, treeId }));
-			dispatch({ type: LOAD_GROUP_SUCCESS });
+			dispatch({ type: GROUP_REQUEST_SUCCESS });
 		} catch (err) {
 			console.log('Actions - removeTreeFromGroup error', err);
 			dispatch(groupError(err));
-			dispatch({ type: LOAD_GROUP_FAILURE });
+			dispatch({ type: GROUP_REQUEST_FAILURE });
 		}
 	};
 }
@@ -132,15 +152,15 @@ function removeTreeFromGroup(groupId, treeId) {
 function removeMemberFromGroup(groupId, userId) {
 	console.log('currUser - removeFromFollowedGroups - ', userId, groupId);
 	return async function(dispatch) {
-		dispatch({ type: LOAD_GROUP_REQUEST });
+		dispatch({ type: GROUP_REQUEST_START });
 		try {
 			await TreeMarkableApi.userRemoveGroup(userId, groupId);
 			dispatch(memberRemovedFromGroup({ groupId, userId }));
-			dispatch({ type: LOAD_GROUP_SUCCESS });
+			dispatch({ type: GROUP_REQUEST_SUCCESS });
 		} catch (err) {
 			console.log('removeFromFollowedGroups error', err);
 			dispatch(groupError(err));
-			dispatch({ type: LOAD_GROUP_FAILURE });
+			dispatch({ type: GROUP_REQUEST_FAILURE });
 		}
 	};
 }
@@ -148,15 +168,15 @@ function removeMemberFromGroup(groupId, userId) {
 function addModToGroup(groupId, userId) {
 	console.log('Actions - addModToGroup - ', groupId, userId);
 	return async function(dispatch) {
-		dispatch({ type: LOAD_GROUP_REQUEST });
+		dispatch({ type: GROUP_REQUEST_START });
 
 		try {
 			await TreeMarkableApi.groupAddMod(groupId, userId);
-			dispatch({ type: LOAD_GROUP_SUCCESS });
+			dispatch({ type: GROUP_REQUEST_SUCCESS });
 		} catch (err) {
 			console.log('Actions - addModToGroup error', err);
 			dispatch(groupError(err));
-			dispatch({ type: LOAD_GROUP_FAILURE });
+			dispatch({ type: GROUP_REQUEST_FAILURE });
 		}
 	};
 }
@@ -164,21 +184,24 @@ function addModToGroup(groupId, userId) {
 function removeModFromGroup(groupId, userId) {
 	console.log('Actions - removeModFromGroup - ', groupId, userId);
 	return async function(dispatch) {
-		dispatch({ type: LOAD_GROUP_REQUEST });
+		dispatch({ type: GROUP_REQUEST_START });
 
 		try {
 			await TreeMarkableApi.groupRemoveMod(groupId, userId);
-			dispatch({ type: LOAD_GROUP_SUCCESS });
+			dispatch({ type: GROUP_REQUEST_SUCCESS });
 		} catch (err) {
 			console.log('Actions - removeModFromGroup error', err);
 			dispatch(groupError(err));
-			dispatch({ type: LOAD_GROUP_FAILURE });
+			dispatch({ type: GROUP_REQUEST_FAILURE });
 		}
 	};
 }
 
 function gotGroup(group) {
 	return { type: LOAD_GROUP, payload: group };
+}
+function deletedGroup(groupId) {
+	return { type: REMOVE_GROUP, payload: groupId };
 }
 function gotGroups(groups) {
 	return { type: LOAD_GROUPS, payload: groups };
@@ -205,5 +228,6 @@ export {
 	removeTreeFromGroup,
 	addModToGroup,
 	removeModFromGroup,
-	removeMemberFromGroup
+	removeMemberFromGroup,
+	deleteGroupInApi
 };

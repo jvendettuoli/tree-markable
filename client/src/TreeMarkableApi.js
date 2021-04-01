@@ -100,7 +100,7 @@ class TreeMarkableApi {
 	}
 	static async deleteGroup(groupId) {
 		console.log('TreeMarkableApi Class deleteGroup - Start');
-		let res = await this.request(`groups/${groupId}`, 'delete');
+		let res = await this.request(`groups/${groupId}`, {}, 'delete');
 		return res.message;
 	}
 	static async getGroupMembers(groupId) {

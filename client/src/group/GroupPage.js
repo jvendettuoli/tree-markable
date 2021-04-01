@@ -128,7 +128,7 @@ function GroupPage() {
 						{group.name}
 					</Typography>
 					<Grid item>
-						{isAuthenticated && <FollowGroupIconBtn groupId={group.id} />}
+						{isAuthenticated && !isCreator && <FollowGroupIconBtn groupId={group.id} />}
 						{isCreator && <EditIconBtn type={'groups'} id={group.id} />}
 					</Grid>
 				</Grid>

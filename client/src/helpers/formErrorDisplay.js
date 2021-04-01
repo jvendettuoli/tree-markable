@@ -26,9 +26,9 @@ const errorDisplay = (field, error) => {
 	if (field === 'new_password') {
 		errors.set('auth/weak-password', 'Password is too weak. Must be greater than 6 characters.');
 	}
-	console.log('status', status);
-	console.log('errors', errors);
-	console.log('errors.get(status)', errors.get(status));
+	// console.log('status', status);
+	// console.log('errors', errors);
+	// console.log('errors.get(status)', errors.get(status));
 	return errors.get(status);
 };
 
