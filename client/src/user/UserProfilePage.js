@@ -38,7 +38,12 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor    : theme.palette.secondary.dark
 	},
 	innerContent        : {
-		padding : 15
+		padding : 20
+	},
+	divider             : {
+		width        : '90%',
+		marginTop    : 10,
+		marginBottom : 10
 	}
 }));
 
@@ -57,8 +62,24 @@ function UserProfilePage() {
 
 	const history = useHistory();
 
-	const { uid, username, email, img_url, created_at, is_admin, savedTreeIds } = useSelector((st) => st.currUser);
-	const trees = useSelector((st) => st.trees.entities);
+	const { uid, username, email, img_url, created_at, is_admin, savedTreeIds, followedGroupIds } = useSelector(
+		(st) => st.currUser
+	);
+	const favTrees = useSelector((st) =>
+		Object.values(st.trees.entities).filter((tree) => savedTreeIds.includes(tree.id))
+	);
+	const userCreatedTrees = useSelector((st) =>
+		Object.values(st.trees.entities).filter((tree) => tree.creator === uid)
+	);
+	const followedGroups = useSelector((st) =>
+		Object.values(st.groups.entities).filter((group) => followedGroupIds.includes(group.id))
+	);
+	const userCreatedGroups = useSelector((st) =>
+		Object.values(st.groups.entities).filter((group) => group.creator === uid)
+	);
+
+	// const favTrees = Object.values(userTrees).filter((tree) => savedTreeIds.includes(tree.id));
+	const favGroups = useSelector((st) => st.groups.entities);
 
 	const pushToEditForm = () => {
 		history.push(`/users/${username}/edit`);
@@ -70,34 +91,135 @@ function UserProfilePage() {
 				<div style={{ height: 300 }} />
 			</Grid>
 			<Grid container item className={classes.innerContent}>
-				<Grid>
-					<CurrUserInfo />
-					<Button color="secondary" onClick={pushToEditForm}>
-						Edit User
-					</Button>
-				</Grid>
 				<Grid container item>
-					<Grid container alignItems="flex-end">
+					<Grid item>
+						<CurrUserInfo />
+					</Grid>
+					<Grid item>
+						<Button color="secondary" variant="outlined" onClick={pushToEditForm}>
+							Edit User
+						</Button>
+					</Grid>
+				</Grid>
+
+				<Divider className={classes.divider} />
+
+				<Grid container item xs={12}>
+					{/* User Created Trees */}
+					<Grid container item xs={12} md={6} lg={3} direction="column">
+						<Box mr={2}>
+							<Typography variant="h5">My Trees</Typography>
+						</Box>
+
+						<List dense={true}>
+							{userCreatedTrees.length > 0 ? (
+								userCreatedTrees.map((tree) => (
+									<ListItem
+										button
+										component={RouterLink}
+										to={`/trees/${tree.id}`}
+										key={`tree-${tree.id}`}
+									>
+										<ListItemText>{tree.name}</ListItemText>
+									</ListItem>
+								))
+							) : (
+								<Grid>
+									<Typography>No Created Trees</Typography>
+								</Grid>
+							)}
+						</List>
+					</Grid>
+
+					<Hidden smUp>
+						<Divider className={classes.divider} />
+					</Hidden>
+
+					{/* User Favorite Trees */}
+					<Grid container item xs={12} md={6} lg={3} direction="column">
 						<Box mr={2}>
 							<Typography variant="h5">Favorite Trees</Typography>
 						</Box>
-						<Link component={RouterLink} to="/trees">
-							<Typography variant="subtitle1">Find more trees!</Typography>
-						</Link>
+
+						<List dense={true}>
+							{favTrees.length > 0 ? (
+								favTrees.map((tree) => (
+									<ListItem
+										button
+										component={RouterLink}
+										to={`/trees/${tree.id}`}
+										key={`tree-${tree.id}`}
+									>
+										<ListItemText>{tree.name}</ListItemText>
+									</ListItem>
+								))
+							) : (
+								<Grid>
+									<Typography>No Favorite Trees</Typography>
+								</Grid>
+							)}
+						</List>
 					</Grid>
-					<List>
-						{savedTreeIds.length > 0 ? (
-							savedTreeIds.map((id) => (
-								<ListItem button component={RouterLink} to={`/trees/${id}`} key={`tree-${id}`}>
-									<ListItemText>{trees[id].name}</ListItemText>
-								</ListItem>
-							))
-						) : (
-							<Grid>
-								<Typography>No Favorite Trees</Typography>
-							</Grid>
-						)}
-					</List>
+
+					<Hidden lgUp>
+						<Divider className={classes.divider} />
+					</Hidden>
+
+					{/* User Created Groups */}
+					<Grid container item xs={12} md={6} lg={3} direction="column">
+						<Box mr={2}>
+							<Typography variant="h5">My Groups</Typography>
+						</Box>
+
+						<List dense={true}>
+							{userCreatedGroups.length > 0 ? (
+								userCreatedGroups.map((group) => (
+									<ListItem
+										button
+										component={RouterLink}
+										to={`/groups/${group.id}`}
+										key={`group-${group.id}`}
+									>
+										<ListItemText>{group.name}</ListItemText>
+									</ListItem>
+								))
+							) : (
+								<Grid>
+									<Typography>No Created Groups</Typography>
+								</Grid>
+							)}
+						</List>
+					</Grid>
+
+					<Hidden smUp>
+						<Divider className={classes.divider} />
+					</Hidden>
+
+					{/* User Followed Groups */}
+					<Grid container item xs={12} md={6} lg={3} direction="column">
+						<Box mr={2}>
+							<Typography variant="h5">Followed Groups</Typography>
+						</Box>
+
+						<List dense={true}>
+							{followedGroups.length > 0 ? (
+								followedGroups.map((group) => (
+									<ListItem
+										button
+										component={RouterLink}
+										to={`/groups/${group.id}`}
+										key={`group-${group.id}`}
+									>
+										<ListItemText>{group.name}</ListItemText>
+									</ListItem>
+								))
+							) : (
+								<Grid>
+									<Typography>No Followed Groups</Typography>
+								</Grid>
+							)}
+						</List>
+					</Grid>
 				</Grid>
 			</Grid>
 		</Grid>
