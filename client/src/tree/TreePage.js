@@ -14,7 +14,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
-import { getTreeFromApi, getTreesFromApi } from '../actions/trees';
+import { getTree } from '../actions/trees';
 import Carousel from '../imageHandling/Carousel';
 import LeafletMap from '../leafletMap/LeafletMap';
 import CommentsContainer from '../comment/CommentsContainer';
@@ -49,11 +49,13 @@ function TreePage() {
 	// If Tree not already in store, request it from API
 	useEffect(
 		() => {
-			const getTree = async (treeId) => {
-				dispatch(getTreeFromApi(treeId));
+			console.log('TreePage UseEffect tree - Start');
+
+			const getTreeFromApi = async (treeId) => {
+				dispatch(getTree(treeId));
 			};
 			if (!tree) {
-				getTree(id);
+				getTreeFromApi(id);
 			}
 		},
 		[ tree, id, dispatch ]
@@ -62,9 +64,10 @@ function TreePage() {
 	// Get Tree Images from FirebaseStorage
 	useEffect(
 		() => {
+			console.log('TreePage UseEffect Images - Start');
 			const getImageUrls = async (collectionRef, id) => {
 				const imgUrls = await downloadImageUrlsFromFirebase(collectionRef, id);
-				console.log('imgUrls', imgUrls);
+				console.log('TreePage UseEffect - ', imgUrls);
 				if (imgUrls) {
 					setImageUrls(imgUrls);
 				}
@@ -143,16 +146,14 @@ function TreePage() {
 							<Table aria-label="tree details">
 								<TableBody>
 									{treeFieldLabels.map((item, idx) => {
-										return (
-											item.value && (
-												<TableRow key={item.label}>
-													<TableCell>
-														<b>{item.label}</b>
-													</TableCell>
-													<TableCell>{item.value}</TableCell>
-												</TableRow>
-											)
-										);
+										return item.value ? (
+											<TableRow key={item.label}>
+												<TableCell>
+													<b>{item.label}</b>
+												</TableCell>
+												<TableCell>{item.value}</TableCell>
+											</TableRow>
+										) : null;
 									})}
 								</TableBody>
 							</Table>

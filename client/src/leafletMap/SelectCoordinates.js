@@ -1,18 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {
-	MapContainer,
-	useMap,
-	useMapEvents,
-	Marker,
-	Popup,
-	TileLayer
-} from 'react-leaflet';
-import {
-	GeoSearchControl,
-	OpenStreetMapProvider
-} from 'leaflet-geosearch';
+import { MapContainer, useMap, useMapEvents, Marker, Popup, TileLayer } from 'react-leaflet';
+import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import 'leaflet-geosearch/dist/geosearch.css';
-
 
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
@@ -26,11 +15,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import LeafletMap from './LeafletMap';
 import useStyles from '../styles/formStyle';
 
-function SelectCoordinates({
-	formData,
-	onCoordinatesChange,
-	onMapCoordinatesChange
-}) {
+function SelectCoordinates({ formData, onCoordinatesChange, onMapCoordinatesChange }) {
 	const classes = useStyles();
 	const didMountRef = useRef(false);
 	const [ showSelectMap, setShowSelectMap ] = useState(true);
@@ -46,11 +31,7 @@ function SelectCoordinates({
 	const mapToggleRef = useRef(null);
 	useEffect(
 		() => {
-			if (
-				showSelectMap &&
-				mapToggleRef.current &&
-				didMountRef.current
-			) {
+			if (showSelectMap && mapToggleRef.current && didMountRef.current) {
 				mapToggleRef.current.scrollIntoView({
 					behavior : 'smooth'
 				});
@@ -66,11 +47,7 @@ function SelectCoordinates({
 		setShowSelectMap(!showSelectMap);
 	};
 	const selectMapBtn = () => {
-		return showSelectMap ? (
-			<Typography>Hide Map</Typography>
-		) : (
-			<Typography>Select Via Map</Typography>
-		);
+		return showSelectMap ? <Typography>Hide Map</Typography> : <Typography>Select Via Map</Typography>;
 	};
 	const setDisplayMapStyle = () => {
 		return showSelectMap ? {} : { display: 'none' };
@@ -110,22 +87,11 @@ function SelectCoordinates({
 					/>
 				</Grid>
 			</Grid>
-			<Button
-				variant="outlined"
-				color="secondary"
-				fullWidth
-				onClick={toggleSelectMap}
-			>
+			<Button variant="outlined" color="secondary" fullWidth onClick={toggleSelectMap}>
 				{selectMapBtn()}
 			</Button>
-			<div
-				className={classes.mapContainer}
-				style={setDisplayMapStyle()}
-			>
-				<LeafletMap
-					onMapCoordinatesChange={onMapCoordinatesChange}
-					useGetClickCoordinates={true}
-				/>
+			<div className={classes.mapContainer} style={setDisplayMapStyle()}>
+				<LeafletMap onMapCoordinatesChange={onMapCoordinatesChange} useGetClickCoordinates={true} />
 			</div>
 		</div>
 	);

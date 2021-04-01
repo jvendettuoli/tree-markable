@@ -5,10 +5,11 @@
 // Tree Action Types
 export const LOAD_TREE = 'LOAD_TREE';
 export const LOAD_TREES = 'LOAD_TREES';
+export const REMOVE_TREE = 'REMOVE_TREE';
 export const TREE_ERROR = 'TREE_ERROR';
-export const LOAD_TREE_REQUEST = 'LOAD_TREE_REQUEST';
-export const LOAD_TREE_SUCCESS = 'LOAD_TREE_SUCCESS';
-export const LOAD_TREE_FAILURE = 'LOAD_TREE_FAILURE';
+export const TREE_REQUEST_START = 'TREE_REQUEST_START';
+export const TREE_REQUEST_SUCCESS = 'TREE_REQUEST_SUCCESS';
+export const TREE_REQUEST_FAILURE = 'TREE_REQUEST_FAILURE';
 
 // Group Action Types
 export const LOAD_GROUP = 'LOAD_GROUP';

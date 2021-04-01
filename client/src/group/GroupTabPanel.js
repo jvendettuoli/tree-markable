@@ -16,7 +16,7 @@ import Paper from '@material-ui/core/Paper';
 import LeafletMap from '../leafletMap/LeafletMap';
 import TreeList from '../tree/TreeList';
 import GroupTreeEditTable from './GroupTreeEditTable';
-import { getTreeFromApi } from '../actions/trees';
+import { getTree } from '../actions/trees';
 import GroupMembersPanel from './GroupMembersPanel';
 
 const useStyles = makeStyles((theme) => {
@@ -82,7 +82,7 @@ function GroupTabPanel({ group, isCreator, imageUrls }) {
 	useEffect(
 		() => {
 			remainingSelectionTreeIds.forEach((id) => {
-				const tree = dispatch(getTreeFromApi(id));
+				const tree = dispatch(getTree(id));
 				groupTrees.push(tree);
 			});
 		},

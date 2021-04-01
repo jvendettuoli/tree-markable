@@ -12,7 +12,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
 
-import { getGroupFromApi, getGroupsFromApi } from '../actions/groups';
+import { getGroup, getGroups } from '../actions/groups';
 import SelectLocationMap from '../leafletMap/LeafletMap';
 import ImagesInput from '../imageHandling/ImagesInput';
 import Carousel from '../imageHandling/Carousel';
@@ -60,10 +60,10 @@ function GroupPage() {
 	// Get specific group from API
 	useEffect(
 		() => {
-			const getGroup = async (groupId) => {
-				dispatch(getGroupFromApi(groupId));
+			const getGroupFromApi = async (groupId) => {
+				dispatch(getGroup(groupId));
 			};
-			getGroup(id);
+			getGroupFromApi(id);
 		},
 		[ id, error, dispatch, history ]
 	);

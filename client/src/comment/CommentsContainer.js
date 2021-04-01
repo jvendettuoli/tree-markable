@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
  */
 
 function CommentsContainer({ type, id, isCreatorOrModerator }) {
-	console.log('CommentsContainer', type, id);
+	console.log('CommentsContainer - Start', type, id);
 
 	const classes = useStyles();
 	const INITIAL_STATE = {
@@ -58,7 +58,6 @@ function CommentsContainer({ type, id, isCreatorOrModerator }) {
 		() => {
 			const getComments = async (type, id) => {
 				const comments = await TreeMarkableApi.getComments(type, id);
-				console.log('getComments - comments', comments);
 				setComments(comments);
 				setIsLoading(false);
 				setCommentDeleted(false);
@@ -83,10 +82,7 @@ function CommentsContainer({ type, id, isCreatorOrModerator }) {
 
 	const handleSubmit = async (evt) => {
 		evt.preventDefault();
-		console.log('Comment submit - text', formData);
-
-		const res = await TreeMarkableApi.createComment(formData);
-		console.log('res', res);
+		await TreeMarkableApi.createComment(formData);
 		setFormData(INITIAL_STATE);
 		setIsLoading(true);
 	};

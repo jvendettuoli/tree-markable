@@ -11,7 +11,6 @@ import Typography from '@material-ui/core/Typography';
 
 import { storageRef } from '../firebase/firebaseStorage';
 
-
 const useStyles = makeStyles((theme) => {
 	return {
 		imgPreview    : { height: 100, width: 'auto' },
@@ -89,20 +88,14 @@ function ImagesInput({ allowMultiple = true, onImageFilesChange }) {
 		console.log('handlePrimaryChange idx', idx);
 
 		setImageUrls((imageUrls) => {
-			const filteredUrls = imageUrls.filter(
-				(url) => url !== targetUrl
-			);
+			const filteredUrls = imageUrls.filter((url) => url !== targetUrl);
 			filteredUrls.unshift(targetUrl);
 			return filteredUrls;
 		});
 
 		console.log('handlePrimaryChange fileList', fileList);
 		setFileList((fileList) => {
-			return [
-				fileList[idx],
-				...fileList.slice(0, idx),
-				...fileList.slice(idx + 1)
-			];
+			return [ fileList[idx], ...fileList.slice(0, idx), ...fileList.slice(idx + 1) ];
 		});
 		console.log('handlePrimaryChange fileList post', fileList);
 	};
@@ -118,45 +111,24 @@ function ImagesInput({ allowMultiple = true, onImageFilesChange }) {
 					inputProps={{ multiple: allowMultiple }}
 					onChange={handleChange}
 				/>
-				<Button
-					variant="outlined"
-					color="primary"
-					htmlFor="file-upload"
-					component="label"
-				>
+				<Button variant="outlined" color="primary" htmlFor="file-upload" component="label">
 					{allowMultiple ? 'Choose Images' : 'Choose Image'}
 				</Button>
 				{allowMultiple && (
 					<Typography>
-						If selecting multiple images, click the one you
-						want to be the primary image.
+						If selecting multiple images, click the one you want to be the primary image.
 					</Typography>
 				)}
 			</Grid>
-			<Grid
-				container
-				item
-				xs={12}
-				justify="center"
-				className={classes.imgsContainer}
-			>
+			<Grid container item xs={12} justify="center" className={classes.imgsContainer}>
 				{imageUrls.map((url, idx) => (
 					<Box key={url} mr={1}>
 						<Paper
 							elevation={3}
 							onClick={handlePrimaryChange}
-							className={
-								imageUrls[0] === url ? (
-									`${classes.imgPaper} selected`
-								) : (
-									classes.imgPaper
-								)
-							}
+							className={imageUrls[0] === url ? `${classes.imgPaper} selected` : classes.imgPaper}
 						>
-							<img
-								className={classes.imgPreview}
-								src={url}
-							/>
+							<img className={classes.imgPreview} src={url} />
 						</Paper>
 					</Box>
 				))}

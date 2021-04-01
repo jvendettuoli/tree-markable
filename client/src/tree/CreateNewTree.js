@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -13,8 +14,10 @@ import Button from '@material-ui/core/Button';
 import TreeMarkableApi from '../TreeMarkableApi';
 import TreeFormBasicFields from './TreeFormBasicFields';
 import SelectCoordinates from '../leafletMap/SelectCoordinates';
-import { treesRef, uploadImagesToFirebase } from '../firebase/firebaseStorage';
+
 import ImagesInput from '../imageHandling/ImagesInput';
+import { addToSavedTrees } from '../actions/currUser';
+import { createTree } from '../actions/trees';
 
 const useStyles = makeStyles({
 	innerContent : {
@@ -31,6 +34,8 @@ const useStyles = makeStyles({
 
 function CreateNewTree() {
 	const history = useHistory();
+	const dispatch = useDispatch();
+	const userId = useSelector((st) => st.currUser.uid);
 	const INITIAL_TREE_FORM_DATA = {
 		name            : '',
 		description     : '',
@@ -102,17 +107,13 @@ function CreateNewTree() {
 				newTree[field] = parseFloat(newTree[field]);
 			}
 		}
+		console.log('CreateNewTree', newTree);
+		const treeId = await dispatch(createTree(newTree, imageFiles));
+		dispatch(addToSavedTrees(userId, treeId));
 
-		console.log('newtree', newTree);
-		try {
-			const res = await TreeMarkableApi.createTree(newTree);
-			console.log('Trees Submit res', res);
-			console.log('CreateNewTree- handleSubmit -ImageFiles', imageFiles);
-			await uploadImagesToFirebase(treesRef, res.id, imageFiles);
-
-			history.push(`/trees/${res.id}`);
-		} catch (err) {
-			console.log('TreeForm Errors', err);
+		if (treeId) {
+			console.log('CreateNewTree - treeId', treeId);
+			history.push(`/trees/${treeId}`);
 		}
 	};
 

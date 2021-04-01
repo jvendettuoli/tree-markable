@@ -15,7 +15,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Paper from '@material-ui/core/Paper';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { getTreesFromApi } from '../actions/trees';
+import { getTrees } from '../actions/trees';
 
 import useStyles from '../styles/formStyle';
 
@@ -38,10 +38,7 @@ function TreeSearchForm({ mapCenter, setCenterOnUser }) {
 
 	const handleChange = (evt) => {
 		const name = evt.target.name;
-		const value =
-			name === 'fruit_bearing'
-				? evt.target.checked
-				: evt.target.value;
+		const value = name === 'fruit_bearing' ? evt.target.checked : evt.target.value;
 
 		setFormData((fData) => ({
 			...fData,
@@ -73,7 +70,7 @@ function TreeSearchForm({ mapCenter, setCenterOnUser }) {
 		}
 
 		console.log('Searchparams', searchParams);
-		dispatch(getTreesFromApi(searchParams));
+		dispatch(getTrees(searchParams));
 	};
 
 	const handleCenterMapOnUser = () => {
@@ -98,9 +95,7 @@ function TreeSearchForm({ mapCenter, setCenterOnUser }) {
 
 				<Grid container item xs={12} md={6}>
 					<Grid item xs={6}>
-						<Typography variant="subtitle1">
-							Height (ft.)
-						</Typography>
+						<Typography variant="subtitle1">Height (ft.)</Typography>
 						<TextField
 							id="height_min"
 							name="height_min"
@@ -121,9 +116,7 @@ function TreeSearchForm({ mapCenter, setCenterOnUser }) {
 						/>
 					</Grid>
 					<Grid item xs={6}>
-						<Typography variant="subtitle1">
-							DSH (in.)
-						</Typography>
+						<Typography variant="subtitle1">DSH (in.)</Typography>
 						<TextField
 							id="dsh_min"
 							name="dsh_min"
@@ -164,12 +157,8 @@ function TreeSearchForm({ mapCenter, setCenterOnUser }) {
 							fullWidth
 						>
 							<MenuItem value="">Any</MenuItem>
-							<MenuItem value="deciduous">
-								Deciduous
-							</MenuItem>
-							<MenuItem value="evergreen">
-								Evergreen
-							</MenuItem>
+							<MenuItem value="deciduous">Deciduous</MenuItem>
+							<MenuItem value="evergreen">Evergreen</MenuItem>
 						</TextField>
 					</Grid>
 					<Grid item xs={6} md={12}>
@@ -203,23 +192,13 @@ function TreeSearchForm({ mapCenter, setCenterOnUser }) {
 					</Grid>
 					<Grid container justify="center" item md={4}>
 						<Tooltip title="Requires user location permission">
-							<Button
-								size="small"
-								color="primary"
-								variant="contained"
-								onClick={handleCenterMapOnUser}
-							>
+							<Button size="small" color="primary" variant="contained" onClick={handleCenterMapOnUser}>
 								Center on Me
 							</Button>
 						</Tooltip>
 					</Grid>
 				</Grid>
-				<Button
-					fullWidth
-					variant="outlined"
-					color="secondary"
-					type="submit"
-				>
+				<Button fullWidth variant="outlined" color="secondary" type="submit">
 					Search
 				</Button>
 			</Grid>

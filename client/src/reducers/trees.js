@@ -5,11 +5,12 @@
 import {
 	LOAD_TREE,
 	LOAD_TREES,
+	REMOVE_TREE,
 	TREE_ERROR,
 	RESET_ALL,
-	LOAD_TREE_REQUEST,
-	LOAD_TREE_SUCCESS,
-	LOAD_TREE_FAILURE
+	TREE_REQUEST_START,
+	TREE_REQUEST_SUCCESS,
+	TREE_REQUEST_FAILURE
 } from '../actions/types';
 
 const INITIAL_STATE = { entities: {}, status: 'idle', error: null };
@@ -19,13 +20,13 @@ function trees(state = INITIAL_STATE, action) {
 		case RESET_ALL:
 			return { ...INITIAL_STATE };
 
-		case LOAD_TREE_REQUEST:
-			return { ...state, status: 'isLoading' };
+		case TREE_REQUEST_START:
+			return { ...state, status: 'loading' };
 
-		case LOAD_TREE_SUCCESS:
+		case TREE_REQUEST_SUCCESS:
 			return { ...state, status: 'idle' };
 
-		case LOAD_TREE_FAILURE:
+		case TREE_REQUEST_FAILURE:
 			return { ...state, status: 'failure' };
 
 		case LOAD_TREE:
@@ -48,6 +49,12 @@ function trees(state = INITIAL_STATE, action) {
 			}, {});
 
 			return { entities: entitiesObj, status: 'success', error: null };
+
+		case REMOVE_TREE:
+			console.log('REDUCERS REMOVE_TREE - action', action);
+			const { [action.payload]: omit, ...trees } = state.entities;
+
+			return { ...state, entities: trees, status: 'success', error: null };
 
 		case TREE_ERROR:
 			console.log('REDUCERS TREE_ERROR - action', action);

@@ -19,7 +19,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 
-import { getGroupsFromApi } from '../actions/groups';
+import { getGroups } from '../actions/groups';
 import GroupSearchForm from './GroupSearchForm';
 import GroupList from './GroupList';
 
@@ -40,7 +40,7 @@ function ExploreGroups() {
 	useEffect(
 		() => {
 			if (isLoading) {
-				dispatch(getGroupsFromApi());
+				dispatch(getGroups());
 				setIsLoading(false);
 			}
 		},

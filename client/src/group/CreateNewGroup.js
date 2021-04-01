@@ -9,7 +9,7 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 
 import GroupFormBasicFields from './GroupFormBasicFields';
-import { groupsRef, uploadImagesToFirebase } from '../firebase/firebaseStorage';
+
 import ImagesInput from '../imageHandling/ImagesInput';
 import { addToFollowedGroups } from '../actions/currUser';
 import { createGroup } from '../actions/groups';
@@ -72,7 +72,7 @@ function CreateNewGroup() {
 		}
 
 		console.log('new group', newGroup);
-		const groupId = await dispatch(createGroup(newGroup, imageFiles, userId, history));
+		const groupId = await dispatch(createGroup(newGroup, imageFiles));
 		dispatch(addToFollowedGroups(userId, groupId, true));
 
 		if (groupId) {

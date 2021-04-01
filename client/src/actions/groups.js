@@ -16,11 +16,10 @@ import {
 	GROUP_REQUEST_FAILURE,
 	REMOVE_MEMBER_FROM_GROUP
 } from './types';
-import { groupsRef, uploadImagesToFirebase } from '../firebase/firebaseStorage';
+import { groupsRef, uploadImagesToFirebase, deleteImagesFromFirebase } from '../firebase/firebaseStorage';
 
-// Sends POST request for new group to TreeMarkableApi
-function createGroup(group, imageFiles, userId) {
-	console.log('Actions - createGroupInApi group', group);
+function createGroup(group, imageFiles) {
+	console.log('Actions - createGroup group', group);
 
 	return async function(dispatch) {
 		dispatch({ type: GROUP_REQUEST_START });
@@ -31,7 +30,7 @@ function createGroup(group, imageFiles, userId) {
 			dispatch({ type: GROUP_REQUEST_SUCCESS });
 			return res.id;
 		} catch (err) {
-			console.log('Actions - createGroupInApi err', err);
+			console.log('Actions - createGroup err', err);
 			dispatch(groupError(err));
 			dispatch({ type: GROUP_REQUEST_FAILURE });
 			return false;
@@ -39,8 +38,8 @@ function createGroup(group, imageFiles, userId) {
 	};
 }
 
-function getGroupFromApi(id) {
-	console.log('Actions - getGroupFromApi group', id);
+function getGroup(id) {
+	console.log('Actions - getGroup group', id);
 	return async function(dispatch) {
 		dispatch({ type: GROUP_REQUEST_START });
 		try {
@@ -48,40 +47,40 @@ function getGroupFromApi(id) {
 			dispatch(gotGroup(res));
 			dispatch({ type: GROUP_REQUEST_SUCCESS });
 		} catch (err) {
-			console.log('Actions - getGroupFromApi err', err);
+			console.log('Actions - getGroup err', err);
 			dispatch(groupError(err));
 			dispatch({ type: GROUP_REQUEST_FAILURE });
 		}
 	};
 }
-function getGroupsFromApi(searchParams) {
+function getGroups(searchParams) {
 	return async function(dispatch) {
 		dispatch({ type: GROUP_REQUEST_START });
 		try {
 			const res = await TreeMarkableApi.getGroups(searchParams);
-			console.log('Actions - getGroupsFromApi res', res);
+			console.log('Actions - getGroups res', res);
 
 			dispatch(gotGroups(res));
 			dispatch({ type: GROUP_REQUEST_SUCCESS });
 		} catch (err) {
-			console.log('Actions - getGroupsFromApi err', err);
+			console.log('Actions - getGroups err', err);
 			dispatch(groupError(err));
 			dispatch({ type: GROUP_REQUEST_FAILURE });
 		}
 	};
 }
 
-function updateGroupInApi(groupId, data) {
+function updateGroup(groupId, data) {
 	return async function(dispatch) {
 		dispatch({ type: GROUP_REQUEST_START });
 		try {
 			const res = await TreeMarkableApi.updateGroup(groupId, data);
-			console.log('Actions - updateGroupInApi res', res);
+			console.log('Actions - updateGroup res', res);
 			dispatch(gotGroup(res));
 			dispatch({ type: GROUP_REQUEST_SUCCESS });
 			return true;
 		} catch (err) {
-			console.log('Actions - updateGroupInApi err', err);
+			console.log('Actions - updateGroup err', err);
 			dispatch(groupError(err));
 			dispatch({ type: GROUP_REQUEST_FAILURE });
 			return false;
@@ -89,18 +88,19 @@ function updateGroupInApi(groupId, data) {
 	};
 }
 
-function deleteGroupInApi(groupId) {
-	console.log('Actions - deleteGroupInApi - start', groupId);
+function deleteGroup(groupId) {
+	console.log('Actions - deleteGroup - start', groupId);
 	return async function(dispatch) {
 		dispatch({ type: GROUP_REQUEST_START });
 		try {
 			const res = await TreeMarkableApi.deleteGroup(groupId);
-			console.log('Actions - deleteGroupInApi res', res);
+			await deleteImagesFromFirebase(groupsRef, groupId);
+			console.log('Actions - deleteGroup res', res);
 			dispatch(deletedGroup(groupId));
 			dispatch({ type: GROUP_REQUEST_SUCCESS });
 			return true;
 		} catch (err) {
-			console.log('Actions - deleteGroupInApi err', err);
+			console.log('Actions - deleteGroup err', err);
 			dispatch(groupError(err));
 			dispatch({ type: GROUP_REQUEST_FAILURE });
 			return false;
@@ -221,13 +221,13 @@ function groupError(error) {
 
 export {
 	createGroup,
-	getGroupFromApi,
-	getGroupsFromApi,
-	updateGroupInApi,
+	getGroup,
+	getGroups,
+	updateGroup,
 	addTreeToGroup,
 	removeTreeFromGroup,
 	addModToGroup,
 	removeModFromGroup,
 	removeMemberFromGroup,
-	deleteGroupInApi
+	deleteGroup
 };

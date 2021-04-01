@@ -13,7 +13,7 @@ import TreeMarkableApi from '../TreeMarkableApi';
 import GroupFormBasicFields from './GroupFormBasicFields';
 import { groupsRef, uploadImagesToFirebase } from '../firebase/firebaseStorage';
 import ImagesInput from '../imageHandling/ImagesInput';
-import { updateGroupInApi, deleteGroupInApi } from '../actions/groups';
+import { updateGroup, deleteGroup } from '../actions/groups';
 
 const useStyles = makeStyles({
 	innerContent : {
@@ -69,12 +69,12 @@ function EditGroup() {
 		}
 
 		console.log('EditGroup - editGroup', editGroup);
-		const updated = await dispatch(updateGroupInApi(id, editGroup));
+		const updated = await dispatch(updateGroup(id, editGroup));
 		if (updated) history.push(`/groups/${id}`);
 	};
 
 	const handleDelete = async () => {
-		const deleted = await dispatch(deleteGroupInApi(id));
+		const deleted = await dispatch(deleteGroup(id));
 		if (deleted) history.push('/groups');
 	};
 

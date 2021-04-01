@@ -15,7 +15,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Paper from '@material-ui/core/Paper';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { getGroupsFromApi } from '../actions/groups';
+import { getGroups } from '../actions/groups';
 
 import useStyles from '../styles/formStyle';
 
@@ -51,7 +51,7 @@ function GroupSearchForm() {
 		}
 
 		console.log('Searchparams', searchParams);
-		dispatch(getGroupsFromApi(searchParams));
+		dispatch(getGroups(searchParams));
 	};
 
 	return (

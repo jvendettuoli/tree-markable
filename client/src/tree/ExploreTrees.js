@@ -18,7 +18,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 
-import { getTreesFromApi } from '../actions/trees';
+import { getTrees } from '../actions/trees';
 import TreeSearchForm from './TreeSearchForm';
 import TreeList from './TreeList';
 import LeafletMap from '../leafletMap/LeafletMap';
@@ -75,7 +75,7 @@ function ExploreTrees() {
 	useEffect(
 		() => {
 			if (isLoading) {
-				dispatch(getTreesFromApi());
+				dispatch(getTrees());
 				setIsLoading(false);
 			}
 		},

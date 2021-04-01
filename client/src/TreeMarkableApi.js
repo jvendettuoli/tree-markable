@@ -71,7 +71,7 @@ class TreeMarkableApi {
 	}
 	static async deleteUser(username) {
 		console.log('TreeMarkableApi Class deleteUser - Start');
-		let res = await this.request(`users/${username}`, 'delete');
+		let res = await this.request(`users/${username}`, {}, 'delete');
 		return res.message;
 	}
 
@@ -135,7 +135,7 @@ class TreeMarkableApi {
 	}
 	static async deleteTree(treeId) {
 		console.log('TreeMarkableApi Class deleteTree - Start');
-		let res = await this.request(`trees/${treeId}`, 'delete');
+		let res = await this.request(`trees/${treeId}`, {}, 'delete');
 		return res.message;
 	}
 	/**

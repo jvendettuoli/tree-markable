@@ -13,13 +13,10 @@ import Button from '@material-ui/core/Button';
 import useStyles from '../styles/formStyle';
 import TreeMarkableApi from '../TreeMarkableApi';
 import SelectLocationMap from '../leafletMap/LeafletMap';
-import {
-	treesRef,
-	uploadImagesToFirebase
-} from '../firebase/firebaseStorage';
+import { treesRef, uploadImagesToFirebase } from '../firebase/firebaseStorage';
 import ImagesInput from '../imageHandling/ImagesInput';
 
-function TreeFormBasicFields({ formData, onFormChange }) {
+function TreeFormBasicFields({ edit = false, formData, onFormChange }) {
 	const classes = useStyles();
 
 	const handleChange = (evt) => {
@@ -35,7 +32,7 @@ function TreeFormBasicFields({ formData, onFormChange }) {
 				placeholder="Hyperion"
 				onChange={handleChange}
 				value={formData.name}
-				required
+				required={!edit}
 			/>
 			<TextField
 				id="description"

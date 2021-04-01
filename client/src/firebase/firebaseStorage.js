@@ -24,27 +24,18 @@ const ALBUM = 'album';
  **/
 
 const uploadImagesToFirebase = async (collectionRef, id, files) => {
-	console.log(
-		'uploadImagesToFirebase - Start:',
-		collectionRef,
-		id,
-		files
-	);
+	console.log('uploadImagesToFirebase - Start:', collectionRef, id, files);
 	for (let idx = 0; idx < files.length; idx++) {
 		let imageRef;
 		if (idx === 0) {
-			imageRef = collectionRef.child(
-				`${id}/${IMAGES}/${PRIMARY}/${files[idx].name}`
-			);
+			imageRef = collectionRef.child(`${id}/${IMAGES}/${PRIMARY}/${files[idx].name}`);
 		}
 		else {
-			imageRef = collectionRef.child(
-				`${id}/${IMAGES}/${ALBUM}/${files[idx].name}`
-			);
+			imageRef = collectionRef.child(`${id}/${IMAGES}/${ALBUM}/${files[idx].name}`);
 		}
 		try {
 			const res = await imageRef.put(files[idx]);
-			console.log('STORAGE -res', res);
+			console.log('uploadImagesToFirebase - res', res);
 		} catch (err) {
 			console.log('uploadImagesToFirebase - err', err);
 		}
@@ -63,21 +54,17 @@ const uploadImagesToFirebase = async (collectionRef, id, files) => {
  * Returns an object {primary: 'imagePath', album:['imagePath1,...']}
  */
 const listImagePathsFromFirebase = async (collectionRef, id) => {
-	console.log('listImagePathsFromFirebase', collectionRef, id);
+	console.log('listImagePathsFromFirebase - start', collectionRef, id);
 
 	try {
-		const primaryRef = collectionRef.child(
-			`${id}/${IMAGES}/${PRIMARY}`
-		);
+		const primaryRef = collectionRef.child(`${id}/${IMAGES}/${PRIMARY}`);
 		const albumRef = collectionRef.child(`${id}/${IMAGES}/${ALBUM}`);
 		const primaryRes = await primaryRef.listAll();
 		const albumRes = await albumRef.listAll();
 
 		if (primaryRes.items.length === 0) return;
 
-		const albumImagePaths = !(albumRes.items.length === 0)
-			? albumRes.items.map((item) => item.fullPath)
-			: [];
+		const albumImagePaths = !(albumRes.items.length === 0) ? albumRes.items.map((item) => item.fullPath) : [];
 
 		const imagePaths = {
 			primary : primaryRes.items[0].fullPath,
@@ -103,35 +90,25 @@ const listImagePathsFromFirebase = async (collectionRef, id) => {
  * Returns an object {primary: 'imageUrl', album:['imageUrl,...']}
  */
 const downloadImageUrlsFromFirebase = async (collectionRef, id) => {
-	console.log('downloadImageUrlsFromFirebase', collectionRef, id);
+	console.log('downloadImageUrlsFromFirebase - start', collectionRef, id);
 
 	try {
-		const imagePaths = await listImagePathsFromFirebase(
-			collectionRef,
-			id
-		);
+		const imagePaths = await listImagePathsFromFirebase(collectionRef, id);
 
-		console.log(
-			'downloadImageUrlsFromFirebase - imagePaths',
-			imagePaths
-		);
+		console.log('downloadImageUrlsFromFirebase - imagePaths', imagePaths);
 		if (!imagePaths) return;
 
-		const primaryImageUrl = await storageRef
-			.child(`${imagePaths.primary}`)
-			.getDownloadURL();
+		const primaryImageUrl = await storageRef.child(`${imagePaths.primary}`).getDownloadURL();
 
 		let imageUrls = { primary: primaryImageUrl, album: [] };
 
 		for await (let imagePath of imagePaths.album) {
-			const imageUrl = await storageRef
-				.child(`${imagePath}`)
-				.getDownloadURL();
+			const imageUrl = await storageRef.child(`${imagePath}`).getDownloadURL();
 
 			imageUrls[ALBUM].push(imageUrl);
 		}
 
-		console.log('imageUrls', imageUrls);
+		console.log('downloadImageUrlsFromFirebase - imageUrls', imageUrls);
 		return imageUrls;
 	} catch (err) {
 		console.error('downloadImageUrlsFromFirebase err - ', err);
@@ -139,12 +116,9 @@ const downloadImageUrlsFromFirebase = async (collectionRef, id) => {
 };
 
 const deleteImagesFromFirebase = async (collectionRef, id) => {
-	console.log('deleteImagesFromFirebase', collectionRef, id);
+	console.log('deleteImagesFromFirebase - start', collectionRef, id);
 	try {
-		const imagePaths = await listImagePathsFromFirebase(
-			collectionRef,
-			id
-		);
+		const imagePaths = await listImagePathsFromFirebase(collectionRef, id);
 		console.log('deleteImagesFromFirebase - imagePaths', imagePaths);
 		if (!imagePaths) return;
 
@@ -152,7 +126,7 @@ const deleteImagesFromFirebase = async (collectionRef, id) => {
 
 		if (imagePaths.album.length > 0) {
 			for (const imagePath of imagePaths.album) {
-				console.log('imagePath', imagePath);
+				console.log('deleteImagesFromFirebase - imagePath', imagePath);
 
 				storageRef.child(`${imagePath}`).delete();
 			}

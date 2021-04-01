@@ -4,49 +4,104 @@
  */
 
 import TreeMarkableApi from '../TreeMarkableApi';
-import { LOAD_TREE, LOAD_TREES, TREE_ERROR, LOAD_TREE_REQUEST, LOAD_TREE_SUCCESS, LOAD_TREE_FAILURE } from './types';
+import {
+	LOAD_TREE,
+	LOAD_TREES,
+	REMOVE_TREE,
+	TREE_ERROR,
+	TREE_REQUEST_START,
+	TREE_REQUEST_SUCCESS,
+	TREE_REQUEST_FAILURE
+} from './types';
+import { treesRef, uploadImagesToFirebase, deleteImagesFromFirebase } from '../firebase/firebaseStorage';
 
-function getTreeFromApi(id) {
+function createTree(tree, imageFiles) {
+	console.log('Actions - createTree tree', tree, imageFiles);
 	return async function(dispatch) {
-		dispatch({ type: LOAD_TREE_REQUEST });
+		dispatch({ type: TREE_REQUEST_START });
+		try {
+			const res = await TreeMarkableApi.createTree(tree);
+			console.log('Actions - createTree res', res);
+			await uploadImagesToFirebase(treesRef, res.id, imageFiles);
+			dispatch(gotTree(res));
+			dispatch({ type: TREE_REQUEST_SUCCESS });
+			return res.id;
+		} catch (err) {
+			console.log('Actions - createTree err', err);
+			dispatch(treeError(err));
+			dispatch({ type: TREE_REQUEST_FAILURE });
+			return false;
+		}
+	};
+}
+
+function getTree(id) {
+	return async function(dispatch) {
+		dispatch({ type: TREE_REQUEST_START });
 		try {
 			const res = await TreeMarkableApi.getTree(id);
+			console.log('Actions - getTree res', res);
 			dispatch(gotTree(res));
-			dispatch({ type: LOAD_TREE_SUCCESS });
+			dispatch({ type: TREE_REQUEST_SUCCESS });
 		} catch (err) {
-			console.log('getTreeFromApi err', err);
+			console.log('Actions - getTree err', err);
 			dispatch(treeError(err));
-			dispatch({ type: LOAD_TREE_FAILURE });
+			dispatch({ type: TREE_REQUEST_FAILURE });
 		}
 	};
 }
-function getTreesFromApi(searchParams) {
+function getTrees(searchParams) {
 	return async function(dispatch) {
-		dispatch({ type: LOAD_TREE_REQUEST });
+		dispatch({ type: TREE_REQUEST_START });
 		try {
 			const res = await TreeMarkableApi.getTrees(searchParams);
-			console.log('Actions - getTreesFromApi res', res);
+			console.log('Actions - getTrees res', res);
 			dispatch(gotTrees(res));
-			dispatch({ type: LOAD_TREE_SUCCESS });
+			dispatch({ type: TREE_REQUEST_SUCCESS });
 		} catch (err) {
-			console.log('getTreesFromApi err', err);
+			console.log('Actions - getTrees err', err);
 			dispatch(treeError(err));
-			dispatch({ type: LOAD_TREE_FAILURE });
+			dispatch({ type: TREE_REQUEST_FAILURE });
 		}
 	};
 }
-function updateTreeInApi(treeId, data) {
+function updateTree(treeId, data, imageFiles) {
 	return async function(dispatch) {
-		dispatch({ type: LOAD_TREE_REQUEST });
+		dispatch({ type: TREE_REQUEST_START });
 		try {
 			const res = await TreeMarkableApi.updateTree(treeId, data);
-			console.log('Actions - updateTreeInApi res', res);
+			console.log('Actions - updateTree res', res);
+			if (imageFiles.length > 0) {
+				console.log('Actions - updateTree - imagesFiles', imageFiles);
+				await deleteImagesFromFirebase(treesRef, treeId);
+				await uploadImagesToFirebase(treesRef, treeId, imageFiles);
+			}
 			dispatch(gotTree(res));
-			dispatch({ type: LOAD_TREE_SUCCESS });
+			dispatch({ type: TREE_REQUEST_SUCCESS });
 		} catch (err) {
-			console.log('updateTreeFromApi err', err);
+			console.log('Actions - updateTree err', err);
 			dispatch(treeError(err));
-			dispatch({ type: LOAD_TREE_FAILURE });
+			dispatch({ type: TREE_REQUEST_FAILURE });
+		}
+	};
+}
+
+function deleteTree(treeId) {
+	console.log('Actions - deleteTree - start', treeId);
+	return async function(dispatch) {
+		dispatch({ type: TREE_REQUEST_START });
+		try {
+			const res = await TreeMarkableApi.deleteTree(treeId);
+			console.log('Actions - deleteTree res', res);
+			await deleteImagesFromFirebase(treesRef, treeId);
+			await dispatch(deletedTree(treeId));
+			await dispatch({ type: TREE_REQUEST_SUCCESS });
+			return true;
+		} catch (err) {
+			console.log('Actions - deleteTree err', err);
+			dispatch(treeError(err));
+			dispatch({ type: TREE_REQUEST_FAILURE });
+			return false;
 		}
 	};
 }
@@ -57,8 +112,11 @@ function gotTree(tree) {
 function gotTrees(trees) {
 	return { type: LOAD_TREES, payload: trees };
 }
+function deletedTree(treeId) {
+	return { type: REMOVE_TREE, payload: treeId };
+}
 function treeError(error) {
 	return { type: TREE_ERROR, payload: error };
 }
 
-export { getTreeFromApi, getTreesFromApi, updateTreeInApi };
+export { createTree, getTree, getTrees, updateTree, deleteTree };
