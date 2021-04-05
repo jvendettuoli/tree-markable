@@ -122,7 +122,7 @@ function GroupTabPanel({ group, isCreator, imageUrls }) {
 									backgroundColor : 'white',
 									width           : '85vw',
 									maxWidth        : 1500,
-									height          : 650,
+									height          : `${120 + Math.min(groupTrees.length, 10) * 52}px`,
 									zIndex          : 10,
 									color           : 'white'
 								}}

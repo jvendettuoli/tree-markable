@@ -90,6 +90,14 @@ function ExploreTrees() {
 
 	return (
 		<div className={classes.innerContent}>
+			<Typography variant="h3" gutterBottom>
+				Explore Trees
+			</Typography>
+			<Typography gutterBottom>
+				**DISCLAIMER: Some trees shown may be on private property. Please use your discretion when visiting any
+				given tree.
+			</Typography>
+
 			<TreeSearchForm mapCenter={mapCenter} setCenterOnUser={setCenterOnUser} />
 			<AppBar position="static" color="default">
 				<Tabs
@@ -115,7 +123,14 @@ function ExploreTrees() {
 					/>
 				</TabPanel>
 				<TabPanel value={value} index={1}>
-					<TreeList trees={trees} />
+					<Box
+						style={{
+							height : `${120 + Math.min(trees.length, 10) * 52}px`,
+							width  : '100%'
+						}}
+					>
+						<TreeList trees={trees} />
+					</Box>
 				</TabPanel>
 			</Paper>
 		</div>

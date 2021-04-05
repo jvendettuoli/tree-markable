@@ -11,6 +11,7 @@ import TreeFormBasicFields from './TreeFormBasicFields';
 import SelectCoordinates from '../leafletMap/SelectCoordinates';
 import ImagesInput from '../imageHandling/ImagesInput';
 import { updateTree, deleteTree } from '../actions/trees';
+import { removeFromSavedTrees } from '../actions/currUser';
 
 const useStyles = makeStyles({
 	innerContent : {
@@ -116,6 +117,7 @@ function EditTree() {
 
 	const handleDelete = async () => {
 		setAction('delete');
+		dispatch(removeFromSavedTrees(tree.creator, id));
 		dispatch(deleteTree(id));
 	};
 

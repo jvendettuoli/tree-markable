@@ -14,17 +14,11 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import { DataGrid } from '@material-ui/data-grid';
 
-import {
-	FavoriteBorder as FavoriteBorderIcon,
-	Favorite as FavoriteIcon
-} from '@material-ui/icons';
+import { FavoriteBorder as FavoriteBorderIcon, Favorite as FavoriteIcon } from '@material-ui/icons';
 
 import { getTreesFromApi } from '../actions/trees';
 import SelectLocationMap from '../leafletMap/LeafletMap';
-import {
-	treesRef,
-	uploadImagesToFirebase
-} from '../firebase/firebaseStorage';
+import { treesRef, uploadImagesToFirebase } from '../firebase/firebaseStorage';
 import ImagesInput from '../imageHandling/ImagesInput';
 import { addToSavedTrees, removeFromSavedTrees } from '../actions/currUser';
 
@@ -55,12 +49,10 @@ const checkTreeIdInUserFavs = (userFavTreeIds, treeId) => {
 function GroupList({ groups }) {
 	const classes = useStyles();
 	const dispatch = useDispatch();
-	const { username, savedGroupIds } = useSelector((st) => st.currUser);
+	const { uid, username, savedGroupIds } = useSelector((st) => st.currUser);
 	const groupRows = groups.map((group) => ({
 		...group,
-		created_at : new Date(
-			group.created_at
-		).toLocaleDateString('en-gb', {
+		created_at : new Date(group.created_at).toLocaleDateString('en-gb', {
 			year  : 'numeric',
 			month : 'long',
 			day   : 'numeric'
@@ -68,14 +60,14 @@ function GroupList({ groups }) {
 		link       : `groups/${group.id}`
 	}));
 
-	const handleUnfavoriteClick = (evt) => {
-		const groupId = parseInt(evt.currentTarget.dataset.groupId);
-		dispatch(removeFromSavedTrees(username, groupId));
-	};
-	const handleFavoriteClick = (evt) => {
-		const groupId = parseInt(evt.currentTarget.dataset.groupId);
-		dispatch(addToSavedTrees(username, groupId));
-	};
+	// const handleUnfavoriteClick = (evt) => {
+	// 	const groupId = parseInt(evt.currentTarget.dataset.groupId);
+	// 	dispatch(removeFromSavedTrees(uid, groupId));
+	// };
+	// const handleFavoriteClick = (evt) => {
+	// 	const groupId = parseInt(evt.currentTarget.dataset.groupId);
+	// 	dispatch(addToSavedTrees(uid, groupId));
+	// };
 
 	const columns = [
 		{ field: 'name', headerName: 'Name', width: 200 },
@@ -90,12 +82,7 @@ function GroupList({ groups }) {
 
 	return (
 		<div style={{ width: '100%' }} className={classes.root}>
-			<DataGrid
-				rows={groupRows}
-				columns={columns}
-				pageSize={10}
-				autoHeight
-			/>
+			<DataGrid rows={groupRows} columns={columns} pageSize={10} autoHeight />
 		</div>
 	);
 }

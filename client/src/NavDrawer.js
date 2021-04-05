@@ -1,5 +1,6 @@
-import React from 'react';
+import { React } from 'react';
 import { Link, withRouter } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
@@ -24,6 +25,7 @@ import useStyles from './styles/navDrawer';
 function NavDrawer(props) {
 	const { location: { pathname } } = props;
 
+	const isAuthenticated = useSelector((st) => st.auth.authenticated);
 	const theme = useTheme();
 	const classes = useStyles(theme);
 
@@ -39,24 +41,14 @@ function NavDrawer(props) {
 				square
 				elevation={5}
 			>
-				<Typography
-					align="center"
-					variant="h5"
-					noWrap
-					style={{ color: 'white' }}
-				>
+				<Typography align="center" variant="h5" noWrap style={{ color: 'white' }}>
 					Tree-Markable
 				</Typography>
 			</Paper>
 
 			<Divider />
 			<List>
-				<ListItem
-					button
-					component={Link}
-					to="/"
-					selected={'/' === pathname}
-				>
+				<ListItem button component={Link} to="/" selected={'/' === pathname}>
 					<ListItemIcon>
 						<HomeIcon />
 					</ListItemIcon>
@@ -64,7 +56,7 @@ function NavDrawer(props) {
 				</ListItem>
 				<Divider />
 
-				<ListItem>
+				<ListItem style={{ backgroundColor: theme.palette.secondary.lightest }} disabled={!isAuthenticated}>
 					<ListItemIcon>
 						<AddIcon />
 					</ListItemIcon>
@@ -77,6 +69,7 @@ function NavDrawer(props) {
 						component={Link}
 						to="/trees/new"
 						selected={'/trees/new' === pathname}
+						disabled={!isAuthenticated}
 					>
 						<ListItemIcon>
 							<NatureIcon />
@@ -89,6 +82,7 @@ function NavDrawer(props) {
 						component={Link}
 						to="/groups/new"
 						selected={'/groups/new' === pathname}
+						disabled={!isAuthenticated}
 					>
 						<ListItemIcon>
 							<GroupIcon />
@@ -98,8 +92,8 @@ function NavDrawer(props) {
 				</List>
 			</List>
 			<Divider />
-			<List>
-				<ListItem>
+			<List style={{ paddingTop: 0 }}>
+				<ListItem style={{ backgroundColor: theme.palette.secondary.lightest }}>
 					<ListItemIcon>
 						<ExploreIcon />
 					</ListItemIcon>
@@ -132,12 +126,7 @@ function NavDrawer(props) {
 					</ListItem>
 				</List>
 				<Divider />
-				<ListItem
-					button
-					component={Link}
-					to="/about"
-					selected={'/about' === pathname}
-				>
+				<ListItem button component={Link} to="/about" selected={'/about' === pathname}>
 					<ListItemIcon>
 						<InfoIcon />
 					</ListItemIcon>

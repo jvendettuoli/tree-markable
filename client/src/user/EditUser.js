@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -9,7 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 
-import CurrUserInfo from './CurrUserInfo';
+// import CurrUserInfo from './CurrUserInfo';
 import { errorDisplay } from '../helpers/formErrorDisplay';
 import { editCurrUser } from '../actions/currUser';
 
@@ -29,7 +29,6 @@ const useStyles = makeStyles({
 function EditUser() {
 	const classes = useStyles();
 	const history = useHistory();
-	const { username: paramsUsername } = useParams();
 	const dispatch = useDispatch();
 	const { username, error } = useSelector((st) => st.currUser);
 	const status = useSelector((st) => st.currUser.status);
@@ -46,14 +45,10 @@ function EditUser() {
 
 	// When a user changes their username, push to the updated username
 	// to prevent issues on a potential refresh.
-	useEffect(
-		() => {
-			if (status === 'success') {
-				history.push(`/users/${username}`);
-			}
-		},
-		[ username, paramsUsername, history, status ]
-	);
+
+	if (status === 'success') {
+		history.push(`/users/${username}`);
+	}
 
 	const handleChange = (evt) => {
 		const { name, value } = evt.target;

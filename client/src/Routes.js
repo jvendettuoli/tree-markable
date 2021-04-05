@@ -18,6 +18,9 @@ import UserProfilePage from './user/UserProfilePage';
 import GroupPage from './group/GroupPage';
 import EditGroup from './group/EditGroup';
 import About from './About';
+import ProtectedRoute from './ProtectedRoute';
+import PrivateEntityRoute from './PrivateEntityRoute';
+import PrivateUserRoute from './PrivateUserRoute';
 
 function Routes() {
 	const history = useHistory();
@@ -52,12 +55,8 @@ function Routes() {
 			<Route exact path="/about">
 				<About />
 			</Route>
-			<Route exact path="/users/:username">
-				<UserProfilePage />
-			</Route>
-			<Route exact path="/users/:username/edit">
-				<EditUser />
-			</Route>
+			<PrivateUserRoute component={UserProfilePage} exact path="/users/:username" />
+			<PrivateUserRoute component={EditUser} exact path="/users/:username/edit" />
 			<Route exact path="/signup">
 				<SignUp />
 			</Route>
@@ -67,27 +66,19 @@ function Routes() {
 			<Route exact path="/trees">
 				<ExploreTrees />
 			</Route>
-			<Route exact path="/trees/new">
-				<CreateNewTree />
-			</Route>
+			<ProtectedRoute component={CreateNewTree} exact path="/trees/new" />
 			<Route exact path="/trees/:id">
 				<TreePage />
 			</Route>
-			<Route exact path="/trees/:id/edit">
-				<EditTree />
-			</Route>
+			<PrivateEntityRoute component={EditTree} exact path="/trees/:id/edit" />
 			<Route exact path="/groups">
 				<ExploreGroups />
 			</Route>
-			<Route exact path="/groups/new">
-				<CreateNewGroup />
-			</Route>
+			<ProtectedRoute component={CreateNewGroup} exact path="/groups/new" />
 			<Route exact path="/groups/:id">
 				<GroupPage />
 			</Route>
-			<Route exact path="/groups/:id/edit">
-				<EditGroup />
-			</Route>
+			<PrivateEntityRoute component={EditGroup} exact path="/groups/:id/edit" />
 			<Route exact path="/404">
 				<NotFound />
 			</Route>

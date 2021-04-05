@@ -171,14 +171,14 @@ class TreeMarkableApi {
 	/**
 	 * User - Tree Relationship Requests
 	 */
-	static async userAddTree(username, treeId) {
+	static async userAddTree(userId, treeId) {
 		console.log('TreeMarkableApi Class userAddTree - Start');
-		let res = await this.request(`users/${username}/trees/${treeId}`, {}, 'post');
+		let res = await this.request(`users/${userId}/trees/${treeId}`, {}, 'post');
 		return res.message;
 	}
-	static async userRemoveTree(username, treeId) {
+	static async userRemoveTree(userId, treeId) {
 		console.log('TreeMarkableApi Class userRemoveTree - Start');
-		let res = await this.request(`users/${username}/trees/${treeId}`, {}, 'delete');
+		let res = await this.request(`users/${userId}/trees/${treeId}`, {}, 'delete');
 		return res.message;
 	}
 	/**

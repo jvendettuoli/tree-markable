@@ -17,11 +17,13 @@ import { lightGreen, brown } from '@material-ui/core/colors';
 const theme = createMuiTheme({
 	palette : {
 		primary   : {
-			main   : lightGreen[900],
-			accent : lightGreen.A400
+			main     : lightGreen[900],
+			accent   : lightGreen.A400,
+			lightest : lightGreen[50]
 		},
 		secondary : {
-			main : brown[500]
+			main     : brown[500],
+			lightest : brown[50]
 		}
 	}
 });

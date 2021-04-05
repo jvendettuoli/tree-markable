@@ -23,7 +23,7 @@ import { addToSavedTrees, removeFromSavedTrees } from '../actions/currUser';
 function FavoriteIconBtn({ treeId }) {
 	const classes = useStyles();
 	const [ isFav, setIsFav ] = useState(null);
-	const username = useSelector((st) => st.currUser.username);
+	const uid = useSelector((st) => st.currUser.uid);
 	const savedTreeIds = useSelector((st) => st.currUser.savedTreeIds);
 	const dispatch = useDispatch();
 
@@ -39,15 +39,15 @@ function FavoriteIconBtn({ treeId }) {
 
 	const handleClick = async () => {
 		if (isFav) {
-			dispatch(removeFromSavedTrees(username, treeId));
+			dispatch(removeFromSavedTrees(uid, treeId));
 		}
 		else {
-			dispatch(addToSavedTrees(username, treeId));
+			dispatch(addToSavedTrees(uid, treeId));
 		}
 		setIsFav(!isFav);
 	};
 
-	if (!username) {
+	if (!uid) {
 		return null;
 	}
 

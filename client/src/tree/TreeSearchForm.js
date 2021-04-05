@@ -81,7 +81,6 @@ function TreeSearchForm({ mapCenter, setCenterOnUser }) {
 	return (
 		<form onSubmit={handleSubmit} className={classes.form}>
 			<Grid container>
-				<Typography variant="h3">Explore Trees</Typography>
 				<Grid item xs={12} className={classes.form}>
 					<TextField
 						id="search"

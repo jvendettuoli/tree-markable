@@ -1,19 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-
-import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 
-import TreeMarkableApi from '../TreeMarkableApi';
 import GroupFormBasicFields from './GroupFormBasicFields';
-import { groupsRef, uploadImagesToFirebase } from '../firebase/firebaseStorage';
-import ImagesInput from '../imageHandling/ImagesInput';
 import { updateGroup, deleteGroup } from '../actions/groups';
+import { removeFromFollowedGroups } from '../actions/currUser';
 
 const useStyles = makeStyles({
 	innerContent : {
@@ -34,8 +30,15 @@ function EditGroup() {
 	const dispatch = useDispatch();
 	const { id } = useParams();
 	const history = useHistory();
+	const [ action, setAction ] = useState(null);
 	const status = useSelector((st) => st.groups.status);
-	const error = useSelector((st) => st.groups.error);
+	const group = useSelector((st) => st.groups.entities[id]);
+
+	if (status === 'success') {
+		if (action === 'edit') history.push(`/groups/${id}`);
+		if (action === 'delete') history.push(`/groups`);
+	}
+
 	const INITIAL_GROUP_FORM_DATA = {
 		name        : '',
 		description : '',
@@ -69,13 +72,14 @@ function EditGroup() {
 		}
 
 		console.log('EditGroup - editGroup', editGroup);
-		const updated = await dispatch(updateGroup(id, editGroup));
-		if (updated) history.push(`/groups/${id}`);
+		setAction('edit');
+		dispatch(updateGroup(id, editGroup));
 	};
 
 	const handleDelete = async () => {
-		const deleted = await dispatch(deleteGroup(id));
-		if (deleted) history.push('/groups');
+		setAction('delete');
+		dispatch(removeFromFollowedGroups(group.creator, id));
+		dispatch(deleteGroup(id));
 	};
 
 	const handleCancel = () => {

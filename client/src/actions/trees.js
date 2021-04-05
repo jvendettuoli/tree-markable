@@ -14,6 +14,7 @@ import {
 	TREE_REQUEST_FAILURE
 } from './types';
 import { treesRef, uploadImagesToFirebase, deleteImagesFromFirebase } from '../firebase/firebaseStorage';
+import { removeFromSavedTrees } from './currUser';
 
 function createTree(tree, imageFiles) {
 	console.log('Actions - createTree tree', tree, imageFiles);

@@ -121,9 +121,9 @@ router.delete('/:username', ensureCorrectUser, async function(req, res, next) {
  * User to Tree routes
  */
 
-/** GET user's saved trees /[username]/trees => {savedTrees}*/
+/** GET user's saved trees /[id]/trees => {savedTrees}*/
 
-router.get('/:username/trees', ensureCorrectUser, async function(req, res, next) {
+router.get('/:id/trees', ensureCorrectUser, async function(req, res, next) {
 	try {
 		const savedTrees = await User.getTrees(req.token.uid);
 		return res.json(savedTrees);
@@ -132,28 +132,28 @@ router.get('/:username/trees', ensureCorrectUser, async function(req, res, next)
 	}
 });
 
-/** ADD TREE TO USER /[username]/trees/[id] => 
- * {message: 'Tree [id] added to User [username]'}*/
+/** ADD TREE TO USER /[id]/trees/[treeId] => 
+ * {message: 'Tree [treeId] added to User [id]'}*/
 
-router.post('/:username/trees/:id', authRequired, async function(req, res, next) {
+router.post('/:id/trees/:treeId', authRequired, async function(req, res, next) {
 	try {
-		await User.addTree(req.token.uid, req.params.id);
+		await User.addTree(req.token.uid, req.params.treeId);
 		return res.json({
-			message : `Tree '${req.params.id}' added to User '${req.params.username}'`
+			message : `Tree '${req.params.id}' added to User '${req.params.id}'`
 		});
 	} catch (err) {
 		return next(err);
 	}
 });
 
-/** REMOVE TREE FROM USER /[username]/trees/[id] => 
- * {message: 'Tree [id] removed from User [username]'}*/
+/** REMOVE TREE FROM USER /[id]/trees/[treeId] => 
+ * {message: 'Tree [treeId] removed from User [id]'}*/
 
-router.delete('/:username/trees/:id', authRequired, async function(req, res, next) {
+router.delete('/:id/trees/:treeId', authRequired, async function(req, res, next) {
 	try {
-		await User.removeTree(req.token.uid, req.params.id);
+		await User.removeTree(req.token.uid, req.params.treeId);
 		return res.json({
-			message : `Tree '${req.params.id}' removed from User '${req.params.username}'`
+			message : `Tree '${req.params.id}' removed from User '${req.params.id}'`
 		});
 	} catch (err) {
 		return next(err);
@@ -164,9 +164,9 @@ router.delete('/:username/trees/:id', authRequired, async function(req, res, nex
  * User to Group routes
  */
 
-/** GET user's saved groups /[username]/groups => {savedGroups}*/
+/** GET user's saved groups /[id]/groups => {savedGroups}*/
 
-router.get('/:username/groups', ensureCorrectUser, async function(req, res, next) {
+router.get('/:id/groups', ensureCorrectUser, async function(req, res, next) {
 	try {
 		const savedGroups = await User.getGroups(req.token.uid);
 		return res.json(savedGroups);

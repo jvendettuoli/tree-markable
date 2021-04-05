@@ -17,7 +17,7 @@ import {
  */
 
 function editCurrUser(credentials, username, data) {
-	console.log('currUser - editCurrUser - ', credentials, username, data);
+	console.log('currUser - editCurrUser - Start', credentials, username, data);
 	return async function(dispatch) {
 		dispatch({ type: LOAD_CURR_USER_REQUEST });
 		try {
@@ -32,9 +32,10 @@ function editCurrUser(credentials, username, data) {
 				});
 			}
 			dispatch(loadCurrUser(user));
+			console.log('currUser - editCurrUser - success', user);
 			dispatch({ type: LOAD_CURR_USER_SUCCESS });
 		} catch (err) {
-			console.log('editCurrUser error', err);
+			console.log('currUser - editCurrUser error', err);
 			dispatch(currUserError(err));
 			dispatch({ type: LOAD_CURR_USER_FAILURE });
 		}
@@ -58,12 +59,12 @@ function editCurrUser(credentials, username, data) {
  * Action creators for updating the current User's saved Trees and 
  */
 
-function addToSavedTrees(username, treeId) {
-	console.log('currUser - addToSavedTrees - ', username, treeId);
+function addToSavedTrees(userId, treeId) {
+	console.log('currUser - addToSavedTrees - ', userId, treeId);
 	return async function(dispatch) {
 		dispatch({ type: LOAD_CURR_USER_REQUEST });
 		try {
-			await TreeMarkableApi.userAddTree(username, treeId);
+			await TreeMarkableApi.userAddTree(userId, treeId);
 			dispatch(treeSaved(treeId));
 			dispatch({ type: LOAD_CURR_USER_SUCCESS });
 		} catch (err) {
@@ -73,12 +74,12 @@ function addToSavedTrees(username, treeId) {
 		}
 	};
 }
-function removeFromSavedTrees(username, treeId) {
-	console.log('currUser - removeFromSavedTrees - ', username, treeId);
+function removeFromSavedTrees(userId, treeId) {
+	console.log('currUser - removeFromSavedTrees - ', userId, treeId);
 	return async function(dispatch) {
 		dispatch({ type: LOAD_CURR_USER_REQUEST });
 		try {
-			await TreeMarkableApi.userRemoveTree(username, treeId);
+			await TreeMarkableApi.userRemoveTree(userId, treeId);
 			dispatch(treeRemoved(treeId));
 			dispatch({ type: LOAD_CURR_USER_SUCCESS });
 		} catch (err) {

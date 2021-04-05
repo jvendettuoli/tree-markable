@@ -5,9 +5,12 @@ import TreeList from '../tree/TreeList';
 import { getTree } from '../actions/trees';
 
 function GroupTreeEditTable({ group, groupTrees }) {
+	console.log('GroupTreeEditTable - Start', group, groupTrees);
 	const dispatch = useDispatch();
 
 	const currUserFavTreeIds = useSelector((st) => st.currUser.savedTreeIds);
+
+	console.log('GroupTreeEditTable - currUserFavTreeIds', currUserFavTreeIds);
 
 	// Get any trees that are already in store
 	let userFavTrees = useSelector((st) => currUserFavTreeIds.map((id) => st.trees.entities[id]));
