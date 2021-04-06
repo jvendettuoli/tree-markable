@@ -5,18 +5,18 @@
  * Also updates user store to keep current user synced with authentication.
  */
 
-import { signUp, signIn, signOut, anonymousAuth, updateEmail, updateProfile } from '../firebase/firebaseAuth';
-import TreeMarkableApi from '../TreeMarkableApi';
+import { anonymousAuth, signIn, signOut, signUp, updateProfile } from '../firebase/firebaseAuth';
 import { auth } from '../firebase/firebaseIndex';
+import TreeMarkableApi from '../TreeMarkableApi';
 import {
 	AUTH_ERROR,
 	AUTH_USER,
-	SIGN_OUT_USER,
+	LOAD_CURR_USER,
+	LOAD_CURR_USER_FAILURE,
 	LOAD_CURR_USER_REQUEST,
 	LOAD_CURR_USER_SUCCESS,
-	LOAD_CURR_USER_FAILURE,
-	LOAD_CURR_USER,
-	RESET_CURR_USER
+	RESET_CURR_USER,
+	SIGN_OUT_USER
 } from './types';
 
 function signUpUser(credentials, userData) {
@@ -112,15 +112,6 @@ function verifyAuth() {
 			const unsubscribe = auth.onAuthStateChanged(async (user) => {
 				if (user) {
 					console.log('verifyAuth - user', user);
-					// const apiRes = await TreeMarkableApi.getUser(
-					// 	user.displayName
-					// );
-					// const currUserData = {
-					// 	...apiRes,
-					// 	token : user.refreshToken
-					// };
-					// dispatch(authUser({ token: user.refreshToken }));
-					// dispatch(loadCurrUser(currUserData));
 				}
 				else {
 					console.log('verifyAuth - no user');
@@ -129,7 +120,7 @@ function verifyAuth() {
 			});
 			return unsubscribe;
 		} catch (err) {
-			console.log('verifyAuth error', err);
+			console.log('verifyAuth - error', err);
 			dispatch(authError(err));
 		}
 	};

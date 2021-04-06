@@ -1,19 +1,12 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-
-import { makeStyles } from '@material-ui/core/styles';
-
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
+import { makeStyles } from '@material-ui/core/styles';
 import { DataGrid } from '@material-ui/data-grid';
-
-import { FavoriteBorder as FavoriteBorderIcon, Favorite as FavoriteIcon } from '@material-ui/icons';
-
-import FavoriteIconBtn from '../iconBtns/FavoriteIconBtn';
+import { Favorite as FavoriteIcon } from '@material-ui/icons';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import EditTreeInGroupIconBtn from '../iconBtns/EditTreeInGroupIconBtn';
-
-import { addToSavedTrees, removeFromSavedTrees } from '../actions/currUser';
+import FavoriteIconBtn from '../iconBtns/FavoriteIconBtn';
 
 const useStyles = makeStyles((theme) => ({
 	treeListContainer : {
@@ -42,7 +35,6 @@ const checkTreeIdInCollection = (collection, treeId) => {
 
 function TreeList({ trees, group = null }) {
 	const classes = useStyles();
-	const dispatch = useDispatch();
 	const { username, savedTreeIds } = useSelector((st) => st.currUser);
 	let treeRows;
 	console.log('TreeList - trees', trees);

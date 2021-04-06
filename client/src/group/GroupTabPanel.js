@@ -1,23 +1,20 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
-
-import { makeStyles, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
+import Backdrop from '@material-ui/core/Backdrop';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import Backdrop from '@material-ui/core/Backdrop';
 import Paper from '@material-ui/core/Paper';
-
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import Typography from '@material-ui/core/Typography';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getTree } from '../actions/trees';
 import LeafletMap from '../leafletMap/LeafletMap';
 import TreeList from '../tree/TreeList';
-import GroupTreeEditTable from './GroupTreeEditTable';
-import { getTree } from '../actions/trees';
 import GroupMembersPanel from './GroupMembersPanel';
+import GroupTreeEditTable from './GroupTreeEditTable';
 
 const useStyles = makeStyles((theme) => {
 	return {

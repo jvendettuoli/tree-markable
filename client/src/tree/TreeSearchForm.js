@@ -1,22 +1,14 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
-
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import Tooltip from '@material-ui/core/Tooltip';
-import Divider from '@material-ui/core/Divider';
-import Box from '@material-ui/core/Box';
-import TextField from '@material-ui/core/TextField';
-import Slider from '@material-ui/core/Slider';
-import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
-import Paper from '@material-ui/core/Paper';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-
+import Grid from '@material-ui/core/Grid';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { getTrees } from '../actions/trees';
-
 import useStyles from '../styles/formStyle';
 
 function TreeSearchForm({ mapCenter, setCenterOnUser }) {

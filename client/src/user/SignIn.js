@@ -1,16 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Link as RouterLink, useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-
-import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-
-import { signInUser, signOutUser } from '../actions/auth';
-import { errorDisplay } from '../helpers/formErrorDisplay';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
+import { signInUser } from '../actions/auth';
 import SignInForm from './SignInForm';
 
 const useStyles = makeStyles({

@@ -1,25 +1,7 @@
 import Grid from '@material-ui/core/Grid';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import profileHeaderImg from '../images/profile-page-header.jpg';
-
-const useStyles = makeStyles((theme) => ({
-	heading             : {
-		fontSize   : theme.typography.pxToRem(15),
-		fontWeight : theme.typography.fontWeightRegular
-	},
-	headerImgBackground : {
-		height             : 300,
-		backgroundImage    : `url(${profileHeaderImg})`,
-		backgroundRepeat   : 'no-repeat',
-		backgroundPosition : 'center',
-		backgroundSize     : 'cover',
-		backgroundColor    : theme.palette.secondary.dark
-	}
-}));
 
 /**
  * Shows the current logged in user's profile. Allows user to edit
@@ -31,18 +13,10 @@ const useStyles = makeStyles((theme) => ({
  * a request to the API for it. 
  */
 function CurrUserInfo() {
-	const theme = useTheme();
-	const classes = useStyles(theme);
+	// const theme = useTheme();
+	// const classes = useStyles(theme);
 
-	const history = useHistory();
-
-	const { uid, username, email, img_url, created_at, is_admin, savedTreeIds, groupIds } = useSelector(
-		(st) => st.currUser
-	);
-
-	const handleEdit = (evt) => {
-		history.push(`/users/${username}/edit`);
-	};
+	const { username, email, created_at } = useSelector((st) => st.currUser);
 
 	return (
 		<Grid container item xs={12}>

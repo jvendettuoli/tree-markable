@@ -1,23 +1,16 @@
-import React from 'react';
-import { Link as RouterLink, useParams, useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-
 import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import Link from '@material-ui/core/Link';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Paper from '@material-ui/core/Paper';
-
-import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Hidden from '@material-ui/core/Hidden';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
+import Grid from '@material-ui/core/Grid';
+import Hidden from '@material-ui/core/Hidden';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-
+import Typography from '@material-ui/core/Typography';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import profileHeaderImg from '../images/profile-page-header.jpg';
 import CurrUserInfo from './CurrUserInfo';
 
@@ -62,9 +55,7 @@ function UserProfilePage() {
 
 	const history = useHistory();
 
-	const { uid, username, email, img_url, created_at, is_admin, savedTreeIds, followedGroupIds } = useSelector(
-		(st) => st.currUser
-	);
+	const { uid, username, savedTreeIds, followedGroupIds } = useSelector((st) => st.currUser);
 	const favTrees = useSelector((st) =>
 		Object.values(st.trees.entities).filter((tree) => savedTreeIds.includes(tree.id))
 	);
@@ -77,9 +68,6 @@ function UserProfilePage() {
 	const userCreatedGroups = useSelector((st) =>
 		Object.values(st.groups.entities).filter((group) => group.creator === uid)
 	);
-
-	// const favTrees = Object.values(userTrees).filter((tree) => savedTreeIds.includes(tree.id));
-	const favGroups = useSelector((st) => st.groups.entities);
 
 	const pushToEditForm = () => {
 		history.push(`/users/${username}/edit`);

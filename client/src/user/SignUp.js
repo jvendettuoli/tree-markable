@@ -1,19 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Link as RouterLink, useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-
-import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
-
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { signUpUser } from '../actions/auth';
-import { errorDisplay } from '../helpers/formErrorDisplay';
 import SignUpForm from './SignUpForm';
-import SelectCoordinates from '../leafletMap/SelectCoordinates';
-import { getUserFromApi } from '../actions/currUser';
 
 const useStyles = makeStyles({
 	innerContent : {
@@ -45,7 +38,7 @@ function SignUp() {
 				history.push(`/users/${username}`);
 			}
 		},
-		[ isAuthenticated, username ]
+		[ isAuthenticated, username, history ]
 	);
 
 	const submitFormData = (formData) => {

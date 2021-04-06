@@ -1,14 +1,9 @@
-import React, { useState } from 'react';
-
-import {
-	NavigateNext as NavigateNextIcon,
-	NavigateBefore as NavigateBeforeIcon
-} from '@material-ui/icons/';
 import Card from '@material-ui/core/Card';
-import Fade from '@material-ui/core/Fade';
 import CardMedia from '@material-ui/core/CardMedia';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
+import { NavigateBefore as NavigateBeforeIcon, NavigateNext as NavigateNextIcon } from '@material-ui/icons/';
+import React, { useState } from 'react';
 
 const useStyles = makeStyles({
 	root  : {
@@ -36,26 +31,17 @@ function Carousel({ imageUrls }) {
 	return (
 		<div className="Carousel">
 			<Card className={classes.root}>
-				<CardMedia
-					className={classes.media}
-					image={imageUrls[cardIdx]}
-				>
+				<CardMedia className={classes.media} image={imageUrls[cardIdx]}>
 					{!leftIconHidden ? (
-						<IconButton onClick={goBack}>
-							<NavigateBeforeIcon
-								fontSize="large"
-								htmlColor="rgba(255,255,255, 0.9)"
-							/>
+						<IconButton onClick={goBack} style={{ backgroundColor: 'rgba(0,0,0,.25)' }}>
+							<NavigateBeforeIcon fontSize="large" htmlColor="rgba(255,255,255, 0.9)" />
 						</IconButton>
 					) : (
 						<div />
 					)}
 					{!rightIconHidden ? (
-						<IconButton onClick={goForward}>
-							<NavigateNextIcon
-								fontSize="large"
-								htmlColor="rgba(255,255,255, 0.9)"
-							/>
+						<IconButton onClick={goForward} style={{ backgroundColor: 'rgba(0,0,0,.25)' }}>
+							<NavigateNextIcon fontSize="large" htmlColor="rgba(255,255,255, 0.9)" />
 						</IconButton>
 					) : (
 						<div />

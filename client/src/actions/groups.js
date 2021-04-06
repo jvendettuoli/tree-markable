@@ -3,20 +3,20 @@
  * Returns an object with the returned group data.
  */
 
+import { deleteImagesFromFirebase, groupsRef, uploadImagesToFirebase } from '../firebase/firebaseStorage';
 import TreeMarkableApi from '../TreeMarkableApi';
 import {
-	LOAD_GROUP,
-	LOAD_GROUPS,
-	REMOVE_GROUP,
-	LOAD_TREE_TO_GROUP,
-	REMOVE_TREE_FROM_GROUP,
 	GROUP_ERROR,
+	GROUP_REQUEST_FAILURE,
 	GROUP_REQUEST_START,
 	GROUP_REQUEST_SUCCESS,
-	GROUP_REQUEST_FAILURE,
-	REMOVE_MEMBER_FROM_GROUP
+	LOAD_GROUP,
+	LOAD_GROUPS,
+	LOAD_TREE_TO_GROUP,
+	REMOVE_GROUP,
+	REMOVE_MEMBER_FROM_GROUP,
+	REMOVE_TREE_FROM_GROUP
 } from './types';
-import { groupsRef, uploadImagesToFirebase, deleteImagesFromFirebase } from '../firebase/firebaseStorage';
 
 function createGroup(group, imageFiles) {
 	console.log('Actions - createGroup group', group);

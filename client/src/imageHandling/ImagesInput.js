@@ -1,15 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Input from '@material-ui/core/Input';
-import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-
-import { storageRef } from '../firebase/firebaseStorage';
+import React, { useEffect, useState } from 'react';
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -37,7 +33,7 @@ function ImagesInput({ allowMultiple = true, onImageFilesChange }) {
 	// Lift files to parent component
 	useEffect(
 		() => {
-			console.log('useEffect fileList', fileList);
+			console.log('ImagesInput - useEffect fileList', fileList);
 			onImageFilesChange(fileList);
 		},
 		[ fileList, onImageFilesChange ]
@@ -49,7 +45,7 @@ function ImagesInput({ allowMultiple = true, onImageFilesChange }) {
 		return new Promise((resolve, reject) => {
 			temporaryFileReader.onerror = () => {
 				temporaryFileReader.abort();
-				reject(new DOMException('Problem parsing input file.'));
+				reject(new DOMException('ImagesInput - Problem parsing input file.'));
 			};
 
 			temporaryFileReader.onload = () => {
@@ -60,7 +56,7 @@ function ImagesInput({ allowMultiple = true, onImageFilesChange }) {
 	};
 
 	const getImageUrlsFromFiles = async (files) => {
-		console.log('getImageUrlsFromFiles', files);
+		console.log('ImagesInput - getImageUrlsFromFiles', files);
 		let urls = [];
 
 		for (let i = 0; i < files.length; i++) {
@@ -74,7 +70,7 @@ function ImagesInput({ allowMultiple = true, onImageFilesChange }) {
 	const handleChange = async (evt) => {
 		const files = evt.target.files;
 		const filesArr = Array.from(files);
-		console.log('filesArr', filesArr);
+		console.log('ImagesInput - handleChange - filesArr', filesArr);
 
 		getImageUrlsFromFiles(files);
 		setFileList((fileList) => {
@@ -85,7 +81,7 @@ function ImagesInput({ allowMultiple = true, onImageFilesChange }) {
 	const handlePrimaryChange = (evt) => {
 		const targetUrl = evt.currentTarget.children[0].src;
 		const idx = imageUrls.findIndex((url) => url === targetUrl);
-		console.log('handlePrimaryChange idx', idx);
+		console.log('ImagesInput - handlePrimaryChange idx', idx);
 
 		setImageUrls((imageUrls) => {
 			const filteredUrls = imageUrls.filter((url) => url !== targetUrl);
@@ -93,11 +89,11 @@ function ImagesInput({ allowMultiple = true, onImageFilesChange }) {
 			return filteredUrls;
 		});
 
-		console.log('handlePrimaryChange fileList', fileList);
+		console.log('ImagesInput - handlePrimaryChange fileList', fileList);
 		setFileList((fileList) => {
 			return [ fileList[idx], ...fileList.slice(0, idx), ...fileList.slice(idx + 1) ];
 		});
-		console.log('handlePrimaryChange fileList post', fileList);
+		console.log('ImagesInput - handlePrimaryChange fileList post', fileList);
 	};
 
 	return (
@@ -121,14 +117,14 @@ function ImagesInput({ allowMultiple = true, onImageFilesChange }) {
 				)}
 			</Grid>
 			<Grid container item xs={12} justify="center" className={classes.imgsContainer}>
-				{imageUrls.map((url, idx) => (
+				{imageUrls.map((url) => (
 					<Box key={url} mr={1}>
 						<Paper
 							elevation={3}
 							onClick={handlePrimaryChange}
 							className={imageUrls[0] === url ? `${classes.imgPaper} selected` : classes.imgPaper}
 						>
-							<img className={classes.imgPreview} src={url} />
+							<img className={classes.imgPreview} src={url} alt={'inputted thumbnail'} />
 						</Paper>
 					</Box>
 				))}

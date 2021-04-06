@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-
-import TreeList from '../tree/TreeList';
+import { useDispatch, useSelector } from 'react-redux';
 import { getTree } from '../actions/trees';
+import TreeList from '../tree/TreeList';
 
 function GroupTreeEditTable({ group, groupTrees }) {
 	console.log('GroupTreeEditTable - Start', group, groupTrees);
@@ -23,12 +22,15 @@ function GroupTreeEditTable({ group, groupTrees }) {
 	// console.log('GroupTreeEditTable remainingSelectionTrees', remainingSelectionTreeIds);
 
 	// Get any other user fav or group tree that is not in store from API
-	useEffect(() => {
-		remainingSelectionTreeIds.forEach((id) => {
-			const tree = dispatch(getTree(id));
-			userFavTrees.push(tree);
-		});
-	}, []);
+	useEffect(
+		() => {
+			remainingSelectionTreeIds.forEach((id) => {
+				const tree = dispatch(getTree(id));
+				userFavTrees.push(tree);
+			});
+		},
+		[ dispatch, userFavTrees, remainingSelectionTreeIds ]
+	);
 	const treesSet = new Set([ ...groupTrees, ...userFavTrees ]);
 	// console.log('GroupTreeEditTable treesSet', treesSet);
 

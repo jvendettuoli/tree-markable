@@ -1,25 +1,22 @@
-import { React } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-
-import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import Paper from '@material-ui/core/Paper';
 import { useTheme } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import {
-	Info as InfoIcon,
 	Add as AddIcon,
-	Nature as NatureIcon,
-	Group as GroupIcon,
 	Explore as ExploreIcon,
-	Home as HomeIcon
+	Group as GroupIcon,
+	Home as HomeIcon,
+	Info as InfoIcon,
+	Nature as NatureIcon
 } from '@material-ui/icons';
-
+import { React } from 'react';
+import { useSelector } from 'react-redux';
+import { Link, withRouter } from 'react-router-dom';
 import useStyles from './styles/navDrawer';
 
 function NavDrawer(props) {

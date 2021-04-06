@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { Nature as NatureIcon } from '@material-ui/icons';
-import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -19,10 +18,7 @@ import useStyles from '../styles/markerCard';
 
 import FavoriteIconBtn from '../iconBtns/FavoriteIconBtn';
 
-import {
-	treesRef,
-	downloadImageUrlsFromFirebase
-} from '../firebase/firebaseStorage';
+import { treesRef, downloadImageUrlsFromFirebase } from '../firebase/firebaseStorage';
 
 function TreePopup({ tree }) {
 	const classes = useStyles();
@@ -39,10 +35,7 @@ function TreePopup({ tree }) {
 	useEffect(
 		() => {
 			const getImageUrls = async (collectionRef, id) => {
-				const imgUrls = await downloadImageUrlsFromFirebase(
-					collectionRef,
-					id
-				);
+				const imgUrls = await downloadImageUrlsFromFirebase(collectionRef, id);
 				if (imgUrls) {
 					setImageUrls(imgUrls);
 				}
@@ -53,7 +46,7 @@ function TreePopup({ tree }) {
 				getImageUrls(treesRef, tree.id);
 			}
 		},
-		[ isLoading, dispatch ]
+		[ isLoading, dispatch, tree ]
 	);
 
 	// If tree has a primary image, show it on popup. Show
@@ -69,13 +62,7 @@ function TreePopup({ tree }) {
 		}
 		else if (imageUrls.primary === '') return '';
 		else {
-			return (
-				<CardMedia
-					className={classes.media}
-					image={imageUrls.primary}
-					title={`${tree.name}`}
-				/>
-			);
+			return <CardMedia className={classes.media} image={imageUrls.primary} title={`${tree.name}`} />;
 		}
 	};
 
@@ -89,31 +76,18 @@ function TreePopup({ tree }) {
 				<Typography variant="body2" color="textSecondary">
 					{tree.common_name}
 				</Typography>
-				<Typography
-					variant="body2"
-					color="textSecondary"
-					component="i"
-				>
+				<Typography variant="body2" color="textSecondary" component="i">
 					{tree.scientific_name}
 				</Typography>
-				<Typography
-					variant="caption"
-					color="textSecondary"
-					component="p"
-				>
-					{`(${tree.geolocation.y.toFixed(
-						5
-					)}, ${tree.geolocation.x.toFixed(5)})`}
+				<Typography variant="caption" color="textSecondary" component="p">
+					{`(${tree.geolocation.y.toFixed(5)}, ${tree.geolocation.x.toFixed(5)})`}
 				</Typography>
 			</CardContent>
 			<CardActions className={classes.actions}>
 				<Grid container justify="center">
 					<Grid container justify="center" item xs={6}>
 						<Tooltip title="Details">
-							<IconButton
-								component={Link}
-								to={`/trees/${tree.id}`}
-							>
+							<IconButton component={Link} to={`/trees/${tree.id}`}>
 								<NatureIcon color="primary" />
 							</IconButton>
 						</Tooltip>

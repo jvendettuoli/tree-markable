@@ -1,11 +1,8 @@
-import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import lostWoods from './images/not-found-page.jpg';
-
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import React from 'react';
 
 const useStyles = makeStyles((theme) => {
 	return {

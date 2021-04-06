@@ -1,19 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { MapContainer, useMap, useMapEvents, Marker, Popup, TileLayer } from 'react-leaflet';
-import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
-import 'leaflet-geosearch/dist/geosearch.css';
-
-import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import Slider from '@material-ui/core/Slider';
-import MenuItem from '@material-ui/core/MenuItem';
-import Button from '@material-ui/core/Button';
-
-import { makeStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import LeafletMap from './LeafletMap';
+import Typography from '@material-ui/core/Typography';
+import 'leaflet-geosearch/dist/geosearch.css';
+import React, { useEffect, useRef, useState } from 'react';
 import useStyles from '../styles/formStyle';
+import LeafletMap from './LeafletMap';
 
 function SelectCoordinates({ formData, onCoordinatesChange, onMapCoordinatesChange }) {
 	const classes = useStyles();

@@ -1,15 +1,15 @@
+import { reauthenticate } from '../firebase/firebaseAuth';
 import TreeMarkableApi from '../TreeMarkableApi';
-import { signUp, signIn, signOut, anonymousAuth, updateEmail, reauthenticate } from '../firebase/firebaseAuth';
 import {
 	LOAD_CURR_USER,
+	LOAD_CURR_USER_ERROR,
+	LOAD_CURR_USER_FAILURE,
 	LOAD_CURR_USER_REQUEST,
 	LOAD_CURR_USER_SUCCESS,
-	LOAD_CURR_USER_FAILURE,
-	LOAD_CURR_USER_ERROR,
-	LOAD_SAVED_TREE,
-	REMOVE_SAVED_TREE,
 	LOAD_FOLLOWED_GROUP,
-	REMOVE_FOLLOWED_GROUP
+	LOAD_SAVED_TREE,
+	REMOVE_FOLLOWED_GROUP,
+	REMOVE_SAVED_TREE
 } from './types';
 
 /**

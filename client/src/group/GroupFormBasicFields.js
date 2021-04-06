@@ -1,18 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-
-import Typography from '@material-ui/core/Typography';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import Slider from '@material-ui/core/Slider';
-import MenuItem from '@material-ui/core/MenuItem';
-import Button from '@material-ui/core/Button';
-
-import useStyles from '../styles/formStyle';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { errorDisplay } from '../helpers/formErrorDisplay';
+import useStyles from '../styles/formStyle';
 
 function GroupFormBasicFields({ formData, onFormChange, edit = false }) {
 	const classes = useStyles();

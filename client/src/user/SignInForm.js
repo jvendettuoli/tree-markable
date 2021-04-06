@@ -1,14 +1,7 @@
-import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-
-import { signInUser, signOutUser } from '../actions/auth';
+import TextField from '@material-ui/core/TextField';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { errorDisplay } from '../helpers/formErrorDisplay';
 import useStyles from '../styles/formStyle';
 

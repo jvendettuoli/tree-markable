@@ -3,18 +3,17 @@
  * Returns an object with the returned tree data.
  */
 
+import { deleteImagesFromFirebase, treesRef, uploadImagesToFirebase } from '../firebase/firebaseStorage';
 import TreeMarkableApi from '../TreeMarkableApi';
 import {
 	LOAD_TREE,
 	LOAD_TREES,
 	REMOVE_TREE,
 	TREE_ERROR,
+	TREE_REQUEST_FAILURE,
 	TREE_REQUEST_START,
-	TREE_REQUEST_SUCCESS,
-	TREE_REQUEST_FAILURE
+	TREE_REQUEST_SUCCESS
 } from './types';
-import { treesRef, uploadImagesToFirebase, deleteImagesFromFirebase } from '../firebase/firebaseStorage';
-import { removeFromSavedTrees } from './currUser';
 
 function createTree(tree, imageFiles) {
 	console.log('Actions - createTree tree', tree, imageFiles);

@@ -1,34 +1,31 @@
-import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-
-import { Switch, Route, useHistory } from 'react-router-dom';
-
-import LandingPage from './LandingPage';
-import SignUp from './user/SignUp';
-import SignIn from './user/SignIn';
-import EditUser from './user/EditUser';
-import CreateNewTree from './tree/CreateNewTree';
-import NotFound from './NotFound';
-import ExploreTrees from './tree/ExploreTrees';
-import ExploreGroups from './group/ExploreGroups';
-import TreePage from './tree/TreePage';
-import EditTree from './tree/EditTree';
-import CreateNewGroup from './group/CreateNewGroup';
-import UserProfilePage from './user/UserProfilePage';
-import GroupPage from './group/GroupPage';
-import EditGroup from './group/EditGroup';
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
 import About from './About';
-import ProtectedRoute from './ProtectedRoute';
+import CreateNewGroup from './group/CreateNewGroup';
+import EditGroup from './group/EditGroup';
+import ExploreGroups from './group/ExploreGroups';
+import GroupPage from './group/GroupPage';
+import LandingPage from './LandingPage';
+import NotFound from './NotFound';
 import PrivateEntityRoute from './PrivateEntityRoute';
 import PrivateUserRoute from './PrivateUserRoute';
+import ProtectedRoute from './ProtectedRoute';
+import CreateNewTree from './tree/CreateNewTree';
+import EditTree from './tree/EditTree';
+import ExploreTrees from './tree/ExploreTrees';
+import TreePage from './tree/TreePage';
+import EditUser from './user/EditUser';
+import SignIn from './user/SignIn';
+import SignUp from './user/SignUp';
+import UserProfilePage from './user/UserProfilePage';
 
 function Routes() {
-	const history = useHistory();
-	const authErrorStatus = useSelector((st) => st.auth.error);
-	const currUserErrorStatus = useSelector((st) => st.currUser.error);
-	const groupsErrorStatus = useSelector((st) => st.groups.error);
-	const treesErrorStatus = useSelector((st) => st.trees.error);
-	const errorStatuses = [ authErrorStatus, currUserErrorStatus, groupsErrorStatus, treesErrorStatus ];
+	// const history = useHistory();
+	// const authErrorStatus = useSelector((st) => st.auth.error);
+	// const currUserErrorStatus = useSelector((st) => st.currUser.error);
+	// const groupsErrorStatus = useSelector((st) => st.groups.error);
+	// const treesErrorStatus = useSelector((st) => st.trees.error);
+	// const errorStatuses = [ authErrorStatus, currUserErrorStatus, groupsErrorStatus, treesErrorStatus ];
 
 	// useEffect(
 	// 	() => {

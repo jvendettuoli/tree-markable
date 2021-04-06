@@ -1,6 +1,6 @@
 import React from 'react';
-import { Route, Redirect, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { Redirect, Route } from 'react-router-dom';
 
 /** 
  * Wrapper Component for Route. Ensures that the user is autheticated
@@ -10,13 +10,8 @@ import { useSelector } from 'react-redux';
 */
 const PrivateUserRoute = ({ component: Component, ...rest }) => {
 	const { location: { pathname } } = rest;
-	console.log('PATHNAME:', pathname);
 
-	console.log('PATHNAME:', pathname.split('/'));
 	const [ blank, type, id ] = pathname.split('/');
-	console.log('blank:', blank);
-	console.log('type:', type);
-	console.log('id:', id);
 
 	const username = useSelector((st) => st.currUser.username);
 	const isUser = username === id;

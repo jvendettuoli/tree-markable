@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-
-import { Add as AddIcon, Check as CheckIcon } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
 import { useTheme } from '@material-ui/core/styles';
-
+import Tooltip from '@material-ui/core/Tooltip';
+import { Add as AddIcon, Check as CheckIcon } from '@material-ui/icons';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { addTreeToGroup, removeTreeFromGroup } from '../actions/groups';
 
 function EditTreeInGroupIconBtn({ group, treeId }) {

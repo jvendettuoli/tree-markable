@@ -1,6 +1,6 @@
 import React from 'react';
-import { Route, Redirect, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { Redirect, Route } from 'react-router-dom';
 
 /** 
  * Wrapper Component for Route. Ensures that the user is autheticated

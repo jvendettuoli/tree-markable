@@ -1,27 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useParams, useHistory } from 'react-router-dom';
-
-import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Button from '@material-ui/core/Button';
-
-import { getGroup, getGroups } from '../actions/groups';
-import SelectLocationMap from '../leafletMap/LeafletMap';
-import ImagesInput from '../imageHandling/ImagesInput';
-import Carousel from '../imageHandling/Carousel';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useParams } from 'react-router-dom';
+import { getGroup } from '../actions/groups';
 import CommentsContainer from '../comment/CommentsContainer';
-import { groupsRef, downloadImageUrlsFromFirebase } from '../firebase/firebaseStorage';
-import FollowGroupIconBtn from '../iconBtns/FollowGroupIconBtn';
-import EditIconBtn from '../iconBtns/EditIconBtn';
-import LeafletMap from '../leafletMap/LeafletMap';
+import { downloadImageUrlsFromFirebase, groupsRef } from '../firebase/firebaseStorage';
 import GroupTabPanel from '../group/GroupTabPanel';
+import EditIconBtn from '../iconBtns/EditIconBtn';
+import FollowGroupIconBtn from '../iconBtns/FollowGroupIconBtn';
 
 const useStyles = makeStyles((theme) => {
 	return {

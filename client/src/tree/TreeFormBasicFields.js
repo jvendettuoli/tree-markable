@@ -1,20 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
-
-import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-
 import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import Slider from '@material-ui/core/Slider';
 import MenuItem from '@material-ui/core/MenuItem';
-import Button from '@material-ui/core/Button';
-
+import TextField from '@material-ui/core/TextField';
+import React from 'react';
 import useStyles from '../styles/formStyle';
-import TreeMarkableApi from '../TreeMarkableApi';
-import SelectLocationMap from '../leafletMap/LeafletMap';
-import { treesRef, uploadImagesToFirebase } from '../firebase/firebaseStorage';
-import ImagesInput from '../imageHandling/ImagesInput';
 
 function TreeFormBasicFields({ edit = false, formData, onFormChange }) {
 	const classes = useStyles();

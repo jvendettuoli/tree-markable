@@ -1,23 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import Slider from '@material-ui/core/Slider';
-import MenuItem from '@material-ui/core/MenuItem';
-import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
-
-import TreeMarkableApi from '../TreeMarkableApi';
-import TreeFormBasicFields from './TreeFormBasicFields';
-import SelectCoordinates from '../leafletMap/SelectCoordinates';
-
-import ImagesInput from '../imageHandling/ImagesInput';
+import Divider from '@material-ui/core/Divider';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { addToSavedTrees } from '../actions/currUser';
 import { createTree } from '../actions/trees';
+import ImagesInput from '../imageHandling/ImagesInput';
+import SelectCoordinates from '../leafletMap/SelectCoordinates';
+import TreeFormBasicFields from './TreeFormBasicFields';
 
 const useStyles = makeStyles({
 	innerContent : {

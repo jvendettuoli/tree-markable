@@ -1,45 +1,25 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
-
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+// import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Backdrop from '@material-ui/core/Backdrop';
-import Paper from '@material-ui/core/Paper';
-
-import LeafletMap from '../leafletMap/LeafletMap';
-import TreeList from '../tree/TreeList';
+import React from 'react';
 import UserList from './UserList';
-import GroupTreeEditTable from './GroupTreeEditTable';
-import { getTreeFromApi } from '../actions/trees';
 
-const useStyles = makeStyles((theme) => {
-	return {
-		tabPanel : {
-			flexGrow        : 1,
-			backgroundColor : 'white',
-			// backgroundColor : theme.palette.background.paper,
-			width           : '100%'
-		},
-		backdrop : {
-			zIndex : theme.zIndex.drawer + 1,
-			color  : '#fff'
-		}
-	};
-});
+// const useStyles = makeStyles((theme) => {
+// 	return {
+// 		tabPanel : {
+// 			flexGrow        : 1,
+// 			backgroundColor : 'white',
+// 			// backgroundColor : theme.palette.background.paper,
+// 			width           : '100%'
+// 		},
+// 		backdrop : {
+// 			zIndex : theme.zIndex.drawer + 1,
+// 			color  : '#fff'
+// 		}
+// 	};
+// });
 
 function GroupMembersPanel({ isCreator, isModerator, group }) {
 	console.log('GroupMembersPanel - Start');
-	const theme = useTheme();
-	const classes = useStyles(theme);
-	const dispatch = useDispatch();
-	const groupStatus = useSelector((st) => st.groups.status);
 
 	console.log('GroupMembersPanel', group);
 
