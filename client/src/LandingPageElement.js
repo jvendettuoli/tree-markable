@@ -24,15 +24,7 @@ const useStyles = makeStyles({
 	}
 });
 
-function LandingPageElement({
-	titleText,
-	bodyText,
-	imgSrc,
-	imgAlt,
-	imgSide = 'left',
-	buttonLink,
-	buttonText
-}) {
+function LandingPageElement({ titleText, bodyText, imgSrc, imgAlt, imgSide = 'left', buttonLink, buttonText }) {
 	const classes = useStyles();
 	const theme = useTheme();
 
@@ -40,13 +32,7 @@ function LandingPageElement({
 		<Grid container justify="center" item xs={12} md={6}>
 			<Paper className={classes.imgPaper} elevation={10}>
 				<Link to={`/${buttonLink}`}>
-					<img
-						height="100%"
-						width="100%"
-						alt={imgAlt}
-						title={imgAlt}
-						src={imgSrc}
-					/>
+					<img height="300px" width="300px" alt={imgAlt} title={imgAlt} src={imgSrc} />
 				</Link>
 			</Paper>
 		</Grid>
@@ -65,23 +51,12 @@ function LandingPageElement({
 			}}
 		>
 			<Grid container justify="center" item xs={12}>
-				<Typography
-					align="center"
-					variant="h4"
-					style={{ color: 'white' }}
-					gutterBottom
-				>
+				<Typography align="center" variant="h4" style={{ color: 'white' }} gutterBottom>
 					{bodyText}
 				</Typography>
 			</Grid>
 			<Grid container justify="center" item xs={12}>
-				<Button
-					component={Link}
-					to={`/${buttonLink}`}
-					variant="contained"
-					color="primary"
-					size="large"
-				>
+				<Button component={Link} to={`/${buttonLink}`} variant="contained" color="primary" size="large">
 					{buttonText}
 				</Button>
 			</Grid>
@@ -98,12 +73,7 @@ function LandingPageElement({
 				paddingBottom : theme.spacing(8)
 			}}
 		>
-			<Typography
-				align="center"
-				variant="h2"
-				style={{ color: 'white' }}
-				gutterBottom
-			>
+			<Typography align="center" variant="h2" style={{ color: 'white' }} gutterBottom>
 				{titleText}
 			</Typography>
 			<Hidden only={[ 'xs', 'sm', 'xl' ]} implementation="js">

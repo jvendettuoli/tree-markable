@@ -10,11 +10,13 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) => {
 	return {
 		innerContent : {
-			padding  : 20,
-			'& > h5' : {
+			padding         : 20,
+			backgroundColor : theme.palette.background.paper,
+			boxShadow       : theme.shadows[4],
+			'& > h5'        : {
 				marginTop : 10
 			},
-			'& > p'  : {
+			'& > p'         : {
 				marginLeft : 20
 			}
 		}

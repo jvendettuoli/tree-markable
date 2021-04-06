@@ -11,6 +11,9 @@ const useStyles = makeStyles((theme) => {
 			[theme.breakpoints.up('md')]: {
 				width      : drawerWidth,
 				flexShrink : 0
+			},
+			'& .MuiDrawer-paperAnchorDockedLeft' : {
+				borderRightColor : theme.palette.primary.dark
 			}
 		},
 		appBar      : {
@@ -36,8 +39,16 @@ const useStyles = makeStyles((theme) => {
 			width : drawerWidth
 		},
 		content     : {
-			flexGrow : 1
-			// padding  : theme.spacing(3)
+			flexGrow                     : 1,
+			backgroundColor              : theme.palette.primary.lightest,
+			[theme.breakpoints.up('lg')]: {
+				paddingLeft  : theme.spacing(20),
+				paddingRight : theme.spacing(20)
+			},
+			[theme.breakpoints.up('xl')]: {
+				paddingLeft  : theme.spacing(40),
+				paddingRight : theme.spacing(40)
+			}
 		},
 		nested      : {
 			paddingLeft : theme.spacing(4)

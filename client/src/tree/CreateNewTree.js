@@ -21,7 +21,8 @@ import { createTree } from '../actions/trees';
 
 const useStyles = makeStyles({
 	innerContent : {
-		padding : 20
+		padding         : 20,
+		backgroundColor : 'white'
 	},
 	form         : {
 		display       : 'flex',

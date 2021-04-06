@@ -4,7 +4,7 @@
 	"description": "tree-markable server",
 	"main": "server.js",
 	"scripts": {
-		"start": "concurrently \"npm run server\" \"cd ../client && npm start\"",
+		"start": "concurrently \"npm run server\" \"cd ../client && npm run start\"",
 		"server": "nodemon server.js",
 		"test": "npm test"
 	},
