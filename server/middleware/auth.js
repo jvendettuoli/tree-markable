@@ -191,8 +191,8 @@ async function ensureIsGroupMod(req, res, next) {
  *
  */
 
-async function ensureIsGroupModOrCommentCreator(req, res, next) {
-	console.log('Middleware - ensureIsGroupModorCreator - Start');
+async function ensureIsModOrCommentCreator(req, res, next) {
+	console.log('Middleware - ensureIsModorCommentCreator - Start');
 	try {
 		const tokenStr = req.body._token || req.query._token;
 
@@ -202,16 +202,25 @@ async function ensureIsGroupModOrCommentCreator(req, res, next) {
 			throw result;
 		}
 
-		const item = await Comment.findOne(req.params.id);
-		console.log('Middleware - ensureIsGroupModorCreator -item.author_id', item.author_id, result.uid);
-		const isItemAuthor = item.author_id === result.uid;
-		const groupId = await Group.getGroupIdByCommentId(req.params.id);
-		const groupMods = await Group.getModerators(groupId);
-		console.log('Middleware - ensureIsGroupModorCreator -group', groupId, groupMods);
-		if (!groupMods.includes(result.uid) && !isItemAuthor) {
+		const comment = await Comment.findOne(req.params.id);
+		console.log('Middleware - ensureIsModorCommentCreator -comment.author_id', comment.author_id, result.uid);
+		const isItemAuthor = comment.author_id === result.uid;
+		let itemId = null;
+		let itemMods = null;
+		if (req.body.type === 'groups') {
+			itemId = await Group.getGroupIdByCommentId(req.params.id);
+			itemMods = await Group.getModerators(itemId);
+		}
+		else if (req.body.type === 'trees') {
+			itemId = await Tree.getTreeIdByCommentId(req.params.id);
+			const tree = await Tree.findOne(itemId);
+			itemMods = [ tree.creator ];
+		}
+
+		console.log('Middleware - ensureIsModorCommentCreator -group', itemId, itemMods);
+		if (!itemMods.includes(result.uid) && !isItemAuthor) {
 			throw new ExpressError(
-				`Must be moderator of group ${groupId} or author of comment '${req.params
-					.id}' to access this endpoint.`,
+				`Must be moderator of group ${itemId} or author of comment '${req.params.id}' to access this endpoint.`,
 				401
 			);
 		}
@@ -230,5 +239,5 @@ module.exports = {
 	ensureCorrectUser,
 	ensureIsCreator,
 	ensureIsGroupMod,
-	ensureIsGroupModOrCommentCreator
+	ensureIsModOrCommentCreator
 };

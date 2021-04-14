@@ -6,12 +6,7 @@ const router = express.Router();
 const Comment = require('../models/comment');
 
 const ExpressError = require('../helpers/expressError');
-const {
-	authRequired,
-	ensureCorrectUser,
-	ensureIsCreator,
-	ensureIsGroupModOrCommentCreator
-} = require('../middleware/auth');
+const { authRequired, ensureCorrectUser, ensureIsCreator, ensureIsModOrCommentCreator } = require('../middleware/auth');
 
 const TREES = 'trees';
 const GROUPS = 'groups';
@@ -87,7 +82,7 @@ router.patch('/:id', ensureIsCreator, async function(req, res, next) {
 
 /** DELETE /[id]  =>  {message: "Comment with ID :id deleted"}  */
 
-router.delete('/:id', ensureIsGroupModOrCommentCreator, async function(req, res, next) {
+router.delete('/:id', ensureIsModOrCommentCreator, async function(req, res, next) {
 	try {
 		await Comment.remove(req.params.id);
 		return res.json({

@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getGroups } from '../actions/groups';
-import useStyles from '../styles/formStyle';
+import useStyles from '../styles/form';
 
 function GroupSearchForm() {
 	const classes = useStyles();

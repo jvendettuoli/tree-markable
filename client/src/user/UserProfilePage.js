@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 import profileHeaderImg from '../images/profile-page-header.jpg';
 import CurrUserInfo from './CurrUserInfo';
+import innerContent from '../styles/innerContent';
 
 const useStyles = makeStyles((theme) => ({
 	accordianContainer  : {
@@ -30,9 +31,8 @@ const useStyles = makeStyles((theme) => ({
 		backgroundSize     : 'cover',
 		backgroundColor    : theme.palette.secondary.dark
 	},
-	innerContent        : {
-		padding : 20
-	},
+
+	innerContent        : innerContent(theme),
 	divider             : {
 		width        : '90%',
 		marginTop    : 10,

@@ -3,21 +3,6 @@ import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import UserList from './UserList';
 
-// const useStyles = makeStyles((theme) => {
-// 	return {
-// 		tabPanel : {
-// 			flexGrow        : 1,
-// 			backgroundColor : 'white',
-// 			// backgroundColor : theme.palette.background.paper,
-// 			width           : '100%'
-// 		},
-// 		backdrop : {
-// 			zIndex : theme.zIndex.drawer + 1,
-// 			color  : '#fff'
-// 		}
-// 	};
-// });
-
 function GroupMembersPanel({ isCreator, isModerator, group }) {
 	console.log('GroupMembersPanel - Start');
 

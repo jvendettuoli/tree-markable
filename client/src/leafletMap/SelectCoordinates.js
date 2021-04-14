@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import 'leaflet-geosearch/dist/geosearch.css';
 import React, { useEffect, useRef, useState } from 'react';
-import useStyles from '../styles/formStyle';
+import useStyles from '../styles/form';
 import LeafletMap from './LeafletMap';
 
 function SelectCoordinates({ formData, onCoordinatesChange, onMapCoordinatesChange }) {

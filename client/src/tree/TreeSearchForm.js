@@ -9,11 +9,19 @@ import Typography from '@material-ui/core/Typography';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getTrees } from '../actions/trees';
-import useStyles from '../styles/formStyle';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import form from '../styles/form';
+
+const useStyles = makeStyles((theme) => {
+	return {
+		form : form(theme)
+	};
+});
 
 function TreeSearchForm({ mapCenter, setCenterOnUser }) {
-	const classes = useStyles();
 	const dispatch = useDispatch();
+	const theme = useTheme();
+	const classes = useStyles(theme);
 
 	console.log('TreeSearchForm - mapCenter', mapCenter);
 
@@ -137,7 +145,7 @@ function TreeSearchForm({ mapCenter, setCenterOnUser }) {
 					</Grid>
 				</Grid>
 				<Grid container item xs={12} md={6}>
-					<Grid item xs={6} md={12}>
+					<Grid item xs={6}>
 						<TextField
 							id="leaf_type"
 							name="leaf_type"
@@ -152,7 +160,7 @@ function TreeSearchForm({ mapCenter, setCenterOnUser }) {
 							<MenuItem value="evergreen">Evergreen</MenuItem>
 						</TextField>
 					</Grid>
-					<Grid item xs={6} md={12}>
+					<Grid item xs={6}>
 						<FormControlLabel
 							control={
 								<Checkbox
@@ -169,7 +177,7 @@ function TreeSearchForm({ mapCenter, setCenterOnUser }) {
 					</Grid>
 				</Grid>
 				<Grid container alignItems="center" item xs={12}>
-					<Grid item md={8}>
+					<Grid item xs={12} md={8}>
 						<TextField
 							id="distance"
 							name="distance"

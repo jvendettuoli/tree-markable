@@ -1,14 +1,25 @@
 import Grid from '@material-ui/core/Grid';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { errorDisplay } from '../helpers/formErrorDisplay';
-import useStyles from '../styles/formStyle';
+import form from '../styles/form';
+import innerContent from '../styles/innerContent';
+
+const useStyles = makeStyles((theme) => {
+	return {
+		innerContent : innerContent(theme),
+		form         : form(theme)
+	};
+});
 
 function GroupFormBasicFields({ formData, onFormChange, edit = false }) {
-	const classes = useStyles();
+	const theme = useTheme();
+	const classes = useStyles(theme);
+
 	const groupError = useSelector((st) => st.groups.error);
-	console.log(groupError);
+	console.log('GroupFromBasicFields - groupError', groupError);
 	const handleChange = (evt) => {
 		onFormChange(evt.target);
 	};

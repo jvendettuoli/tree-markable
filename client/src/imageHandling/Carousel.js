@@ -12,7 +12,7 @@ const useStyles = makeStyles({
 	},
 
 	media : {
-		height         : 600,
+		height         : 400,
 		display        : 'flex',
 		justifyContent : 'space-between',
 		alignItems     : 'center'

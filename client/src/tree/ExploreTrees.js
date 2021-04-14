@@ -11,6 +11,8 @@ import { getTrees } from '../actions/trees';
 import LeafletMap from '../leafletMap/LeafletMap';
 import TreeList from './TreeList';
 import TreeSearchForm from './TreeSearchForm';
+import innerContent from '../styles/innerContent';
+import form from '../styles/form';
 
 function TabPanel(props) {
 	const { children, value, index, ...other } = props;
@@ -35,15 +37,15 @@ function a11yProps(index) {
 	};
 }
 
-const useStyles = makeStyles((theme) => ({
-	indicator    : {
-		backgroundColor : theme.palette.secondary.main
-	},
-	innerContent : {
-		backgroundColor : theme.palette.background.paper,
-		padding         : 20
-	}
-}));
+const useStyles = makeStyles((theme) => {
+	return {
+		innerContent : innerContent(theme),
+		form         : form(theme),
+		indicator    : {
+			backgroundColor : theme.palette.secondary.main
+		}
+	};
+});
 
 function ExploreTrees() {
 	const theme = useTheme();

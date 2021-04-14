@@ -1,6 +1,6 @@
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,19 +10,14 @@ import { createTree } from '../actions/trees';
 import ImagesInput from '../imageHandling/ImagesInput';
 import SelectCoordinates from '../leafletMap/SelectCoordinates';
 import TreeFormBasicFields from './TreeFormBasicFields';
+import innerContent from '../styles/innerContent';
+import form from '../styles/form';
 
-const useStyles = makeStyles({
-	innerContent : {
-		padding         : 20,
-		backgroundColor : 'white'
-	},
-	form         : {
-		display       : 'flex',
-		flexDirection : 'column',
-		'& div'       : {
-			marginBottom : 10
-		}
-	}
+const useStyles = makeStyles((theme) => {
+	return {
+		innerContent : innerContent(theme),
+		form         : form(theme)
+	};
 });
 
 function CreateNewTree() {
@@ -39,7 +34,8 @@ function CreateNewTree() {
 		leaf_type       : '',
 		fruit_bearing   : false
 	};
-	const classes = useStyles();
+	const theme = useTheme();
+	const classes = useStyles(theme);
 	const [ treeFormData, setTreeFormData ] = useState(INITIAL_TREE_FORM_DATA);
 	const [ coordinates, setCoordinates ] = useState({ lat: '', lng: '' });
 	const [ imageFiles, setImageFiles ] = useState([]);

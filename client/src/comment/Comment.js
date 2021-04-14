@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-function Comment({ onDelete, username, comment, isCreatorOrModerator }) {
+function Comment({ type, onDelete, username, comment, isCreatorOrModerator }) {
 	const classes = useStyles();
 	const [ editing, setEditing ] = useState(false);
 	const [ editText, setEditText ] = useState(comment.text);
@@ -37,7 +37,7 @@ function Comment({ onDelete, username, comment, isCreatorOrModerator }) {
 	};
 	const handleDeleteClick = async () => {
 		setAnchorEl(null);
-		await TreeMarkableApi.deleteComment(comment.id);
+		await TreeMarkableApi.deleteComment(comment.id, type);
 		onDelete();
 	};
 

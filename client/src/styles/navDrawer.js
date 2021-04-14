@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme) => {
 		},
 		content     : {
 			flexGrow                     : 1,
+			height                       : '100%',
 			backgroundColor              : theme.palette.primary.lightest,
 			[theme.breakpoints.up('lg')]: {
 				paddingLeft  : theme.spacing(20),

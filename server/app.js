@@ -17,6 +17,16 @@ app.use(cors());
 // add basic logging system
 app.use(morgan('tiny'));
 
+/**
+ * If starting in production mode, set express to serve the 
+ * index.html file from create-react-app by default so that it can
+ * function as a single page application.
+ */
+// if(process.env.NODE_ENV==='production'){
+// 	app.use(express.static(path.resolve(__dirname, './client/build')));
+
+// }
+
 //Routes
 app.use('/users', usersRoutes);
 app.use('/groups', groupsRoutes);

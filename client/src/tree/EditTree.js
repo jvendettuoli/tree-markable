@@ -1,35 +1,29 @@
-import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
-
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import Button from '@material-ui/core/Button';
-
-import TreeFormBasicFields from './TreeFormBasicFields';
-import SelectCoordinates from '../leafletMap/SelectCoordinates';
-import ImagesInput from '../imageHandling/ImagesInput';
-import { updateTree, deleteTree } from '../actions/trees';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useParams } from 'react-router-dom';
 import { removeFromSavedTrees } from '../actions/currUser';
+import { deleteTree, updateTree } from '../actions/trees';
+import ImagesInput from '../imageHandling/ImagesInput';
+import SelectCoordinates from '../leafletMap/SelectCoordinates';
+import form from '../styles/form';
+import innerContent from '../styles/innerContent';
+import TreeFormBasicFields from './TreeFormBasicFields';
 
-const useStyles = makeStyles({
-	innerContent : {
-		padding : 20
-	},
-	form         : {
-		display       : 'flex',
-		flexDirection : 'column',
-		'& div'       : {
-			marginBottom : 10
-		}
-	}
+const useStyles = makeStyles((theme) => {
+	return {
+		innerContent : innerContent(theme),
+		form         : form(theme)
+	};
 });
 
 function EditTree() {
 	console.log('EditTree - start');
-	const classes = useStyles();
 	const theme = useTheme();
+	const classes = useStyles(theme);
 	const { id } = useParams();
 	const dispatch = useDispatch();
 	const [ action, setAction ] = useState(null);

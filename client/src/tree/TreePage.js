@@ -1,6 +1,5 @@
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -17,19 +16,24 @@ import EditIconBtn from '../iconBtns/EditIconBtn';
 import FavoriteIconBtn from '../iconBtns/FavoriteIconBtn';
 import Carousel from '../imageHandling/Carousel';
 import LeafletMap from '../leafletMap/LeafletMap';
+import innerContent from '../styles/innerContent';
+import form from '../styles/form';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 
-const useStyles = makeStyles({
-	innerContent   : {
-		padding : 20
-	},
-	tableContainer : {
-		marginRight : 10
-	}
+const useStyles = makeStyles((theme) => {
+	return {
+		innerContent   : innerContent(theme),
+		form           : form(theme),
+		tableContainer : {
+			marginRight : 10
+		}
+	};
 });
 
 function TreePage() {
 	console.log('TreePage - start');
-	const classes = useStyles();
+	const theme = useTheme();
+	const classes = useStyles(theme);
 	const { id } = useParams();
 	const tree = useSelector((st) => st.trees.entities[id]);
 	const uid = useSelector((st) => st.currUser.uid);

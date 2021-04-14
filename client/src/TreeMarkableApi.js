@@ -162,9 +162,9 @@ class TreeMarkableApi {
 		let res = await this.request(`comments/${commentId}`, data, 'patch');
 		return res.updatedComment;
 	}
-	static async deleteComment(commentId) {
+	static async deleteComment(commentId, type) {
 		console.log('TreeMarkableApi Class deleteComment - Start');
-		let res = await this.request(`comments/${commentId}`, {}, 'delete');
+		let res = await this.request(`comments/${commentId}`, { type }, 'delete');
 		return res.message;
 	}
 

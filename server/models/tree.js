@@ -44,15 +44,12 @@ class Tree {
 	/** Find all trees based on queries supplied. With no passed queries
 	 * will return all trees. */
 
-	static async findAll(queries={}) {
+	static async findAll(queries = {}) {
 		console.log('Tree Model - findAll - queries', queries);
 
 		// Validate min and max dsh
 		if (queries.dsh_min >= queries.dsh_max) {
-			throw new ExpressError(
-				'Query parameters are invalid. Minimum dsh must be less than maximum dsh.',
-				400
-			);
+			throw new ExpressError('Query parameters are invalid. Minimum dsh must be less than maximum dsh.', 400);
 		}
 		// Validate min and max height
 		if (queries.height_min >= queries.height_max) {
@@ -88,9 +85,7 @@ class Tree {
 
 			baseQuery = `SELECT id, name, common_name, scientific_name, height, dsh, leaf_type, description, geolocation, fruit_bearing, favorites, creator, created_at, (geolocation<@>${map_center}) as distance
 			FROM trees`;
-			whereStatements.push(
-				`(geolocation<@>${map_center}) <  $${queryIdx}`
-			);
+			whereStatements.push(`(geolocation<@>${map_center}) <  $${queryIdx}`);
 			queryIdx += 1;
 			queryValues.push(queries.distance);
 		}
@@ -110,24 +105,15 @@ class Tree {
 			addQueryParam(`leaf_type = $${queryIdx}`, queries.leaf_type);
 		}
 		if (queries.fruit_bearing) {
-			addQueryParam(
-				`fruit_bearing = $${queryIdx}`,
-				queries.fruit_bearing
-			);
+			addQueryParam(`fruit_bearing = $${queryIdx}`, queries.fruit_bearing);
 		}
 
 		let finalQuery = '';
 		if (whereStatements.length > 0) {
-			finalQuery = baseQuery.concat(
-				' WHERE ',
-				whereStatements.join(' AND ')
-			);
+			finalQuery = baseQuery.concat(' WHERE ', whereStatements.join(' AND '));
 		}
 
-		const results = await db.query(
-			finalQuery ? finalQuery : baseQuery,
-			queryValues
-		);
+		const results = await db.query(finalQuery ? finalQuery : baseQuery, queryValues);
 
 		console.log('Tree Model - findAll - finalQuery, queryValues', finalQuery, queryValues);
 		return results.rows;
@@ -146,10 +132,7 @@ class Tree {
 		const tree = treeRes.rows[0];
 
 		if (!tree) {
-			const error = new ExpressError(
-				`There exists no tree with id '${id}'.`,
-				404
-			);
+			const error = new ExpressError(`There exists no tree with id '${id}'.`, 404);
 			throw error;
 		}
 
@@ -176,10 +159,7 @@ class Tree {
 		const tree = result.rows[0];
 
 		if (!tree) {
-			let notFound = new ExpressError(
-				`There exists no tree with id: '${id}'`,
-				404
-			);
+			let notFound = new ExpressError(`There exists no tree with id: '${id}'`, 404);
 			throw notFound;
 		}
 
@@ -197,12 +177,31 @@ class Tree {
 		);
 
 		if (result.rows.length === 0) {
-			let notFound = new ExpressError(
-				`There exists no tree with id: '${id}'`,
-				404
-			);
+			let notFound = new ExpressError(`There exists no tree with id: '${id}'`, 404);
 			throw notFound;
 		}
+	}
+
+	/**
+	 * Trees to Comments Relationships
+	 */
+	static async getTreeIdByCommentId(commentId) {
+		console.log('Models Tree - getTreeIdByCommentId - Start', commentId);
+
+		const result = await db.query(
+			`SELECT tree_id
+			FROM trees_comments
+			WHERE comment_id = $1`,
+			[ commentId ]
+		);
+
+		const treeId = result.rows[0].tree_id;
+		console.log('Models Tree - getTreeIdByCommentId - result.rows', result.rows);
+		if (!treeId) {
+			const error = new ExpressError(`There exists no tree associated with comment id '${id}'.`, 404);
+			throw error;
+		}
+		return treeId;
 	}
 }
 

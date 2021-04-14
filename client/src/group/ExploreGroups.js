@@ -5,12 +5,15 @@ import { getGroups } from '../actions/groups';
 import GroupList from './GroupList';
 import GroupSearchForm from './GroupSearchForm';
 
-const useStyles = makeStyles((theme) => ({
-	innerContent : {
-		backgroundColor : theme.palette.background.paper,
-		padding         : 20
-	}
-}));
+import form from '../styles/form';
+import innerContent from '../styles/innerContent';
+
+const useStyles = makeStyles((theme) => {
+	return {
+		innerContent : innerContent(theme),
+		form         : form(theme)
+	};
+});
 
 function ExploreGroups() {
 	const theme = useTheme();

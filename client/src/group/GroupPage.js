@@ -10,12 +10,13 @@ import { downloadImageUrlsFromFirebase, groupsRef } from '../firebase/firebaseSt
 import GroupTabPanel from '../group/GroupTabPanel';
 import EditIconBtn from '../iconBtns/EditIconBtn';
 import FollowGroupIconBtn from '../iconBtns/FollowGroupIconBtn';
+import form from '../styles/form';
+import innerContent from '../styles/innerContent';
 
 const useStyles = makeStyles((theme) => {
 	return {
-		innerContent   : {
-			padding : 15
-		},
+		innerContent   : innerContent(theme),
+		form           : form(theme),
 		tableContainer : {
 			marginRight : 10
 		}
@@ -24,10 +25,9 @@ const useStyles = makeStyles((theme) => {
 
 function GroupPage() {
 	console.log('GroupPage - start');
-
-	const classes = useStyles();
-	const history = useHistory();
 	const theme = useTheme();
+	const classes = useStyles(theme);
+	const history = useHistory();
 	const { id } = useParams();
 	const isAuthenticated = useSelector((st) => st.auth.authenticated);
 	const group = useSelector((st) => st.groups.entities[id]);

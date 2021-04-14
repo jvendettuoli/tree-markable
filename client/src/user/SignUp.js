@@ -8,22 +8,19 @@ import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { signUpUser } from '../actions/auth';
 import SignUpForm from './SignUpForm';
 
-const useStyles = makeStyles({
-	innerContent : {
-		padding : 20
-	},
-	form         : {
-		display       : 'flex',
-		flexDirection : 'column',
-		'& div'       : {
-			marginBottom : 10
-		}
-	}
+import form from '../styles/form';
+import innerContent from '../styles/innerContent';
+
+const useStyles = makeStyles((theme) => {
+	return {
+		innerContent : innerContent(theme),
+		form         : form(theme)
+	};
 });
 
 function SignUp() {
-	const classes = useStyles();
 	const theme = useTheme();
+	const classes = useStyles(theme);
 	const history = useHistory();
 	const dispatch = useDispatch();
 	const isAuthenticated = useSelector((st) => st.auth.authenticated);
@@ -66,9 +63,7 @@ function SignUp() {
 						here
 					</Link>.
 				</Typography>
-				<Grid item>
-					<SignUpForm submitFormData={submitFormData} />
-				</Grid>
+				<SignUpForm submitFormData={submitFormData} />
 			</Grid>
 		</Grid>
 	);

@@ -1,6 +1,6 @@
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,24 +8,20 @@ import { useHistory } from 'react-router-dom';
 import { addToFollowedGroups } from '../actions/currUser';
 import { createGroup } from '../actions/groups';
 import ImagesInput from '../imageHandling/ImagesInput';
+import form from '../styles/form';
+import innerContent from '../styles/innerContent';
 import GroupFormBasicFields from './GroupFormBasicFields';
 
-const useStyles = makeStyles({
-	innerContent : {
-		padding         : 20,
-		backgroundColor : 'white'
-	},
-	form         : {
-		display       : 'flex',
-		flexDirection : 'column',
-		'& div'       : {
-			marginBottom : 10
-		}
-	}
+const useStyles = makeStyles((theme) => {
+	return {
+		innerContent : innerContent(theme),
+		form         : form(theme)
+	};
 });
 
 function CreateNewGroup() {
-	const classes = useStyles();
+	const theme = useTheme();
+	const classes = useStyles(theme);
 	const dispatch = useDispatch();
 	const history = useHistory();
 	const userId = useSelector((st) => st.currUser.uid);

@@ -1,7 +1,7 @@
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import React, { useState } from 'react';
@@ -10,22 +10,19 @@ import { useHistory } from 'react-router-dom';
 import { editCurrUser } from '../actions/currUser';
 // import CurrUserInfo from './CurrUserInfo';
 import { errorDisplay } from '../helpers/formErrorDisplay';
+import form from '../styles/form';
+import innerContent from '../styles/innerContent';
 
-const useStyles = makeStyles({
-	innerContent : {
-		padding : 20
-	},
-	form         : {
-		display       : 'flex',
-		flexDirection : 'column',
-		'& div'       : {
-			marginBottom : 10
-		}
-	}
+const useStyles = makeStyles((theme) => {
+	return {
+		innerContent : innerContent(theme),
+		form         : form(theme)
+	};
 });
 
 function EditUser() {
-	const classes = useStyles();
+	const theme = useTheme();
+	const classes = useStyles(theme);
 	const history = useHistory();
 	const dispatch = useDispatch();
 	const { username, error } = useSelector((st) => st.currUser);

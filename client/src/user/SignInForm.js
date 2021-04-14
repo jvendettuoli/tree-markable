@@ -1,13 +1,22 @@
 import Button from '@material-ui/core/Button';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { errorDisplay } from '../helpers/formErrorDisplay';
-import useStyles from '../styles/formStyle';
+import form from '../styles/form';
+import innerContent from '../styles/innerContent';
+
+const useStyles = makeStyles((theme) => {
+	return {
+		innerContent : innerContent(theme),
+		form         : form(theme)
+	};
+});
 
 function SignIn({ submitFormData }) {
-	const classes = useStyles();
-
+	const theme = useTheme();
+	const classes = useStyles(theme);
 	const authErrors = useSelector((st) => st.auth.error);
 
 	const INITIAL_FORM_DATA = {

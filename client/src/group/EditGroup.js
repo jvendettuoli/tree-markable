@@ -10,23 +10,19 @@ import Button from '@material-ui/core/Button';
 import GroupFormBasicFields from './GroupFormBasicFields';
 import { updateGroup, deleteGroup } from '../actions/groups';
 import { removeFromFollowedGroups } from '../actions/currUser';
+import form from '../styles/form';
+import innerContent from '../styles/innerContent';
 
-const useStyles = makeStyles({
-	innerContent : {
-		padding : 20
-	},
-	form         : {
-		display       : 'flex',
-		flexDirection : 'column',
-		'& div'       : {
-			marginBottom : 10
-		}
-	}
+const useStyles = makeStyles((theme) => {
+	return {
+		innerContent : innerContent(theme),
+		form         : form(theme)
+	};
 });
 
 function EditGroup() {
-	const classes = useStyles();
 	const theme = useTheme();
+	const classes = useStyles(theme);
 	const dispatch = useDispatch();
 	const { id } = useParams();
 	const history = useHistory();

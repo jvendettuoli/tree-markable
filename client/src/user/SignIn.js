@@ -8,23 +8,21 @@ import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { signInUser } from '../actions/auth';
 import SignInForm from './SignInForm';
 
-const useStyles = makeStyles({
-	innerContent : {
-		padding : 20
-	},
-	form         : {
-		display       : 'flex',
-		flexDirection : 'column',
-		'& div'       : {
-			marginBottom : 10
-		}
-	}
+import innerContent from '../styles/innerContent';
+import form from '../styles/form';
+
+const useStyles = makeStyles((theme) => {
+	return {
+		innerContent : innerContent(theme),
+		form         : form(theme)
+	};
 });
 
 function SignIn() {
 	console.log('SignIn Component - Start');
-	const classes = useStyles();
 	const theme = useTheme();
+	const classes = useStyles(theme);
+
 	const dispatch = useDispatch();
 	const history = useHistory();
 	const isAuthenticated = useSelector((st) => st.auth.authenticated);

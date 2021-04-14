@@ -81,6 +81,7 @@ function CommentsContainer({ type, id, isCreatorOrModerator }) {
 					{comments.length > 0 ? (
 						comments.map((comment) => (
 							<Comment
+								type={type}
 								key={`comment-${comment.id}`}
 								onDelete={handleDeleteComment}
 								comment={comment}

@@ -1,13 +1,22 @@
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import React from 'react';
-import useStyles from '../styles/formStyle';
+import form from '../styles/form';
+console.log('FORM', form);
+const useStyles = makeStyles((theme) => {
+	return {
+		form : form(theme)
+	};
+});
 
 function TreeFormBasicFields({ edit = false, formData, onFormChange }) {
-	const classes = useStyles();
+	const theme = useTheme();
+	const classes = useStyles(theme);
 
 	const handleChange = (evt) => {
 		onFormChange(evt.target);
