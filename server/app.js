@@ -2,6 +2,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const path = require('path');
 
 const ExpressError = require('./helpers/expressError');
 const usersRoutes = require('./routes/users');
@@ -22,10 +23,9 @@ app.use(morgan('tiny'));
  * index.html file from create-react-app by default so that it can
  * function as a single page application.
  */
-// if(process.env.NODE_ENV==='production'){
-// 	app.use(express.static(path.resolve(__dirname, './client/build')));
-
-// }
+if (process.env.NODE_ENV === 'production') {
+	app.use(express.static(path.resolve(__dirname, '../client/build')));
+}
 
 //Routes
 app.use('/users', usersRoutes);
@@ -39,6 +39,11 @@ app.use(function(req, res, next) {
 
 	// pass the error to the next piece of middleware
 	return next(err);
+});
+
+// Anything that doesn't match the above, send back index.html
+app.get('*', (req, res) => {
+	res.sendFile(path.join(__dirname + '/client/build/index.html'));
 });
 
 /** general error handler */
