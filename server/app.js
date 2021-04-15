@@ -33,17 +33,17 @@ app.use('/groups', groupsRoutes);
 app.use('/trees', treesRoutes);
 app.use('/comments', commentsRoutes);
 
+// Anything that doesn't match the above, send back index.html
+app.get('*', (req, res) => {
+	res.sendFile(path.resolve(__dirname, '../client/build/index.html'));
+});
+
 /** 404 handler */
 app.use(function(req, res, next) {
 	const err = new ExpressError('Not Found', 404);
 
 	// pass the error to the next piece of middleware
 	return next(err);
-});
-
-// Anything that doesn't match the above, send back index.html
-app.get('*', (req, res) => {
-	res.sendFile(path.resolve(__dirname, '../client/build/index.html'));
 });
 
 /** general error handler */
