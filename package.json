@@ -4,8 +4,9 @@
 	"description": "tree-markable server",
 	"main": "server.js",
 	"scripts": {
-		"start": "node server.js",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"start": "cd server && node server.js",
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"heroku-postbuild": "cd client && npm install && npm run build"
 	},
 	"author": "Justin Vendettuoli",
 	"license": "ISC",
