@@ -1,3 +1,10 @@
+/**
+ * This file will delete all Firebase Users and attempt to 
+ * create generic Firebase Users and insert generic data into 
+ * database. Be sure you know what you are doing before you run it!
+ * 
+ */
+
 const db = require('./db');
 const {
 	createFirebaseUser,
