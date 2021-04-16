@@ -159,9 +159,9 @@ function GroupTabPanel({ group, isCreator, imageUrls }) {
 					</Grid>
 				</Grid>
 			</TabPanel>
-			<TabPanel value={value} index={1}>
+			{/* <TabPanel value={value} index={1}>
 				Album
-			</TabPanel>
+			</TabPanel> */}
 			<TabPanel value={value} index={2}>
 				<GroupMembersPanel isCreator={isCreator} isModerator={isModerator} group={group} />
 			</TabPanel>
