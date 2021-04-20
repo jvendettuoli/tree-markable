@@ -30,13 +30,18 @@ app.use('/comments', commentsRoutes);
  * function as a single page application.
  */
 if (process.env.NODE_ENV === 'production') {
-	app.use(express.static(path.resolve(__dirname, '../client/build')));
-}
+	console.log("path.join(__dirname, '../client/build'", path.resolve(__dirname, '../client/build'));
+	console.log(
+		"path.join(__dirname, '..', '/client/build', 'index.html')",
+		path.join(__dirname, '..', '/client/build', 'index.html')
+	);
+	app.use(express.static(path.join(__dirname, '../client/build')));
 
-// Anything that doesn't match the above, send back index.html
-app.get('*', (req, res) => {
-	res.sendFile(path.resolve(__dirname, '../client/build/index.html'));
-});
+	// Handle react routing for single page application for any path.
+	app.get('*', (req, res) => {
+		res.sendFile(path.join(__dirname, '..', '/client/build', 'index.html'));
+	});
+}
 
 /** 404 handler */
 app.use(function(req, res, next) {
