@@ -18,6 +18,12 @@ app.use(cors());
 // add basic logging system
 app.use(morgan('tiny'));
 
+//Routes
+app.use('/users', usersRoutes);
+app.use('/groups', groupsRoutes);
+app.use('/trees', treesRoutes);
+app.use('/comments', commentsRoutes);
+
 /**
  * If starting in production mode, set express to serve the 
  * index.html file from create-react-app by default so that it can
@@ -26,12 +32,6 @@ app.use(morgan('tiny'));
 if (process.env.NODE_ENV === 'production') {
 	app.use(express.static(path.resolve(__dirname, '../client/build')));
 }
-
-//Routes
-app.use('/users', usersRoutes);
-app.use('/groups', groupsRoutes);
-app.use('/trees', treesRoutes);
-app.use('/comments', commentsRoutes);
 
 // Anything that doesn't match the above, send back index.html
 app.get('*', (req, res) => {
