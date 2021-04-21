@@ -30,6 +30,7 @@ app.use('/comments', commentsRoutes);
  * function as a single page application.
  */
 if (process.env.NODE_ENV === 'production') {
+	console.log('__dirname', dirname);
 	console.log("path.join(__dirname, '../client/build'", path.resolve(__dirname, '../client/build'));
 	console.log(
 		"path.join(__dirname, '..', '/client/build', 'index.html')",
