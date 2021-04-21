@@ -18,12 +18,6 @@ app.use(cors());
 // add basic logging system
 app.use(morgan('tiny'));
 
-//Routes
-app.use('/users', usersRoutes);
-app.use('/groups', groupsRoutes);
-app.use('/trees', treesRoutes);
-app.use('/comments', commentsRoutes);
-
 /**
  * If starting in production mode, set express to serve the 
  * index.html file from create-react-app by default so that it can
@@ -33,16 +27,22 @@ if (process.env.NODE_ENV === 'production') {
 	console.log('__dirname', __dirname);
 	console.log("path.join(__dirname, '../client/build'", path.resolve(__dirname, '../client/build'));
 	console.log(
-		"path.join(__dirname, '..', '/client/build', 'index.html')",
-		path.join(__dirname, '..', '/client/build', 'index.html')
+		"path.resolve(__dirname, '..', 'client', 'build', 'index.html')",
+		path.resolve(__dirname, '..', 'client', 'build', 'index.html')
 	);
 	app.use(express.static(path.join(__dirname, '../client/build')));
 
 	// Handle react routing for single page application for any path.
 	app.get('*', (req, res) => {
-		res.sendFile(path.join(__dirname, '..', '/client/build', 'index.html'));
+		res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
 	});
 }
+
+//Routes
+app.use('/users', usersRoutes);
+app.use('/groups', groupsRoutes);
+app.use('/trees', treesRoutes);
+app.use('/comments', commentsRoutes);
 
 /** 404 handler */
 app.use(function(req, res, next) {
