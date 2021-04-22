@@ -7,11 +7,7 @@ const { validate } = require('jsonschema');
 const Tree = require('../models/tree');
 
 const ExpressError = require('../helpers/expressError');
-const {
-	authRequired,
-	ensureCorrectUser,
-	ensureIsCreator
-} = require('../middleware/auth');
+const { authRequired, ensureCorrectUser, ensureIsCreator } = require('../middleware/auth');
 const { treeNewSchema, treeUpdateSchema } = require('../schemas');
 
 /** GET / => {trees: [tree, ...]} */
@@ -48,12 +44,7 @@ router.post('/', authRequired, async function(req, res, next) {
 		req.body.creator = req.token.uid;
 
 		if (!validation.valid) {
-			return next(
-				new ExpressError(
-					validation.errors.map((err) => err.stack),
-					400
-				)
-			);
+			return next(new ExpressError(validation.errors.map((err) => err.stack), 400));
 		}
 
 		const newTree = await Tree.create(req.body);
@@ -96,5 +87,12 @@ router.delete('/:id', ensureIsCreator, async function(req, res, next) {
 		return next(err);
 	}
 });
+
+if (process.env.NODE_ENV === 'production') {
+	// Handle react routing for single page application for any path.
+	app.get([ '/', '/*' ], (req, res) => {
+		res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
+	});
+}
 
 module.exports = router;
