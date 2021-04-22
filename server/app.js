@@ -55,8 +55,8 @@ app.use(function(err, req, res, next) {
 
 if (process.env.NODE_ENV === 'production') {
 	// Handle react routing for single page application for any path.
+	console.log('Tree Routes - sendFile: ', path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
 	app.get([ '/', '/*' ], (req, res) => {
-		console.log('Tree Routes - sendFile: ', path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
 		console.log('sendFile for req.hostname: ', req.hostname, ', originalUrl: ', req.originalUrl);
 		res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
 	});
