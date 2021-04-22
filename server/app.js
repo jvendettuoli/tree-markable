@@ -34,9 +34,18 @@ app.use('api/groups', groupsRoutes);
 app.use('api/trees', treesRoutes);
 app.use('api/comments', commentsRoutes);
 
+if (process.env.NODE_ENV === 'production') {
+	// Handle react routing for single page application for any path.
+	console.log('app.js - sendFile: ', path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
+	app.get([ '/', '/*' ], (req, res) => {
+		console.log('app.js - sendFile for req.hostname: ', req.hostname, ', originalUrl: ', req.originalUrl);
+		res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
+	});
+}
+
 /** 404 handler */
 app.use(function(req, res, next) {
-	const err = new ExpressError('Not Found', 404);
+	const err = new ExpressError(`${req.path} Not Found`, 404);
 
 	// pass the error to the next piece of middleware
 	return next(err);
@@ -52,14 +61,5 @@ app.use(function(err, req, res, next) {
 		message : err.message
 	});
 });
-
-if (process.env.NODE_ENV === 'production') {
-	// Handle react routing for single page application for any path.
-	console.log('app.js - sendFile: ', path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
-	app.get([ '/', '/*' ], (req, res) => {
-		console.log('sendFile for req.hostname: ', req.hostname, ', originalUrl: ', req.originalUrl);
-		res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
-	});
-}
 
 module.exports = app;
