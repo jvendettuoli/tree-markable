@@ -90,8 +90,8 @@ router.delete('/:id', ensureIsCreator, async function(req, res, next) {
 
 if (process.env.NODE_ENV === 'production') {
 	// Handle react routing for single page application for any path.
-	app.get([ '/', '/*' ], (req, res) => {
-		res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
+	router.get([ '/', '/*' ], (req, res) => {
+		res.sendFile(path.resolve(__dirname, '..', '..', 'client', 'build', 'index.html'));
 	});
 }
 
