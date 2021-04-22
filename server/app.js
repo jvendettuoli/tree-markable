@@ -29,10 +29,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 //Routes
-app.use('/users', usersRoutes);
-app.use('/groups', groupsRoutes);
-app.use('/trees', treesRoutes);
-app.use('/comments', commentsRoutes);
+app.use('api/users', usersRoutes);
+app.use('api/groups', groupsRoutes);
+app.use('api/trees', treesRoutes);
+app.use('api/comments', commentsRoutes);
 
 /** 404 handler */
 app.use(function(req, res, next) {
@@ -55,7 +55,7 @@ app.use(function(err, req, res, next) {
 
 if (process.env.NODE_ENV === 'production') {
 	// Handle react routing for single page application for any path.
-	console.log('Tree Routes - sendFile: ', path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
+	console.log('app.js - sendFile: ', path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
 	app.get([ '/', '/*' ], (req, res) => {
 		console.log('sendFile for req.hostname: ', req.hostname, ', originalUrl: ', req.originalUrl);
 		res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
