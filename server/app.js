@@ -54,7 +54,7 @@ app.use(function(err, req, res, next) {
 
 if (process.env.NODE_ENV === 'production') {
 	// Handle react routing for single page application for any path.
-	app.get([ '/app', '/app/*' ], (req, res) => {
+	app.get([ '/', '/*' ], (req, res) => {
 		res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
 	});
 }
