@@ -2,6 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
+const path = require('path');
 const { validate } = require('jsonschema');
 
 const Tree = require('../models/tree');
