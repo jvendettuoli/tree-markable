@@ -24,6 +24,7 @@ app.use(morgan('tiny'));
  * function as a single page application.
  */
 if (process.env.NODE_ENV === 'production') {
+	console.log('Serving static file: ', path.join(__dirname, '../client/build'));
 	app.use(express.static(path.join(__dirname, '../client/build')));
 }
 
@@ -55,6 +56,8 @@ app.use(function(err, req, res, next) {
 if (process.env.NODE_ENV === 'production') {
 	// Handle react routing for single page application for any path.
 	app.get([ '/', '/*' ], (req, res) => {
+		console.log('Tree Routes - sendFile: ', path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
+		console.log('sendFile for req.hostname: ', req.hostname, ', originalUrl: ', req.originalUrl);
 		res.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
 	});
 }
