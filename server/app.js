@@ -19,10 +19,10 @@ app.use(cors());
 app.use(morgan('tiny'));
 
 //Routes
-app.use('api/users', usersRoutes);
-app.use('api/groups', groupsRoutes);
-app.use('api/trees', treesRoutes);
-app.use('api/comments', commentsRoutes);
+app.use('/api/users', usersRoutes);
+app.use('/api/groups', groupsRoutes);
+app.use('/api/trees', treesRoutes);
+app.use('/api/comments', commentsRoutes);
 
 /**
  * If starting in production mode, set express to serve the 
