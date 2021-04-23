@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getToken } from './firebase/firebaseAuth';
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:3001';
+const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:3001/api';
 
 /**
  * TreeMarkable API class contains static methods to help interact with

@@ -18,6 +18,12 @@ app.use(cors());
 // add basic logging system
 app.use(morgan('tiny'));
 
+//Routes
+app.use('api/users', usersRoutes);
+app.use('api/groups', groupsRoutes);
+app.use('api/trees', treesRoutes);
+app.use('api/comments', commentsRoutes);
+
 /**
  * If starting in production mode, set express to serve the 
  * index.html file from create-react-app by default so that it can
@@ -26,15 +32,7 @@ app.use(morgan('tiny'));
 if (process.env.NODE_ENV === 'production') {
 	console.log('Serving static file: ', path.join(__dirname, '../client/build'));
 	app.use(express.static(path.join(__dirname, '../client/build')));
-}
 
-//Routes
-app.use('api/users', usersRoutes);
-app.use('api/groups', groupsRoutes);
-app.use('api/trees', treesRoutes);
-app.use('api/comments', commentsRoutes);
-
-if (process.env.NODE_ENV === 'production') {
 	// Handle react routing for single page application for any path.
 	console.log('app.js - sendFile: ', path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
 	app.get([ '/', '/*' ], (req, res) => {
