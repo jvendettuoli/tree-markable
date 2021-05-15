@@ -12,7 +12,7 @@ const { userNewSchema, userUpdateSchema } = require('../schemas');
 
 /** GET / => {users: [user, ...]} */
 
-router.get('/', authRequired, async function(req, res, next) {
+router.get('/', async function(req, res, next) {
 	try {
 		const users = await User.findAll();
 		return res.json({ users });
