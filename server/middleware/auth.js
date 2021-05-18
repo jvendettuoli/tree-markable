@@ -78,7 +78,7 @@ async function ensureCorrectUser(req, res, next) {
 		const tokenStr = req.body._token || req.query._token;
 
 		let result = await verifyToken(tokenStr);
-		console.log('Middleware - ensureCorrectUser - token result', result);
+
 		if (result instanceof Error) {
 			throw result;
 		}

@@ -39,15 +39,16 @@ const {
 // Add test users to Firebase
 const firebaseSeed = async (testUsers, testUserRecords) => {
 	console.debug(`TreeMarkable Tests Setup - firebaseSeed - Start`);
-	console.log(`TreeMarkable Tests Setup - firebaseSeed - testUsers: ${testUsers}`);
 
 	try {
+		let firebaseUserCount = 0;
 		//Create Firebase user
 		for (const user of Object.values(testUsers)) {
 			const result = await createFirebaseUser(user);
 			if (result instanceof Error) {
 				throw result;
 			}
+			firebaseUserCount++;
 			testUserRecords.push(result);
 		}
 
@@ -61,8 +62,7 @@ const firebaseSeed = async (testUsers, testUserRecords) => {
 		}
 
 		//Remove outdated Firebase User Records
-		testUserRecords.shift();
-		testUserRecords.shift();
+		for (let i = 0; i < firebaseUserCount; i++) testUserRecords.shift();
 
 		//Make first user an admin
 		const result = await createAdmin(testUserRecords[0].uid);
@@ -124,7 +124,7 @@ async function seedTestTreeData(testTrees) {
 
 //Create groups in tree_markable_test database
 async function seedTestGroupData(testGroups) {
-	console.debug(`GroupMarkable Tests Setup - seedTestGroupData - Start`);
+	console.debug(`TreeMarkable Tests Setup - seedTestGroupData - Start`);
 	try {
 		// Create groups in tree_markable_test database. Requires Firebase users to have
 		// been created first, to use firebase uid in creator field
@@ -138,7 +138,7 @@ async function seedTestGroupData(testGroups) {
 			);
 		}
 	} catch (err) {
-		console.error(`GroupMarkable Tests Setup - seedTestGroupData - ${err}`);
+		console.error(`TreeMarkable Tests Setup - seedTestGroupData - ${err}`);
 		throw err;
 	}
 }
@@ -180,15 +180,7 @@ const beforeAllSetup = async (testUsers, testUserRecords) => {
 };
 
 // Before each test seed test data into the test database
-async function beforeEachSetup(
-	testUserRecords,
-	testUsers,
-	defaultPhotoUrl,
-	defaultHomeGeo,
-	testTrees,
-	signInUser = false,
-	signInAdmin = false
-) {
+async function beforeEachSetup(testUserRecords, testUsers, defaultPhotoUrl, defaultHomeGeo, testTrees) {
 	try {
 		console.debug('TreeMarkable Tests Setup- beforeEachSetup - Start');
 		//Create Users
@@ -210,16 +202,6 @@ async function beforeEachSetup(
 
 		//Create Comments
 		await seedTestCommentData(Object.values(testComments));
-
-		//Sign in specified user, or none
-		// let token = null;
-		// if (signInAdmin) {
-		// 	token = await getIdToken(testUserRecords[0].uid);
-		// }
-		// if (signInUser) {
-		// 	token = await getIdToken(testUserRecords[1].uid);
-		// }
-		// return token;
 	} catch (err) {
 		console.error(`TreeMarkable Tests Setup - beforeEachSetup - ${err}`);
 		throw err;
@@ -228,8 +210,11 @@ async function beforeEachSetup(
 
 async function afterEachSetup() {
 	console.debug(`TreeMarkable Tests Setup - afterEachSetup - Start`);
-
 	try {
+		for (const user of testUserRecords) {
+			await deleteFirebaseUser(user.uid);
+		}
+
 		await db.query('DELETE FROM users');
 		await db.query('DELETE FROM trees');
 		await db.query('DELETE FROM groups');
@@ -242,13 +227,7 @@ async function afterEachSetup() {
 
 async function afterAllSetup(testUserRecords) {
 	console.debug(`TreeMarkable Tests Setup - afterAllSetup - Start`);
-
 	try {
-		for (const user of testUserRecords) {
-			await deleteFirebaseUser(user.uid);
-		}
-		console.debug('TreeMarkable Tests Setup - afterAllSetup - Firebase Users Deleted');
-
 		await db.end();
 	} catch (err) {
 		console.error(`TreeMarkable Tests Setup - afterAllSetup - ${err}`);
@@ -256,7 +235,10 @@ async function afterAllSetup(testUserRecords) {
 	}
 }
 
-// For testing setup file. Only runs when calling this file alone
+/**
+ * For testing setup file. Commented out for general tests.
+ */
+
 // (async function(testUsers, testUserRecords, testTrees) {
 // 	console.debug(`TreeMarkable Tests Setup - Main - Start`);
 // 	try {

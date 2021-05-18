@@ -11,6 +11,7 @@ const defaultHomeGeo = '-123.48034399738893,48.0913799544858';
 const userEmail = uuidv4();
 const adminEmail = uuidv4();
 const newUserEmail = uuidv4();
+const patchUserEmail = uuidv4();
 
 // Test users to be added to Firebase Auth and database
 const testUsers = {
@@ -28,6 +29,14 @@ const testUsers = {
 		email     : `${adminEmail}@test.com`,
 		photo_url : defaultPhotoUrl,
 		is_admin  : true
+	},
+
+	patch : {
+		username  : 'Patch User 1',
+		password  : 'testpw3',
+		email     : `${patchUserEmail}@test.com`,
+		photo_url : defaultPhotoUrl,
+		is_admin  : false
 	}
 };
 
@@ -107,6 +116,7 @@ module.exports = {
 	userEmail,
 	newUserEmail,
 	adminEmail,
+	patchUserEmail,
 	testUsers,
 	testTrees,
 	testGroups,

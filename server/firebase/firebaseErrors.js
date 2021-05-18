@@ -10,12 +10,10 @@ const handleFirebaseErrors = (err, next) => {
 		);
 	}
 	else if (err.code === 'auth/argument-error') {
-		return next(
-			new ExpressError(
-				'Firebase ID token has invalid signature.',
-				401
-			)
-		);
+		return next(new ExpressError('Firebase ID token has invalid signature.', 401));
+	}
+	else if (err.code === 'auth/email-already-exists') {
+		return next(new ExpressError('The email is already in use by another Firebase account', 400));
 	}
 };
 
